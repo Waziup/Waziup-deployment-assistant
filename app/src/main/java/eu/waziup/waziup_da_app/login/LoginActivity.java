@@ -1,7 +1,9 @@
-package eu.waziup.waziup_da_app;
+package eu.waziup.waziup_da_app.login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import eu.waziup.waziup_da_app.R;
 
 public class LoginActivity extends AppCompatActivity {
 
