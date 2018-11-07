@@ -39,4 +39,10 @@ ext {
     gsonVersion = '2.8.0'
     calligraphyVersion = '2.2.0'
     glideVersion = '3.7.0'
+
+    // Butter Knife
+    butterKnifeVersion = '9.0.0-rc1'
+    retrofitVersion = '2.4.0'
+    retrofitInterceptorVersion = '3.8.0'
+    picassoVersion = '2.71828'
 }
