@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">waziup_da_app</string>
+    <string name="app_market_link">"market://details?id="</string>
+    <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
+
+    <!--App Message-->
+    <string name="api_retry_error">Please retry!</string>
+    <string name="api_default_error">Something wrong happened!</string>
+    <string name="some_error">Some Error Occurred!</string>
+    <string name="connection_error">Internet connection lost!</string>
+
+
+    <string name="error_invalid_credential">Invalid credential! try again.</string>
+    <string name="error_file_does_not_exist">File does not exist.</string>
+    <string name="error_server_error">Internal Server Error.</string>
+    <string name="error_server_unreachable">Service Unavailable.</string>
+    <string name="error_something_wrong_happend">Something wrong happened. Please try again later.</string>
+
 </resources>

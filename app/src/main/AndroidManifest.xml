@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:theme="@style/AppTheme.no_toolbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SensorActivity" />
-        <activity android:name=".activities.RegisterSensorActivity"/>
+            android:name=".ui.sensor.SensorActivity" />
+        <activity android:name=".ui.register.RegisterSensorActivity"/>
     </application>
 
 </manifest>

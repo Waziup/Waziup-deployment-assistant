@@ -8,7 +8,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -45,4 +44,10 @@ ext {
     retrofitVersion = '2.4.0'
     retrofitInterceptorVersion = '3.8.0'
     picassoVersion = '2.71828'
+
+    dagger2Version = '2.8'
+    rxjava2Version = '2.0.6'
+    rxandroidVersion = '2.0.2'
+    butterKnifeVersion = '8.8.1'
+    timberVersion = '4.7.0'
 }
