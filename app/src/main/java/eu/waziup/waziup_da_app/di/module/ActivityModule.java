@@ -7,6 +7,9 @@ import dagger.Module;
 import dagger.Provides;
 import eu.waziup.waziup_da_app.di.ActivityContext;
 import eu.waziup.waziup_da_app.di.PerActivity;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorMvpPresenter;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorMvpView;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorPresenter;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpPresenter;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpView;
 import eu.waziup.waziup_da_app.ui.login.LoginPresenter;
@@ -68,6 +71,13 @@ public class ActivityModule {
     @PerActivity
     RegisterSensorMvpPresenter<RegisterSensorMvpView> provideRegisterSensorPresenter(
             RegisterSensorPresenter<RegisterSensorMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    DetailSensorMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
+            DetailSensorPresenter<DetailSensorMvpView> presenter) {
         return presenter;
     }
 }

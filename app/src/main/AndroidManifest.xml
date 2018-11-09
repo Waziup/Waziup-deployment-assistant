@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.sensor.SensorActivity" />
-        <activity android:name=".ui.register.RegisterSensorActivity"/>
+        <activity android:name=".ui.sensor.SensorActivity" />
+        <activity android:name=".ui.register.RegisterSensorActivity" />
+        <activity android:name=".ui.detail.DetailSensorActivity"></activity>
     </application>
 
 </manifest>

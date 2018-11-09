@@ -79,4 +79,3 @@ dependencies {
 configurations.all {
     resolutionStrategy.force "com.android.support:support-annotations:$supportLibraryVersion"
 }
-

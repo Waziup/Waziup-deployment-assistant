@@ -17,6 +17,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
 
     private List<Sensor> sensors;
     private Context context;
+    private Callback mCallback;
 
     public SensorAdapter(List<Sensor> sensors, Context context) {
         this.sensors = sensors;
@@ -47,6 +48,14 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
     @Override
     public int getItemCount() {
         return sensors.size();
+    }
+
+    public void setCallback(Callback callback) {
+        mCallback = callback;
+    }
+
+    public interface Callback {
+        void onItemClicked(Sensor sensor);
     }
 
     public class SensorViewHolder extends RecyclerView.ViewHolder {

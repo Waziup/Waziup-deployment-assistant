@@ -1,5 +1,6 @@
 package eu.waziup.waziup_da_app.ui.sensor;
 
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.PerActivity;
 import eu.waziup.waziup_da_app.ui.base.MvpPresenter;
 
@@ -13,5 +14,5 @@ public interface SensorMvpPresenter<V extends SensorMvpView> extends MvpPresente
     void onLogOutClicked();
     void loadSensors();
     void onRegisterFabClicked();
-
+    void onSensorItemClicked(Sensor sensor);
 }

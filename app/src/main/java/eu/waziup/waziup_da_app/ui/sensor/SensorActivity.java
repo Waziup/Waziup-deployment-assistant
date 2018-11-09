@@ -24,12 +24,13 @@ import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorActivity;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorActivity;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 import eu.waziup.waziup_da_app.utils.Constants;
 
-public class SensorActivity extends BaseActivity implements SensorMvpView {
+public class SensorActivity extends BaseActivity implements SensorMvpView, SensorAdapter.Callback {
 
 
     @Inject
@@ -120,6 +121,12 @@ public class SensorActivity extends BaseActivity implements SensorMvpView {
     }
 
     @Override
+    public void openDetailSensorActivity(Sensor sensor) {
+        //todo pass data like the sensor's id with the intent
+        startActivity(DetailSensorActivity.getStartIntent(SensorActivity.this));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -156,4 +163,8 @@ public class SensorActivity extends BaseActivity implements SensorMvpView {
         startActivity(RegisterSensorActivity.getStartIntent(SensorActivity.this));
     }
 
+    @Override
+    public void onItemClicked(Sensor sensor) {
+        mPresenter.onSensorItemClicked(sensor);
+    }
 }
