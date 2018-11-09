@@ -5,11 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
-import eu.waziup.waziup_da_app.ui.sensor.SensorActivity;
 
-public class RegisterSensorActivity extends BaseActivity {
+public class RegisterSensorActivity extends BaseActivity implements RegisterSensorMvpView {
+
+
+    @Inject
+    RegisterSensorMvpPresenter<RegisterSensorMvpView> mPresenter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, RegisterSensorActivity.class);
@@ -19,13 +24,13 @@ public class RegisterSensorActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_sensor);
-
+        hideKeyboard(this);
         setUp();
     }
 
     @Override
     protected void setUp() {
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Register Sensor");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -40,6 +45,6 @@ public class RegisterSensorActivity extends BaseActivity {
 
     @Override
     public void hideKeyboard() {
-
+        // todo add hideKeyboard functionality in here
     }
 }

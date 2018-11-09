@@ -17,7 +17,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         implements LoginMvpPresenter<V> {
 
-    private static final String TAG = "SensorPresenter";
+    private static final String TAG = "RegisterSensorPresenter";
 
     @Inject
     public LoginPresenter(DataManager dataManager,

@@ -1,14 +1,10 @@
 package eu.waziup.waziup_da_app.ui.sensor;
 
-import android.content.Intent;
-
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
-import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
-import eu.waziup.waziup_da_app.utils.Constants;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -19,7 +15,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
         implements SensorMvpPresenter<V> {
 
-    private static final String TAG = "SensorPresenter";
+    private static final String TAG = "RegisterSensorPresenter";
 
     @Inject
     public SensorPresenter(DataManager dataManager,
