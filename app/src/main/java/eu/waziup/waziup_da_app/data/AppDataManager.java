@@ -1,14 +1,17 @@
 package eu.waziup.waziup_da_app.data;
 
 
-import android.content.Context;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import eu.waziup.waziup_da_app.data.network.ApiHeader;
 import eu.waziup.waziup_da_app.data.network.ApiHelper;
+import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.data.prefs.PreferencesHelper;
+import io.reactivex.Observable;
 
 @Singleton
 public class AppDataManager implements DataManager {
@@ -32,6 +35,16 @@ public class AppDataManager implements DataManager {
     @Override
     public void setApiHeader(ApiHeader apiHeader) {
 
+    }
+
+    @Override
+    public Observable<String> serverLogin(LoginRequest.ServerLoginRequest request) {
+        return mApiHelper.serverLogin(request);
+    }
+
+    @Override
+    public Observable<List<Sensor>> fetchSensors() {
+        return mApiHelper.fetchSensors();
     }
 
     @Override
@@ -101,21 +114,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void updateUserInfo(
-            String accessToken,
-            Long userId,
-            LoggedInMode loggedInMode,
-            String userName,
-            String email,
-            String profilePicPath) {
-
+    public void updateUserInfo(String accessToken) {
         setAccessToken(accessToken);
-        setCurrentUserId(userId);
-        setCurrentUserLoggedInMode(loggedInMode);
-        setCurrentUserName(userName);
-        setCurrentUserEmail(email);
-        setCurrentUserProfilePicUrl(profilePicPath);
-
         updateApiHeader(accessToken);
     }
 
@@ -126,12 +126,6 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setUserAsLoggedOut() {
-        updateUserInfo(
-                null,
-                null,
-                DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT,
-                null,
-                null,
-                null);
+        updateUserInfo(null);
     }
 }

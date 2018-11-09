@@ -13,7 +13,7 @@
  */
 
 
-package eu.waziup.waziup_da_app.data.network.model;
+package eu.waziup.waziup_da_app.data.network.model.user;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,9 +28,6 @@ public class User {
 
     @SerializedName("username")
     public String username = null;
-
-    @SerializedName("password")
-    public String password = null;
 
     @SerializedName("firstName")
     public String firstName = null;
@@ -53,9 +50,5 @@ public class User {
     @SerializedName("twitter")
     public String twitter = null;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }
 

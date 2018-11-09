@@ -13,6 +13,7 @@ public interface MvpView {
 
     void hideLoading();
 
+    // activity to be opened when token expires
     void openActivityOnTokenExpire();
 
     void onError(@StringRes int resId);

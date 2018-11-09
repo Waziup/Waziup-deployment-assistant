@@ -8,7 +8,5 @@ import eu.waziup.waziup_da_app.ui.base.MvpView;
 
 public interface LoginMvpView extends MvpView {
 
-    void openMainActivity();
-    void openForgetPasswordActivity();
-    boolean getDeviceToken();
+    void openSensorActivity();
 }

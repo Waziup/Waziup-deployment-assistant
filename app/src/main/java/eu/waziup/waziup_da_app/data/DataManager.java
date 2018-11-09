@@ -3,7 +3,6 @@ package eu.waziup.waziup_da_app.data;
 
 import eu.waziup.waziup_da_app.data.network.ApiHelper;
 import eu.waziup.waziup_da_app.data.prefs.PreferencesHelper;
-import io.reactivex.Observable;
 
 public interface DataManager extends PreferencesHelper, ApiHelper {
 
@@ -11,13 +10,7 @@ public interface DataManager extends PreferencesHelper, ApiHelper {
 
     void setUserAsLoggedOut();
 
-    void updateUserInfo(
-            String accessToken,
-            Long userId,
-            LoggedInMode loggedInMode,
-            String userName,
-            String email,
-            String profilePicPath);
+    void updateUserInfo(String accessToken);
 
     void updateUserToken(String accessToken);
 

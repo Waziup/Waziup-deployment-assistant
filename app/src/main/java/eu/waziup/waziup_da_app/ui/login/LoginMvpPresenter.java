@@ -10,8 +10,6 @@ import eu.waziup.waziup_da_app.ui.base.MvpPresenter;
 @PerActivity
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
 
-    void onServerLoginClick(String email, String password, String imei);
-
-    void onForgetPasswordClicked();
-
+    void onServerLoginClick(String username, String password);
+    void onDecideNextActivity();
 }

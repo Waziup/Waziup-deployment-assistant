@@ -16,4 +16,11 @@
     <string name="error_server_unreachable">Service Unavailable.</string>
     <string name="error_something_wrong_happend">Something wrong happened. Please try again later.</string>
 
+
+    <!--Login Validation-->
+    <string name="empty_email">Please provide a non empty email.</string>
+    <string name="empty_username">Please provide a non empty deviceToken.</string>
+    <string name="invalid_email">Please provide a valid deviceToken.</string>
+    <string name="empty_password">Please provide a non empty password.</string>
+
 </resources>

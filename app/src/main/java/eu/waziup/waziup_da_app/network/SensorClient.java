@@ -9,6 +9,5 @@ import retrofit2.http.GET;
 
 public interface SensorClient {
 
-    @GET(EndPoints.SENSOR)
-    Call<List<Sensor>> getSensors();
+
 }

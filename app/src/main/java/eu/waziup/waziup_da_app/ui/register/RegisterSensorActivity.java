@@ -1,12 +1,19 @@
 package eu.waziup.waziup_da_app.ui.register;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
+import eu.waziup.waziup_da_app.ui.sensor.SensorActivity;
 
 public class RegisterSensorActivity extends BaseActivity {
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, RegisterSensorActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

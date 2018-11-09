@@ -10,6 +10,9 @@ import eu.waziup.waziup_da_app.di.PerActivity;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpPresenter;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpView;
 import eu.waziup.waziup_da_app.ui.login.LoginPresenter;
+import eu.waziup.waziup_da_app.ui.sensor.SensorMvpPresenter;
+import eu.waziup.waziup_da_app.ui.sensor.SensorMvpView;
+import eu.waziup.waziup_da_app.ui.sensor.SensorPresenter;
 import eu.waziup.waziup_da_app.utils.rx.AppSchedulerProvider;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -48,6 +51,13 @@ public class ActivityModule {
     @PerActivity
     LoginMvpPresenter<LoginMvpView> provideLoginPresenter(
             LoginPresenter<LoginMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    SensorMvpPresenter<SensorMvpView> provideSensorPresenter(
+            SensorPresenter<SensorMvpView> presenter) {
         return presenter;
     }
 }

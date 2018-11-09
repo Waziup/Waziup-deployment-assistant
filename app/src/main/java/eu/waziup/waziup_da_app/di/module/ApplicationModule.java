@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import eu.waziup.waziup_da_app.BuildConfig;
-import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.AppDataManager;
 import eu.waziup.waziup_da_app.data.DataManager;
 import eu.waziup.waziup_da_app.data.network.ApiCall;

@@ -1,16 +1,14 @@
 package eu.waziup.waziup_da_app.data.network;
 
 
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.user.User;
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
+import io.reactivex.Observer;
 
 /**
  * Created by KidusMT.
@@ -40,6 +38,16 @@ public class AppApiHelper implements ApiHelper {
             mApiHeader.setUserId(apiHeader.getUserId());
             mApiHeader.setAccessToken(apiHeader.getAccessToken());
         }
+    }
+
+    @Override
+    public Observable<String> serverLogin(LoginRequest.ServerLoginRequest request) {
+        return mApiCall.login(request);
+    }
+
+    @Override
+    public void fetchSensors() {
+        mApiCall.getSensors();
     }
 
 }

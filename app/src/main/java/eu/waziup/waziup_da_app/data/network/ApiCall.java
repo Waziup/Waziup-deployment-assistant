@@ -1,19 +1,22 @@
 package eu.waziup.waziup_da_app.data.network;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import eu.waziup.waziup_da_app.BuildConfig;
-import eu.waziup.waziup_da_app.DaApp;
+import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.user.User;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
+import eu.waziup.waziup_da_app.network.EndPoints;
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 
 /**
  * Created by KidusMT.
@@ -34,6 +37,16 @@ public interface ApiCall {
 //    @POST(ENDPOINT_SERVER_CHANGE_PASSWORD)
 //    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
 //    Observable<ChangePasswordResponse> doChangePasswordApiCall(@Body ChangePasswordRequest request);
+
+
+    @GET(EndPoints.SENSOR)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<List<Sensor>> getSensors();
+
+
+    @POST(EndPoints.LOGIN)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
+    Observable<String> login(@Body LoginRequest.ServerLoginRequest request);
 
     class Factory {
 
