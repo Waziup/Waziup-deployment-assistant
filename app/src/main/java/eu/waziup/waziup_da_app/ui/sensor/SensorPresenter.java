@@ -2,12 +2,16 @@ package eu.waziup.waziup_da_app.ui.sensor;
 
 import android.util.Log;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
+
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
+import eu.waziup.waziup_da_app.data.network.model.ApiError;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
+import eu.waziup.waziup_da_app.utils.ErrorUtils;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -31,12 +35,7 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
     public void onLogOutClicked() {
         // removing the token when the user logout
         getDataManager().setUserAsLoggedOut();
-        getMvpView().openLoginActivity();
-
-        //todo find out if there is anything left in this part
-//        sharedpreferences.edit().putString(Constants.token, "nothing").apply();
-//        startActivity(new Intent(SensorActivity.this, LoginActivity.class));
-//        finish();
+//        getMvpView().openLoginActivity();
     }
 
     @Override
@@ -48,21 +47,17 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
                 .subscribe(sensors -> {
                     if (!isViewAttached())
                         return;
-                    Log.e("--->loadSensor","working");
-
 
                     getMvpView().showSensors(sensors);
 
                 }, throwable -> {
 
-                    Log.e("--->loadSensor","failed");
-
                     if (!isViewAttached())
                         return;
 
                     getMvpView().hideLoading();
-                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
-
+                    ApiError apiError = ErrorUtils.parseError(((HttpException)throwable).response());
+                    getMvpView().onError(apiError.getMessage());
                 }));
     }
 
@@ -76,4 +71,5 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
     public void onSensorItemClicked(Sensor sensor) {
         getMvpView().openDetailSensorActivity(sensor);
     }
+
 }

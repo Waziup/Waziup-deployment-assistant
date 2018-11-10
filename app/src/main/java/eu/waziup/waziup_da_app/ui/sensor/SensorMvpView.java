@@ -13,6 +13,6 @@ public interface SensorMvpView extends MvpView {
 
     void openRegisterSensorActivity();
     void showSensors(List<Sensor> sensorList);
-    void openLoginActivity();
+
     void openDetailSensorActivity(Sensor sensor);
 }

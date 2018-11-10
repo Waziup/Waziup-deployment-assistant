@@ -9,13 +9,11 @@
     <string name="some_error">Some Error Occurred!</string>
     <string name="connection_error">Internet connection lost!</string>
 
-
     <string name="error_invalid_credential">Invalid credential! try again.</string>
     <string name="error_file_does_not_exist">File does not exist.</string>
     <string name="error_server_error">Internal Server Error.</string>
     <string name="error_server_unreachable">Service Unavailable.</string>
     <string name="error_something_wrong_happend">Something wrong happened. Please try again later.</string>
-
 
     <!--Login Validation-->
     <string name="empty_email">Please provide a non empty email.</string>
@@ -23,5 +21,11 @@
     <string name="invalid_email">Please provide a valid deviceToken.</string>
     <string name="empty_password">Please provide a non empty password.</string>
     <string name="no_sensors_list_found">No sensors list found.</string>
+    <string name="username">username</string>
+    <string name="email">email</string>
+
+    <!--Drawer-->
+    <string name="open_drawer">Drawer Open</string>
+    <string name="close_drawer">Drawer Close</string>
 
 </resources>
