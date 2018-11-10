@@ -61,6 +61,7 @@ public class AppDataManager implements DataManager {
     @Override
     public void updateUserToken(String accessToken) {
         setAccessToken(accessToken);
+
     }
 
     @Override
@@ -114,9 +115,10 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void updateUserInfo(String accessToken) {
+    public void updateUserInfo(String accessToken, LoggedInMode loggedInMode) {
         setAccessToken(accessToken);
         updateApiHeader(accessToken);
+        setCurrentUserLoggedInMode(loggedInMode);
     }
 
     @Override
@@ -126,6 +128,6 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setUserAsLoggedOut() {
-        updateUserInfo(null);
+        updateUserInfo(null, DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT);
     }
 }

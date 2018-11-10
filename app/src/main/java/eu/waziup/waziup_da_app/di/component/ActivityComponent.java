@@ -7,6 +7,7 @@ import eu.waziup.waziup_da_app.ui.detail.DetailSensorActivity;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorActivity;
 import eu.waziup.waziup_da_app.ui.sensor.SensorActivity;
+import eu.waziup.waziup_da_app.ui.sensor.SensorAdapter;
 
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
@@ -15,6 +16,8 @@ public interface ActivityComponent {
     void inject(LoginActivity activity);
 
     void inject(SensorActivity activity);
+
+    void inject(SensorAdapter adapter);
 
     void inject(RegisterSensorActivity activity);
 

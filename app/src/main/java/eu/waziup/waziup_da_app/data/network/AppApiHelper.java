@@ -2,10 +2,13 @@ package eu.waziup.waziup_da_app.data.network;
 
 
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.data.network.model.user.User;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -46,8 +49,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public void fetchSensors() {
-        mApiCall.getSensors();
+    public Observable<List<Sensor>> fetchSensors() {
+        return mApiCall.getSensors();
     }
 
 }

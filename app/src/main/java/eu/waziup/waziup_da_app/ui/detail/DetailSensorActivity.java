@@ -37,9 +37,4 @@ public class DetailSensorActivity extends BaseActivity implements DetailSensorMv
     protected void setUp() {
 
     }
-
-    @Override
-    public void hideKeyboard() {
-
-    }
 }

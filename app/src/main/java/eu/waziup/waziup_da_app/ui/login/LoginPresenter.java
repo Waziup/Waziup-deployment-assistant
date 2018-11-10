@@ -1,12 +1,18 @@
 package eu.waziup.waziup_da_app.ui.login;
 
+import android.util.Log;
+
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
+
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.DataManager;
+import eu.waziup.waziup_da_app.data.network.model.ApiError;
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
+import eu.waziup.waziup_da_app.utils.ErrorUtils;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -45,16 +51,12 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                 .serverLogin(new LoginRequest.ServerLoginRequest(email, password))
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
-                .subscribe(loginResponse -> {
-
-                    // this is the token responded by the api after the user login.
-                    getDataManager().updateUserInfo(loginResponse);
+                .subscribe(s -> {
 
                     if (!isViewAttached()) {
                         return;
                     }
-
-//                    if (getMvpView().getDeviceToken())
+                    getDataManager().updateUserInfo( s, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
                     getMvpView().openSensorActivity();
 
                 }, throwable -> {
@@ -62,22 +64,25 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                     if (!isViewAttached()) {
                         return;
                     }
-
+                    // todo find out if this is the right implementation for this scenario
                     getMvpView().hideLoading();
-                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
+                    ApiError apiError = ErrorUtils.parseError(((HttpException)throwable).response());
+                    getMvpView().onError(apiError.getMessage());
                 }));
     }
 
-    @Override
     public void onDecideNextActivity() {
-        if (!(getDataManager().getCurrentUserLoggedInMode()
-                == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType())) {
-//            getMvpView().openActivityOnTokenExpire();
-            return;
+        if (getDataManager().getCurrentUserLoggedInMode()
+                == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {
+           return;
         } else {
             getMvpView().openSensorActivity();
         }
     }
 
-
+    @Override
+    public void onAttach(V mvpView) {
+        super.onAttach(mvpView);
+        onDecideNextActivity();
+    }
 }

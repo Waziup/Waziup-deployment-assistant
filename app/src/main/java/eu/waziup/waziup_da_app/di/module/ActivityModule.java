@@ -3,6 +3,8 @@ package eu.waziup.waziup_da_app.di.module;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import dagger.Module;
 import dagger.Provides;
 import eu.waziup.waziup_da_app.di.ActivityContext;
@@ -16,6 +18,7 @@ import eu.waziup.waziup_da_app.ui.login.LoginPresenter;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorPresenter;
+import eu.waziup.waziup_da_app.ui.sensor.SensorAdapter;
 import eu.waziup.waziup_da_app.ui.sensor.SensorMvpPresenter;
 import eu.waziup.waziup_da_app.ui.sensor.SensorMvpView;
 import eu.waziup.waziup_da_app.ui.sensor.SensorPresenter;
@@ -79,5 +82,11 @@ public class ActivityModule {
     DetailSensorMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
             DetailSensorPresenter<DetailSensorMvpView> presenter) {
         return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    SensorAdapter provideSensorAdapter() {
+        return new SensorAdapter(new ArrayList<>());
     }
 }

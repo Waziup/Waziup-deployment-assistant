@@ -31,6 +31,9 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 
@@ -38,6 +41,7 @@ import eu.waziup.waziup_da_app.DaApp;
 import eu.waziup.waziup_da_app.R;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
 /**
@@ -117,22 +121,22 @@ public final class CommonUtils {
                 return DaApp.getContext().getString(R.string.error_server_unreachable);
             } else {
 
-                return DaApp.getContext().getString(R.string.error_something_wrong_happend);
-//                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
-//                try {//should display the correct error message form the http protocol
-//                    if (responseBody != null) {
-//                        JSONObject jObjError = new JSONObject(responseBody.toString());
-//                        return jObjError.toString();
-//                    }
-//                } catch (JSONException e1) {
-//                    e1.printStackTrace();
-//                }
+//                return DaApp.getContext().getString(R.string.error_something_wrong_happend);
+                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
+                try {//should display the correct error message form the http protocol
+                    if (responseBody != null) {
+                        JSONObject jObjError = new JSONObject(responseBody.toString());
+                        return jObjError.toString();
+                    }
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
         //todo find out if this is the right way of handling this condition
-//        else {
-//            return throwable.getMessage();
-//        }
+        else {
+            return throwable.getMessage();
+        }
         return "";
     }
 }

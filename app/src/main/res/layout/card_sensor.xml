@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_agenda_layout"
     android:layout_width="match_parent"
@@ -13,31 +14,141 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/sensor_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_bold"
-            android:maxLines="1"
-            android:text="@string/app_name"
-            android:textColor="@color/gray"
-            android:textSize="18sp" />
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/sensor_title"
+            <TextView
+                android:id="@+id/sensor_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.7"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/sensor_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.3"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_light"
+                android:maxLines="1"
+                android:text="Jun 12, 2018"
+                android:textAlignment="textEnd"
+                android:textColor="@color/semi_gray"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_light"
-            android:maxLines="2"
-            android:text="@string/app_name"
-            android:textColor="@color/gray"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/ic_sensor" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.85"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sensor_domain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="2dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxLines="1"
+                    android:text="Domain: "
+                    android:textColor="@color/gray"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/icon_sensor_owner"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        app:srcCompat="@drawable/ic_account" />
+
+                    <TextView
+                        android:id="@+id/sensor_owner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/roboto_light"
+                        android:maxLines="1"
+                        android:text="@string/app_name"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@color/colorPrimary">
+
+                <!--TODO correct the image here-->
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@color/white"
+                    android:src="@drawable/waziup_logo"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/measurement_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="223"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+            </RelativeLayout>
+        </HorizontalScrollView>
     </LinearLayout>
 </android.support.v7.widget.CardView>

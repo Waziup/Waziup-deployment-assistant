@@ -40,7 +40,7 @@ public class ApiHeader {
     }
 
     public String getAccessToken() {
-        return mAccessToken;
+        return "Bearer "+ mAccessToken;
     }
 
     public void setAccessToken(String accessToken) {

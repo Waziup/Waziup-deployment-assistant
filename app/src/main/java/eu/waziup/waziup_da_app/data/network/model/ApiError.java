@@ -8,17 +8,20 @@ public class ApiError {
     private int errorCode;
 
     @Expose
-    @SerializedName("status_code")
-    private String statusCode;
+    @SerializedName("error")
+    private String error;
 
     @Expose
-    @SerializedName("message")
-    private String message;
+    @SerializedName("description")
+    private String description;
+
+    public ApiError() {
+    }
 
     public ApiError(int errorCode, String statusCode, String message) {
         this.errorCode = errorCode;
-        this.statusCode = statusCode;
-        this.message = message;
+        this.error = statusCode;
+        this.description = message;
     }
 
     public int getErrorCode() {
@@ -30,19 +33,19 @@ public class ApiError {
     }
 
     public String getStatusCode() {
-        return statusCode;
+        return error;
     }
 
     public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
+        this.error = statusCode;
     }
 
     public String getMessage() {
-        return message;
+        return description;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessage(String description) {
+        this.description = description;
     }
 
     @Override
@@ -53,18 +56,18 @@ public class ApiError {
         ApiError apiError = (ApiError) object;
 
         if (errorCode != apiError.errorCode) return false;
-        if (statusCode != null ? !statusCode.equals(apiError.statusCode)
-                : apiError.statusCode != null)
+        if (error != null ? !error.equals(apiError.error)
+                : apiError.error != null)
             return false;
-        return message != null ? message.equals(apiError.message) : apiError.message == null;
+        return description != null ? description.equals(apiError.description) : apiError.description == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = errorCode;
-        result = 31 * result + (statusCode != null ? statusCode.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (error != null ? error.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
 }

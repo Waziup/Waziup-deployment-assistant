@@ -50,7 +50,4 @@ public class RegisterSensorActivity extends BaseActivity implements RegisterSens
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void hideKeyboard() {
-    }
 }

@@ -67,11 +67,14 @@ dependencies {
     // reactive
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-//    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.rxandroidVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:$rootProject.rxJakeVersion"
 
     // code generator for view
     implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+
+    // date formatter
+//    implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
 
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"

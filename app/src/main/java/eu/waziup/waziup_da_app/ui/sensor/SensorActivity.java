@@ -2,7 +2,6 @@ package eu.waziup.waziup_da_app.ui.sensor;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,12 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
@@ -28,21 +28,26 @@ import eu.waziup.waziup_da_app.ui.detail.DetailSensorActivity;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorActivity;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
-import eu.waziup.waziup_da_app.utils.Constants;
 
 public class SensorActivity extends BaseActivity implements SensorMvpView, SensorAdapter.Callback {
-
 
     @Inject
     SensorMvpPresenter<SensorMvpView> mPresenter;
 
-    RecyclerView mRecyclerView;
+    @Inject
     SensorAdapter mAdapter;
-    //    Toolbar mToolbar;
-    List<Sensor> sensorList = new ArrayList<>();
-    SharedPreferences sharedpreferences;
+
+    @BindView(R.id.sensor_recycler)
+    RecyclerView mRecyclerView;
+
+    @BindView(R.id.sensor_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView(R.id.fab_sensor)
     FloatingActionButton mfab;
+
+    @BindView(R.id.tv_no_sensor)
+    TextView tvNoSensors;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SensorActivity.class);
@@ -56,8 +61,11 @@ public class SensorActivity extends BaseActivity implements SensorMvpView, Senso
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.onAttach(SensorActivity.this);
+        mAdapter.setCallback(this);
 
         setUp();
+
+        mPresenter.loadSensors();
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mPresenter.loadSensors();
@@ -79,11 +87,6 @@ public class SensorActivity extends BaseActivity implements SensorMvpView, Senso
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Sensors");
 
-        mRecyclerView = findViewById(R.id.sensor_recycler);
-        mSwipeRefreshLayout = findViewById(R.id.sensor_swipe_to_refresh);
-        mfab = findViewById(R.id.fab_sensor);
-
-        sharedpreferences = getSharedPreferences(Constants.prefName, Context.MODE_PRIVATE);
         setUpRecyclerView();
 
         mPresenter.loadSensors();
@@ -92,7 +95,6 @@ public class SensorActivity extends BaseActivity implements SensorMvpView, Senso
     private void setUpRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SensorAdapter(sensorList, SensorActivity.this);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -101,17 +103,16 @@ public class SensorActivity extends BaseActivity implements SensorMvpView, Senso
     public void showSensors(List<Sensor> sensors) {
         if (sensors != null) {
             if (sensors.size() > 0) {
-                //todo add the tvNoMeetings text in the layout
-//                tvNoMeetings.setVisibility(View.GONE);
+                tvNoSensors.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(sensors);
             } else {
                 mRecyclerView.setVisibility(View.GONE);
-                //todo to be added later
-//                tvNoMeetings.setVisibility(View.VISIBLE);
-//                tvNoMeetings.setText(R.string.no_meeting);
+                tvNoSensors.setVisibility(View.VISIBLE);
+                tvNoSensors.setText(R.string.no_sensors_list_found);
             }
         }
+        hideLoading();
     }
 
     @Override
@@ -151,11 +152,6 @@ public class SensorActivity extends BaseActivity implements SensorMvpView, Senso
             CommonUtils.toast("settings clicked");
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void hideKeyboard() {
-        //todo add hideKeyboard functionality in here
     }
 
     @Override

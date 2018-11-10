@@ -1,5 +1,7 @@
 package eu.waziup.waziup_da_app.ui.sensor;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
@@ -46,10 +48,14 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
                 .subscribe(sensors -> {
                     if (!isViewAttached())
                         return;
+                    Log.e("--->loadSensor","working");
+
 
                     getMvpView().showSensors(sensors);
 
                 }, throwable -> {
+
+                    Log.e("--->loadSensor","failed");
 
                     if (!isViewAttached())
                         return;
