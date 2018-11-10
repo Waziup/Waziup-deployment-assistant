@@ -70,11 +70,14 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
 
     @Override
     public void onDecideNextActivity() {
-        if (getDataManager().getCurrentUserLoggedInMode()
-                == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {
-            getMvpView().openActivityOnTokenExpire();
+        if (!(getDataManager().getCurrentUserLoggedInMode()
+                == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType())) {
+//            getMvpView().openActivityOnTokenExpire();
+            return;
         } else {
             getMvpView().openSensorActivity();
         }
     }
+
+
 }

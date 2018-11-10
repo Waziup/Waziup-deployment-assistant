@@ -7,11 +7,11 @@ import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
 
 public class RegisterSensorActivity extends BaseActivity implements RegisterSensorMvpView {
-
 
     @Inject
     RegisterSensorMvpPresenter<RegisterSensorMvpView> mPresenter;
@@ -24,8 +24,15 @@ public class RegisterSensorActivity extends BaseActivity implements RegisterSens
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_sensor);
+
+        getActivityComponent().inject(this);
+        setUnBinder(ButterKnife.bind(this));
+
+        mPresenter.onAttach(RegisterSensorActivity.this);
+
         hideKeyboard(this);
         setUp();
+
     }
 
     @Override
@@ -45,6 +52,5 @@ public class RegisterSensorActivity extends BaseActivity implements RegisterSens
 
     @Override
     public void hideKeyboard() {
-        // todo add hideKeyboard functionality in here
     }
 }

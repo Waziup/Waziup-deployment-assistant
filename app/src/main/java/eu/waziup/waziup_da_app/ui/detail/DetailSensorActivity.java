@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
@@ -25,6 +26,11 @@ public class DetailSensorActivity extends BaseActivity implements DetailSensorMv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_sensor);
+
+        getActivityComponent().inject(this);
+        setUnBinder(ButterKnife.bind(this));
+
+        mPresenter.onAttach(DetailSensorActivity.this);
     }
 
     @Override
