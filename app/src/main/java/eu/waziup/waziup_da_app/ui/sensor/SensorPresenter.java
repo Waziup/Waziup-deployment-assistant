@@ -62,7 +62,7 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onRegisterFabClicked() {
+    public void onFabClicked() {
         getMvpView().hideLoading();
         getMvpView().openRegisterSensorActivity();
     }

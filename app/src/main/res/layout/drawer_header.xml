@@ -17,7 +17,7 @@
             android:id="@+id/iv_profile_pic"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:background="@drawable/bg_status_active"
+            android:background="@color/white"
             android:padding="5dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/waziup_logo" />

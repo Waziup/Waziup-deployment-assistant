@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
+import eu.waziup.waziup_da_app.ui.main.MainActivity;
 import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
@@ -60,7 +61,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     public void openSensorActivity() {
         hideLoading();
-        startActivity(SensorFragment.getStartIntent(LoginActivity.this));
+        startActivity(MainActivity.getStartIntent(LoginActivity.this));
         finish();
     }
 }

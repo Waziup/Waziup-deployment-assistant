@@ -6,6 +6,17 @@ public interface MainMvpView extends MvpView {
 
     void openLoginActivity();
 
+    void openNotificationFragment();
+
+    void openGatewayFragment();
+
+    void openMapFragment();
+
+
+    void lockDrawer();
+
+    void unlockDrawer();
+
     // for the navigation drawer
     void updateUserName(String currentUserName);
 

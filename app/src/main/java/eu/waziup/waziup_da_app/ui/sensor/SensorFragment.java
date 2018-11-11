@@ -47,20 +47,16 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     @BindView(R.id.sensor_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @BindView(R.id.fab_sensor)
-    FloatingActionButton mfab;
-
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
 
-    @BindView(R.id.flContent)
-    FrameLayout frameLayout;
+    public static final String TAG = "SensorFragment";
 
-    @BindView(R.id.navigation_view)
-    NavigationView nvDrawer;
-
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, SensorFragment.class);
+    public static SensorFragment newInstance() {
+        Bundle args = new Bundle();
+        SensorFragment fragment = new SensorFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
@@ -85,76 +81,20 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             mSwipeRefreshLayout.setRefreshing(false);
         });
 
-        mfab.setOnClickListener(v -> {
-            //todo find out what should go in here
-//            startActivity(new Intent(SensorFragment.this, RegisterSensorFragment.class));
-        });
-
         return view;
     }
 
     @OnClick(R.id.fab_sensor)
     void onFabClicked() {
-        mPresenter.onRegisterFabClicked();
+        mPresenter.onFabClicked();
     }
 
     @Override
     protected void setUp(View view) {
-
         setUpRecyclerView();
-
         mPresenter.loadSensors();
-
     }
 
-//    void setupNavMenu() {
-//        View headerLayout = mNavigationView.getHeaderView(0);
-////        mProfileImageView = (RoundedImageView) headerLayout.findViewById(R.id.iv_profile_pic);
-//        mNameTextView = headerLayout.findViewById(R.id.tv_name);
-//        mEmailTextView = headerLayout.findViewById(R.id.tv_email);
-//
-//        mNavigationView.setNavigationItemSelectedListener(
-//                item -> {
-//                    mDrawer.closeDrawer(GravityCompat.START);
-//                    switch (item.getItemId()) {
-//                        case R.id.nav_notices:
-//                            mPresenter.openNotices();
-//                            return true;
-//                        case R.id.nav_meetings:
-//                            mPresenter.openMeetings();
-//                            return true;
-//                        case R.id.nav_archives_meetings:
-//                            mPresenter.openArchivesMeetings();
-//                            return true;
-//                        case R.id.nav_archives_document:
-//                            mPresenter.openArchivesDocuments();
-//                            return true;
-//                        case R.id.nav_question_answer:
-//                            mPresenter.openQuestionAnswer();
-//                            return true;
-//                        case R.id.nav_settings:
-//                            mPresenter.openSettings();
-//                            return true;
-//                        case R.id.nav_about:
-//                            showAboutFragment();
-//                            return true;
-//                        case R.id.nav_logout:
-//                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                            builder.setMessage(R.string.dialog_logout)
-//                                    .setPositiveButton(R.string.logout, (dialog, id) -> {
-//                                        mPresenter.onDrawerOptionLogoutClick();
-//                                    })
-//                                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-//                                        dialog.dismiss();
-//                                    });
-//                            AlertDialog alert = builder.create();
-//                            alert.show();
-//                            return true;
-//                        default:
-//                            return false;
-//                    }
-//                });
-//    }
 
     private void setUpRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

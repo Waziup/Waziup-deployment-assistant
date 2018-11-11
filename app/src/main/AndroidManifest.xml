@@ -21,10 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.sensor.SensorFragment" />
-        <activity android:name=".ui.register.RegisterSensorFragment" />
-        <activity android:name=".ui.detail.DetailSensorFragment" />
-        <activity android:name=".ui.main.MainActivity"></activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:theme="@style/AppTheme.no_toolbar" />
+        <activity android:name=".ui.map.MapActivity"></activity>
     </application>
 
 </manifest>

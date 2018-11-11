@@ -70,6 +70,50 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         setUp();
 
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                .commit();
+
+//        fragmentManager = getSupportFragmentManager();
+//
+//        fragmentManager.beginTransaction()
+//                .add(R.id.container, new ND1Fragment())
+//                .commit();
+
+    }
+
+    @Override
+    protected void setUp() {
+        mToolbar.setTitle(R.string.app_name);
+        setSupportActionBar(mToolbar);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawer,
+                mToolbar,
+                R.string.open_drawer,
+                R.string.close_drawer) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                hideKeyboard(MainActivity.this);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
+        mDrawer.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        setupDrawerContent(nvDrawer);
+
+        mPresenter.onNavMenuCreated();
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -79,7 +123,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
                     return true;
                 });
     }
-
 
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
@@ -110,7 +153,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        if (fragment != null)
+            fragmentManager.beginTransaction()
+                    .replace(R.id.flContent, fragment)
+                    .commit();
 
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
@@ -118,37 +164,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
         mDrawer.closeDrawers();
-    }
-
-
-    @Override
-    protected void setUp() {
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle("Sensors");
-
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                mDrawer,
-                mToolbar,
-                R.string.open_drawer,
-                R.string.close_drawer) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                hideKeyboard(MainActivity.this);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-        };
-        mDrawer.addDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
-
-        setupDrawerContent(nvDrawer);
-
-        mPresenter.onNavMenuCreated();
     }
 
 //    void setupNavMenu() {
@@ -201,6 +216,27 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //    }
 
     @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+//    todo get back here later
+//    @Override
+//    public void onBackPressed() {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentByTag(AboutFragment.TAG);
+//        if (fragment == null) {
+//            super.onBackPressed();
+//        } else {
+//            onFragmentDetached(AboutFragment.TAG);
+//        }
+//    }
+
+    @Override
     public void updateUserName(String currentUserName) {
         mNameTextView.setText(currentUserName);
     }
@@ -219,6 +255,43 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void openLoginActivity() {
         startActivity(LoginActivity.getStartIntent(MainActivity.this));
         finish();
+    }
+
+//    @Override
+//    public void openRegistrationFragment() {
+//        lockDrawer();
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .disallowAddToBackStack()
+//                .add(R.id.flContent, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+//                .commit();
+//    }
+
+    @Override
+    public void lockDrawer() {
+        if (mDrawer != null)
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+    }
+
+    @Override
+    public void unlockDrawer() {
+        if (mDrawer != null)
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    @Override
+    public void openNotificationFragment() {
+
+    }
+
+    @Override
+    public void openGatewayFragment() {
+
+    }
+
+    @Override
+    public void openMapFragment() {
+
     }
 
     @Override

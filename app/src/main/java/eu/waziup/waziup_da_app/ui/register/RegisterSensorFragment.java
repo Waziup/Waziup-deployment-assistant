@@ -1,7 +1,5 @@
 package eu.waziup.waziup_da_app.ui.register;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,8 +20,13 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @Inject
     RegisterSensorMvpPresenter<RegisterSensorMvpView> mPresenter;
 
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, RegisterSensorFragment.class);
+    public static final String TAG = "RegisterSensorFragment";
+
+    public static RegisterSensorFragment newInstance() {
+        Bundle args = new Bundle();
+        RegisterSensorFragment fragment = new RegisterSensorFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable

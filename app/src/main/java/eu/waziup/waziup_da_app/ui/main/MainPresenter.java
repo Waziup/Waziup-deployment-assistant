@@ -1,14 +1,9 @@
 package eu.waziup.waziup_da_app.ui.main;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
-
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
-import eu.waziup.waziup_da_app.data.network.model.ApiError;
-import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
-import eu.waziup.waziup_da_app.utils.ErrorUtils;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -57,4 +52,5 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
             getMvpView().updateUserProfilePic(profilePicUrl);
         }
     }
+
 }
