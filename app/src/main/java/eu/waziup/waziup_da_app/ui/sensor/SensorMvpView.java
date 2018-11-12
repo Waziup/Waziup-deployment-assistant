@@ -2,6 +2,7 @@ package eu.waziup.waziup_da_app.ui.sensor;
 
 import java.util.List;
 
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.MvpView;
 

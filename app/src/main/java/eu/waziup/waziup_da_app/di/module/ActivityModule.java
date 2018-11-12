@@ -18,6 +18,8 @@ import eu.waziup.waziup_da_app.ui.login.LoginPresenter;
 import eu.waziup.waziup_da_app.ui.main.MainMvpPresenter;
 import eu.waziup.waziup_da_app.ui.main.MainMvpView;
 import eu.waziup.waziup_da_app.ui.main.MainPresenter;
+import eu.waziup.waziup_da_app.ui.map.MapMvpPresenter;
+import eu.waziup.waziup_da_app.ui.map.MapMvpView;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorPresenter;
@@ -91,6 +93,13 @@ public class ActivityModule {
     @PerActivity
     DetailSensorMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
             DetailSensorPresenter<DetailSensorMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    MapMvpPresenter<MapMvpView> provideMapPresenter(
+            MapMvpPresenter<MapMvpView> presenter) {
         return presenter;
     }
 

@@ -73,7 +73,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
-    // date formatter
+//     date formatter
 //    implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
 
     // logger

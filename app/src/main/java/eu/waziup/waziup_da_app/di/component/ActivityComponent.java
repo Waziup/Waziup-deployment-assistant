@@ -6,6 +6,7 @@ import eu.waziup.waziup_da_app.di.module.ActivityModule;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.main.MainActivity;
+import eu.waziup.waziup_da_app.ui.map.MapFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
 import eu.waziup.waziup_da_app.ui.sensor.SensorAdapter;
 import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
@@ -16,14 +17,16 @@ public interface ActivityComponent {
 
     void inject(LoginActivity activity);
 
-    void inject(SensorFragment fragment);
+    void inject(MainActivity activity);
 
     void inject(SensorAdapter adapter);
+
+    void inject(SensorFragment fragment);
 
     void inject(RegisterSensorFragment fragment);
 
     void inject(DetailSensorFragment fragment);
 
-    void inject(MainActivity activity);
+    void inject(MapFragment fragment);
 
 }

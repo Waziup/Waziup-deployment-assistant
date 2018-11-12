@@ -64,10 +64,8 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                     if (!isViewAttached()) {
                         return;
                     }
-                    // todo find out if this is the right implementation for this scenario
                     getMvpView().hideLoading();
-                    ApiError apiError = ErrorUtils.parseError(((HttpException)throwable).response());
-                    getMvpView().onError(apiError.getMessage());
+                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
                 }));
     }
 

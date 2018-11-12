@@ -28,11 +28,14 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
+import eu.waziup.waziup_da_app.ui.map.MapFragment;
+import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
+import eu.waziup.waziup_da_app.ui.sensor.SensorCommunicator;
 import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 
-public class MainActivity extends BaseActivity implements MainMvpView {
+public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator {
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -70,20 +73,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
         setUp();
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
-
-//        fragmentManager = getSupportFragmentManager();
-//
-//        fragmentManager.beginTransaction()
-//                .add(R.id.container, new ND1Fragment())
-//                .commit();
-
     }
 
     @Override
@@ -127,26 +120,44 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
-        Class fragmentClass;
+        Class fragmentClass = null;
         switch (menuItem.getItemId()) {
             case R.id.nav_sensor:
                 fragmentClass = SensorFragment.class;
                 break;
             case R.id.nav_gateway:
-                fragmentClass = DetailSensorFragment.class;
+                CommonUtils.toast("gateway clicked");
+//                fragmentClass = DetailSensorFragment.class;
                 break;
             case R.id.nav_notification:
-                fragmentClass = RegisterSensorMvpView.class;
+                CommonUtils.toast("notification clicked");
+//                fragmentClass = RegisterSensorMvpView.class;
                 break;
-//            case R.id.nav_map:
-//                fragmentClass = ThirdFragment.class;
-//                break;
+            case R.id.nav_map:
+                fragmentClass = MapFragment.class;
+                break;
+            case R.id.nav_setting://todo remove if nothing goes in here
+                fragmentClass = MapFragment.class;
+                break;
+            case R.id.nav_logout:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Logout", (dialog, id) -> {
+                            mPresenter.onLogOutClicked();
+                        })
+                        .setNegativeButton("Cancel", (dialog, id) -> {
+                            dialog.dismiss();
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                break;
             default:
                 fragmentClass = SensorFragment.class;
         }
 
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            if (fragmentClass != null)
+                fragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -257,15 +268,15 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         finish();
     }
 
-//    @Override
-//    public void openRegistrationFragment() {
-//        lockDrawer();
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .disallowAddToBackStack()
-//                .add(R.id.flContent, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
-//                .commit();
-//    }
+    @Override
+    public void openRegisterationSensor() {
+        lockDrawer();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .replace(R.id.flContent, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .commit();
+    }
 
     @Override
     public void lockDrawer() {
@@ -277,21 +288,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     public void unlockDrawer() {
         if (mDrawer != null)
             mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
-    @Override
-    public void openNotificationFragment() {
-
-    }
-
-    @Override
-    public void openGatewayFragment() {
-
-    }
-
-    @Override
-    public void openMapFragment() {
-
     }
 
     @Override
@@ -307,21 +303,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             ((Animatable) drawable).start();
         }
         switch (item.getItemId()) {
-            case R.id.menu_logout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Are you sure you want to logout?")
-                        .setPositiveButton("Logout", (dialog, id) -> {
-                            mPresenter.onLogOutClicked();
-                        })
-                        .setNegativeButton("Cancel", (dialog, id) -> {
-                            dialog.dismiss();
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-                return true;
-            case R.id.menu_settings://todo has to be included in the navigation drawer
-                CommonUtils.toast("settings clicked");
-                return true;
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
@@ -342,5 +323,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void fabClicked() {
+        mPresenter.onFabClicked();
     }
 }

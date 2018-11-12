@@ -120,27 +120,23 @@
         </LinearLayout>
 
         <HorizontalScrollView
+            android:id="@+id/h_scroll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp">
 
-            <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@color/colorPrimary">
-
-                <!--TODO correct the image here-->
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@color/white"
-                    android:src="@drawable/waziup_logo"
-                    android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/measurement_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
 
                 <TextView
+                    android:gravity="center"
+                    android:background="@color/colorPrimary"
                     android:id="@+id/measurement_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_centerInParent="true"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -148,7 +144,7 @@
                     android:textColor="@color/white"
                     android:textSize="24sp" />
 
-            </RelativeLayout>
+            </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
 </android.support.v7.widget.CardView>

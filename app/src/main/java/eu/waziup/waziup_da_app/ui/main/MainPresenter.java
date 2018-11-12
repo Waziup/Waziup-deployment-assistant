@@ -53,4 +53,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
         }
     }
 
+    @Override
+    public void onFabClicked() {
+        getMvpView().lockDrawer();
+        getMvpView().openRegisterationSensor();
+    }
+
 }

@@ -1,7 +1,5 @@
 package eu.waziup.waziup_da_app.ui.sensor;
 
-import android.util.Log;
-
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 
 import javax.inject.Inject;
@@ -56,15 +54,9 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
                         return;
 
                     getMvpView().hideLoading();
-                    ApiError apiError = ErrorUtils.parseError(((HttpException)throwable).response());
-                    getMvpView().onError(apiError.getMessage());
-                }));
-    }
+                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
 
-    @Override
-    public void onFabClicked() {
-        getMvpView().hideLoading();
-        getMvpView().openRegisterSensorActivity();
+                }));
     }
 
     @Override

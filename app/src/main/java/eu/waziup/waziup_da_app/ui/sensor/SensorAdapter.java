@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BaseViewHolder;
 
@@ -71,6 +73,9 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.sensor_domain)
         TextView mSensorDomain;
 
+        @BindView(R.id.measurement_container)
+        LinearLayout measurementContainer;
+
         Sensor sensor;
 
         public SensorViewHolder(View view) {
@@ -98,8 +103,25 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             // domain
             if (!TextUtils.isEmpty(sensor.getDomain()))
-                mSensorDomain.setText(String.valueOf(sensor.getDomain()));
+                mSensorDomain.setText("Domain: " + String.valueOf(sensor.getDomain()));
 
+
+            for (Measurement measurement : sensor.getMeasurements()) {
+                measurementContainer.removeAllViews();
+                TextView measurementValue = new TextView(itemView.getContext());
+                measurementValue.setWidth(50);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(8, 8, 8, 8);
+                measurementValue.setLayoutParams(params);
+
+                if (measurementValue.getParent()!=null)
+                    ((ViewGroup)measurementValue.getParent()).removeView(measurementValue);
+                measurementValue.setText(measurement.getId());
+                measurementContainer.addView(measurementValue);
+            }
         }
 
         @Override

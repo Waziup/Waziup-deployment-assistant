@@ -23,5 +23,15 @@
             android:checked="true"
             android:icon="@drawable/ic_map"
             android:title="Map" />
+        <item
+            android:id="@+id/nav_setting"
+            android:checked="true"
+            android:icon="@drawable/ic_settings"
+            android:title="Map" />
+        <item
+            android:id="@+id/nav_logout"
+            android:checked="true"
+            android:icon="@drawable/ic_exit"
+            android:title="Map" />
     </group>
 </menu>

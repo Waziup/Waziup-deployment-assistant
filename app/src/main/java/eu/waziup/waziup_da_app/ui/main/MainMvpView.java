@@ -6,12 +6,7 @@ public interface MainMvpView extends MvpView {
 
     void openLoginActivity();
 
-    void openNotificationFragment();
-
-    void openGatewayFragment();
-
-    void openMapFragment();
-
+    void openRegisterationSensor();
 
     void lockDrawer();
 

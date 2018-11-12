@@ -39,6 +39,7 @@ import java.net.SocketTimeoutException;
 
 import eu.waziup.waziup_da_app.DaApp;
 import eu.waziup.waziup_da_app.R;
+import eu.waziup.waziup_da_app.data.network.model.ApiError;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -121,22 +122,26 @@ public final class CommonUtils {
                 return DaApp.getContext().getString(R.string.error_server_unreachable);
             } else {
 
+                //todo check if this works out for all scenarios
+                ApiError apiError = ErrorUtils.parseError(((HttpException) throwable).response());
+                return apiError.getMessage();
+
 //                return DaApp.getContext().getString(R.string.error_something_wrong_happend);
-                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
-                try {//should display the correct error message form the http protocol
-                    if (responseBody != null) {
-                        JSONObject jObjError = new JSONObject(responseBody.toString());
-                        return jObjError.toString();
-                    }
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+//                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
+//                try {//should display the correct error message form the http protocol
+//                    if (responseBody != null) {
+//                        JSONObject jObjError = new JSONObject(responseBody.toString());
+//                        return jObjError.toString();
+//                    }
+//                } catch (JSONException e1) {
+//                    e1.printStackTrace();
+//                }
             }
         }
         //todo find out if this is the right way of handling this condition
         else {
-            return throwable.getMessage();
+            ApiError apiError = ErrorUtils.parseError(((com.jakewharton.retrofit2.adapter.rxjava2.HttpException) throwable).response());
+            return apiError.getMessage();
         }
-        return "";
     }
 }

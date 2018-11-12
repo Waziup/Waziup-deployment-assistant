@@ -24,7 +24,7 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.no_toolbar" />
-        <activity android:name=".ui.map.MapActivity"></activity>
+        <activity android:name=".ui.map.MapFragment"></activity>
     </application>
 
 </manifest>

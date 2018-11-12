@@ -1,14 +1,11 @@
 package eu.waziup.waziup_da_app.ui.sensor;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -29,9 +26,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
+import eu.waziup.waziup_da_app.utils.CommonUtils;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback {
 
@@ -49,6 +48,8 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
+
+    SensorCommunicator communicator;
 
     public static final String TAG = "SensorFragment";
 
@@ -84,9 +85,15 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (SensorCommunicator) context;
+    }
+
     @OnClick(R.id.fab_sensor)
     void onFabClicked() {
-        mPresenter.onFabClicked();
+        communicator.fabClicked();
     }
 
     @Override
@@ -94,7 +101,6 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         setUpRecyclerView();
         mPresenter.loadSensors();
     }
-
 
     private void setUpRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -119,7 +125,6 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         hideLoading();
     }
 
-
     @Override
     public void openDetailSensorActivity(Sensor sensor) {
         //todo pass data like the sensor's id with the intent
@@ -133,20 +138,20 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             ((Animatable) drawable).start();
         }
         switch (item.getItemId()) {
-            case R.id.menu_logout:
-                if (getActivity() != null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setMessage("Are you sure you want to logout?")
-                            .setPositiveButton("Logout", (dialog, id) -> {
-                                mPresenter.onLogOutClicked();
-                            })
-                            .setNegativeButton("Cancel", (dialog, id) -> {
-                                dialog.dismiss();
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-                return true;
+//            case R.id.menu_logout:
+//                if (getActivity() != null) {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setMessage("Are you sure you want to logout?")
+//                            .setPositiveButton("Logout", (dialog, id) -> {
+//                                mPresenter.onLogOutClicked();
+//                            })
+//                            .setNegativeButton("Cancel", (dialog, id) -> {
+//                                dialog.dismiss();
+//                            });
+//                    AlertDialog alert = builder.create();
+//                    alert.show();
+//                }
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,7 +159,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @Override
     public void openRegisterSensorActivity() {
-//        startActivity(RegisterSensorFragment.getStartIntent(SensorFragment.this));
+
     }
 
     @Override
