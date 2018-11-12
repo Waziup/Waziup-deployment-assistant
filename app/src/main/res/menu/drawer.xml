@@ -27,11 +27,11 @@
             android:id="@+id/nav_setting"
             android:checked="true"
             android:icon="@drawable/ic_settings"
-            android:title="Map" />
+            android:title="Settings" />
         <item
             android:id="@+id/nav_logout"
             android:checked="true"
             android:icon="@drawable/ic_exit"
-            android:title="Map" />
+            android:title="Logout" />
     </group>
 </menu>

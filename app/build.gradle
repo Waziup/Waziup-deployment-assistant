@@ -74,7 +74,10 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
 //     date formatter
-//    implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
+    implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
+
+    // MapBox
+    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxVersion"
 
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"

@@ -27,5 +27,6 @@
     <!--Drawer-->
     <string name="open_drawer">Drawer Open</string>
     <string name="close_drawer">Drawer Close</string>
+    <string name="sensor_registration">Sensor Registration</string>
 
 </resources>

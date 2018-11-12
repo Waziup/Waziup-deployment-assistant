@@ -26,11 +26,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
-import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.map.MapFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
-import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
 import eu.waziup.waziup_da_app.ui.sensor.SensorCommunicator;
 import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
@@ -228,24 +226,30 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(RegisterSensorFragment.TAG);
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (fragment == null) {
             super.onBackPressed();
+        } else {
+            onFragmentDetached(RegisterSensorFragment.TAG);
         }
     }
 
-//    todo get back here later
-//    @Override
-//    public void onBackPressed() {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Fragment fragment = fragmentManager.findFragmentByTag(AboutFragment.TAG);
-//        if (fragment == null) {
-//            super.onBackPressed();
-//        } else {
-//            onFragmentDetached(AboutFragment.TAG);
-//        }
-//    }
+    @Override
+    public void onFragmentDetached(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(tag);
+        if (fragment != null) {
+            fragmentManager
+                    .beginTransaction()
+                    .disallowAddToBackStack()
+                    .remove(fragment)
+                    .commitNow();
+            unlockDrawer();
+        }
+    }
 
     @Override
     public void updateUserName(String currentUserName) {
@@ -274,7 +278,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         getSupportFragmentManager()
                 .beginTransaction()
                 .disallowAddToBackStack()
-                .replace(R.id.flContent, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .add(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
                 .commit();
     }
 

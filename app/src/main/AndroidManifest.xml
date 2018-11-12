@@ -14,7 +14,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.login.LoginActivity"
-            android:theme="@style/AppTheme.no_toolbar">
+            android:theme="@style/AppTheme.no_toolbar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +25,6 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.no_toolbar" />
-        <activity android:name=".ui.map.MapFragment"></activity>
     </application>
 
 </manifest>

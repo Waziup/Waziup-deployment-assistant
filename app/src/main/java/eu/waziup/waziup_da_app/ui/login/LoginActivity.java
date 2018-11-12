@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
-import android.widget.EditText;
 
 import javax.inject.Inject;
 
@@ -15,7 +14,6 @@ import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
 import eu.waziup.waziup_da_app.ui.main.MainActivity;
-import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
@@ -38,11 +36,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         setUnBinder(ButterKnife.bind(this));
 
+
         setUp();
     }
 
     @BindView(R.id.et_username)
-    EditText etUsername;
+    TextInputEditText etUsername;
 
     @BindView(R.id.et_password)
     TextInputEditText etPassword;
@@ -54,7 +53,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @OnClick(R.id.btn_login)
     void onLoginClicked() {
-        mPresenter.onServerLoginClick(etUsername.getText().toString().trim(),
+        mPresenter.onServerLoginClick(
+                TextUtils.isEmpty(etUsername.getText()) ? "" : etUsername.getText().toString().trim(),
                 TextUtils.isEmpty(etPassword.getText()) ? "" : etPassword.getText().toString().trim());
     }
 

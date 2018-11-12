@@ -2,12 +2,17 @@ package eu.waziup.waziup_da_app.ui.sensor;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.github.thunder413.datetimeutils.DateTimeStyle;
+import com.github.thunder413.datetimeutils.DateTimeUtils;
 
 import java.util.List;
 
@@ -93,9 +98,10 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             if (!TextUtils.isEmpty(sensor.getId()) || !TextUtils.isEmpty(sensor.getName()))
                 mSensorId.setText((TextUtils.isEmpty(sensor.getId())) ? sensor.getName() : sensor.getId());
 
-            // date - todo date formatter has to be inserted in here
+            // date
             if (!TextUtils.isEmpty(sensor.getDateCreated()))
-                mSensorDate.setText(String.valueOf(sensor.getDateCreated()));
+                mSensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(sensor.getDateCreated(),
+                        DateTimeStyle.MEDIUM)));
 
             // owner
             if (!TextUtils.isEmpty(sensor.getOwner()))
@@ -103,22 +109,29 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             // domain
             if (!TextUtils.isEmpty(sensor.getDomain()))
-                mSensorDomain.setText("Domain: " + String.valueOf(sensor.getDomain()));
+                mSensorDomain.setText(String.valueOf(sensor.getDomain()));
 
-
+            measurementContainer.removeAllViews();
             for (Measurement measurement : sensor.getMeasurements()) {
-                measurementContainer.removeAllViews();
                 TextView measurementValue = new TextView(itemView.getContext());
-                measurementValue.setWidth(50);
+                measurementValue.setTextColor(itemView.getResources().getColor(R.color.white));
+                measurementValue.setGravity(Gravity.CENTER);
+                measurementValue.setBackground(itemView.getResources().getDrawable(R.drawable.bg_curved_primary_color));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
-                params.setMargins(8, 8, 8, 8);
+                params.setMargins(0, 5, 3, 5);
                 measurementValue.setLayoutParams(params);
+                measurementValue.setWidth(120);
+                measurementValue.setHeight(70);
+                // for limiting the number of character that can be displayed
+                measurementValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
+                measurementValue.setMaxLines(1);
+                measurementValue.setEllipsize(TextUtils.TruncateAt.END);
 
-                if (measurementValue.getParent()!=null)
-                    ((ViewGroup)measurementValue.getParent()).removeView(measurementValue);
+                if (measurementValue.getParent() != null)
+                    ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
                 measurementValue.setText(measurement.getId());
                 measurementContainer.addView(measurementValue);
             }

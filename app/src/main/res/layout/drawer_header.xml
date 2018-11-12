@@ -32,6 +32,7 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:visibility="gone" />
+
     </LinearLayout>
 
     <TextView

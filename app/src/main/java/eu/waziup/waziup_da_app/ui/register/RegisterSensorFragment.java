@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
@@ -45,20 +45,20 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
         return view;
     }
 
-    @Override
-    protected void setUp(View view) {
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().setTitle("Register Sensor");
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
+    @OnClick(R.id.nav_back_btn)
+    void onNavBackClick() {
+        getBaseActivity().onFragmentDetached(TAG);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //todo get back here
-//        if (item.getItemId() == android.R.id.home)
-//            finish();
-        return super.onOptionsItemSelected(item);
+    protected void setUp(View view) {
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDetach();
+        super.onDestroyView();
     }
 
 }
