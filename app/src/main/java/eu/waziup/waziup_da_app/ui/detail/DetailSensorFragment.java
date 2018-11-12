@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
@@ -20,6 +24,15 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @Inject
     DetailSensorMvpPresenter<DetailSensorMvpView> mPresenter;
+
+    @Inject
+    MeasurementAdapter mAdapter;
+
+    @Inject
+    LinearLayoutManager mLayoutManager;
+
+    @BindView(R.id.measurement_recycler)
+    RecyclerView mRecyclerView;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DetailSensorFragment.class);
@@ -40,9 +53,16 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         return view;
     }
 
-
     @Override
     protected void setUp(View view) {
+        setUpRecyclerView();
 
     }
+
+    private void setUpRecyclerView() {
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+    }
 }
+

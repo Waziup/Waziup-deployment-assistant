@@ -40,6 +40,9 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     @Inject
     SensorAdapter mAdapter;
 
+    @Inject
+    LinearLayoutManager mLayoutManager;
+
     @BindView(R.id.sensor_recycler)
     RecyclerView mRecyclerView;
 
@@ -103,7 +106,6 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     }
 
     private void setUpRecyclerView() {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);

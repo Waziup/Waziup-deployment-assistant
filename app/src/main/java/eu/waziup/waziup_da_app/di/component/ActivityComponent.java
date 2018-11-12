@@ -4,6 +4,7 @@ import dagger.Component;
 import eu.waziup.waziup_da_app.di.PerActivity;
 import eu.waziup.waziup_da_app.di.module.ActivityModule;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
+import eu.waziup.waziup_da_app.ui.detail.MeasurementAdapter;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.main.MainActivity;
 import eu.waziup.waziup_da_app.ui.map.MapFragment;
@@ -20,6 +21,8 @@ public interface ActivityComponent {
     void inject(MainActivity activity);
 
     void inject(SensorAdapter adapter);
+
+    void inject(MeasurementAdapter adapter);
 
     void inject(SensorFragment fragment);
 

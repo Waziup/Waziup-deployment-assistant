@@ -12,6 +12,7 @@ import eu.waziup.waziup_da_app.di.PerActivity;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorMvpPresenter;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorMvpView;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorPresenter;
+import eu.waziup.waziup_da_app.ui.detail.MeasurementAdapter;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpPresenter;
 import eu.waziup.waziup_da_app.ui.login.LoginMvpView;
 import eu.waziup.waziup_da_app.ui.login.LoginPresenter;
@@ -107,5 +108,11 @@ public class ActivityModule {
     @PerActivity
     SensorAdapter provideSensorAdapter() {
         return new SensorAdapter(new ArrayList<>());
+    }
+
+    @Provides
+    @PerActivity
+    MeasurementAdapter provideMeasurementAdapter() {
+        return new MeasurementAdapter(new ArrayList<>());
     }
 }
