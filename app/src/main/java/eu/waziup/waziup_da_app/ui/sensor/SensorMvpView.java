@@ -12,7 +12,6 @@ import eu.waziup.waziup_da_app.ui.base.MvpView;
 
 public interface SensorMvpView extends MvpView {
 
-    void openRegisterSensorActivity();
     void showSensors(List<Sensor> sensorList);
     void openDetailSensorActivity(Sensor sensor);
 }

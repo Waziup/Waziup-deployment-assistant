@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -26,11 +24,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
-import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
-import eu.waziup.waziup_da_app.utils.CommonUtils;
+import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback {
 
@@ -129,8 +126,11 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @Override
     public void openDetailSensorActivity(Sensor sensor) {
-        //todo pass data like the sensor's id with the intent
-//        startActivity(DetailSensorFragment.getStartIntent(SensorFragment.this));
+        getBaseActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .add(R.id.layout_container, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .commit();
     }
 
     @Override
@@ -139,29 +139,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
         }
-        switch (item.getItemId()) {
-//            case R.id.menu_logout:
-//                if (getActivity() != null) {
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                    builder.setMessage("Are you sure you want to logout?")
-//                            .setPositiveButton("Logout", (dialog, id) -> {
-//                                mPresenter.onLogOutClicked();
-//                            })
-//                            .setNegativeButton("Cancel", (dialog, id) -> {
-//                                dialog.dismiss();
-//                            });
-//                    AlertDialog alert = builder.create();
-//                    alert.show();
-//                }
-//                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void openRegisterSensorActivity() {
-
+        return true;
     }
 
     @Override
