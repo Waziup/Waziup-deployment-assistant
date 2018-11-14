@@ -3,6 +3,7 @@ package eu.waziup.waziup_da_app.ui.main;
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -57,6 +58,12 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     public void onFabClicked() {
         getMvpView().lockDrawer();
         getMvpView().openRegisterationSensor();
+    }
+
+    @Override
+    public void onSensorItemClicked(Sensor sensor) {
+        getMvpView().lockDrawer();
+        getMvpView().openSensorDetailFragment(sensor);
     }
 
 }

@@ -28,5 +28,6 @@
     <string name="open_drawer">Drawer Open</string>
     <string name="close_drawer">Drawer Close</string>
     <string name="sensor_registration">Sensor Registration</string>
+    <string name="no_measurements_list_found">No measurements list found.</string>
 
 </resources>

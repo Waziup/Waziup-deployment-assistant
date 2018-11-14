@@ -34,7 +34,7 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.card_sensor, viewGroup, false);
+                .inflate(R.layout.card_measurement, viewGroup, false);
         return new MeasurementViewHolder(view);
     }
 
@@ -89,6 +89,12 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.card_measurement_edit)
         ImageView mEdit;
 
+        @BindView(R.id.card_measurement_name)
+        TextView mMeasurementName;
+
+        @BindView(R.id.card_measurement_kind)
+        TextView mMeasurementKind;
+
         @BindView(R.id.card_measurement_delete)
         ImageView mDelete;
 
@@ -102,26 +108,59 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             mDelete.setOnClickListener(view -> mDeleteCallback.onItemDeleteClicked(measurements.get(getAdapterPosition())));
             // todo find out how is it possible to separate the whole view onClickListener with just only some part of the view clickListener
             itemView.setOnClickListener(view -> mCallback.onItemClicked(measurements.get(getAdapterPosition())));
+
         }
 
         @Override
         public void onBind(int position) {
             super.onBind(position);
-            measurement = measurements.get(position);
+            if (measurements != null) {
+                measurement = measurements.get(position);
 
-            // for setting the image
-            if (measurement.getQuantityKind().equals("Temperature")) {
-                mIcon.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_mesurement_temp));
+                // for setting the image
+                if (measurement.getSensingDevice() != null)
+                    if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
+                        mIcon.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_mesurement_temp));
+
+                if (!TextUtils.isEmpty(measurement.getId())) {
+                    mMeasurementName.setVisibility(View.VISIBLE);
+                    mMeasurementName.setText(measurement.getId());
+                } else if (!TextUtils.isEmpty(measurement.getName())) {
+                    mMeasurementName.setVisibility(View.VISIBLE);
+                    mMeasurementName.setText(measurement.getName());
+                } else {
+                    mMeasurementName.setVisibility(View.GONE);
+                }
+
+                mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
+
+
+                if (!TextUtils.isEmpty(measurement.getQuantityKind())) {
+                    mMeasurementKind.setVisibility(View.VISIBLE);
+                    mMeasurementKind.setText(measurement.getQuantityKind());
+                } else {
+                    mMeasurementKind.setVisibility(View.GONE);
+                }
+
+
+                // for the value
+                if (measurement.getLastValue() != null)
+                    if (!TextUtils.isEmpty(measurement.getLastValue().getValue())) {
+                        mMeasurementValue.setVisibility(View.VISIBLE);
+                        mMeasurementValue.setText(measurement.getLastValue().getValue());
+                    } else {
+                        mMeasurementValue.setVisibility(View.GONE);
+                    }
+
             }
 
-            // for the value
-            if (TextUtils.isEmpty(measurement.getLastValue().getValue()))
-                mMeasurementValue.setText(measurement.getLastValue().getValue());
         }
 
         @Override
         protected void clear() {
-
+            mMeasurementValue.setText("");
+            mMeasurementKind.setText("");
+            mMeasurementName.setText("");
         }
     }
 }

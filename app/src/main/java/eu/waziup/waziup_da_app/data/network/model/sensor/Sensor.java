@@ -1,11 +1,12 @@
 
 package eu.waziup.waziup_da_app.data.network.model.sensor;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Sensor {
+public class Sensor implements Serializable {
 
     @SerializedName("id")
     @Expose

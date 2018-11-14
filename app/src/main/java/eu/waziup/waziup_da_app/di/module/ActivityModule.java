@@ -2,6 +2,7 @@ package eu.waziup.waziup_da_app.di.module;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 
@@ -114,5 +115,10 @@ public class ActivityModule {
     @PerActivity
     MeasurementAdapter provideMeasurementAdapter() {
         return new MeasurementAdapter(new ArrayList<>());
+    }
+
+    @Provides
+    LinearLayoutManager provideLinearLayoutManager(AppCompatActivity activity) {
+        return new LinearLayoutManager(activity);
     }
 }

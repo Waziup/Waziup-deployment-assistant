@@ -13,5 +13,4 @@ public interface SensorMvpPresenter<V extends SensorMvpView> extends MvpPresente
 
     void onLogOutClicked();
     void loadSensors();
-    void onSensorItemClicked(Sensor sensor);
 }

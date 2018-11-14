@@ -10,6 +10,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +29,9 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
+import eu.waziup.waziup_da_app.utils.CommonUtils;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback {
 
@@ -126,11 +130,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @Override
     public void openDetailSensorActivity(Sensor sensor) {
-        getBaseActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .disallowAddToBackStack()
-                .add(R.id.layout_container, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
-                .commit();
+
     }
 
     @Override
@@ -144,7 +144,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @Override
     public void onItemClicked(Sensor sensor) {
-        mPresenter.onSensorItemClicked(sensor);
+        communicator.onItemClicked(sensor);
     }
 
 }

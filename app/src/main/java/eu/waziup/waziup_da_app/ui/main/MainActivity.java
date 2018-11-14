@@ -14,18 +14,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.waziup_da_app.R;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
+import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.map.MapFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
@@ -136,6 +141,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 break;
             case R.id.nav_setting://todo remove if nothing goes in here
                 fragmentClass = MapFragment.class;
+                CommonUtils.toast("settings clicked");
                 break;
             case R.id.nav_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -175,66 +181,41 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mDrawer.closeDrawers();
     }
 
-//    void setupNavMenu() {
-//        View headerLayout = mNavigationView.getHeaderView(0);
-////        mProfileImageView = (RoundedImageView) headerLayout.findViewById(R.id.iv_profile_pic);
-//        mNameTextView = headerLayout.findViewById(R.id.tv_name);
-//        mEmailTextView = headerLayout.findViewById(R.id.tv_email);
-//
-//        mNavigationView.setNavigationItemSelectedListener(
-//                item -> {
-//                    mDrawer.closeDrawer(GravityCompat.START);
-//                    switch (item.getItemId()) {
-//                        case R.id.nav_notices:
-//                            mPresenter.openNotices();
-//                            return true;
-//                        case R.id.nav_meetings:
-//                            mPresenter.openMeetings();
-//                            return true;
-//                        case R.id.nav_archives_meetings:
-//                            mPresenter.openArchivesMeetings();
-//                            return true;
-//                        case R.id.nav_archives_document:
-//                            mPresenter.openArchivesDocuments();
-//                            return true;
-//                        case R.id.nav_question_answer:
-//                            mPresenter.openQuestionAnswer();
-//                            return true;
-//                        case R.id.nav_settings:
-//                            mPresenter.openSettings();
-//                            return true;
-//                        case R.id.nav_about:
-//                            showAboutFragment();
-//                            return true;
-//                        case R.id.nav_logout:
-//                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                            builder.setMessage(R.string.dialog_logout)
-//                                    .setPositiveButton(R.string.logout, (dialog, id) -> {
-//                                        mPresenter.onDrawerOptionLogoutClick();
-//                                    })
-//                                    .setNegativeButton(R.string.cancel, (dialog, id) -> {
-//                                        dialog.dismiss();
-//                                    });
-//                            AlertDialog alert = builder.create();
-//                            alert.show();
-//                            return true;
-//                        default:
-//                            return false;
-//                    }
-//                });
-//    }
-
     @Override
     public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(RegisterSensorFragment.TAG);
+        // todo there has to be some way of handling the nullPointerException
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
+                    .findFragmentByTag(SensorFragment.TAG))
+                    .getView())
+                    .findViewById(R.id.fab_sensor)
+                    .setVisibility(View.VISIBLE);
+        }
+
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawer(GravityCompat.START);
-        } else if (fragment == null) {
-            super.onBackPressed();
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+//            onFragmentDetached();
         } else {
-            onFragmentDetached(RegisterSensorFragment.TAG);
+            super.onBackPressed();
         }
+
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentByTag(RegisterSensorFragment.TAG);
+//        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+//            mDrawer.closeDrawer(GravityCompat.START);
+//        } else if (fragment == null) {
+//            super.onBackPressed();
+//        } else {
+//            if (fragment instanceof RegisterSensorFragment)
+//                onFragmentDetached(RegisterSensorFragment.TAG);
+//            if (fragment instanceof DetailSensorFragment)
+//                onFragmentDetached(DetailSensorFragment.TAG);
+//        }
     }
 
     @Override
@@ -275,10 +256,32 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void openRegisterationSensor() {
         lockDrawer();
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
+        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
+            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
+                    .getView())
+                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .disallowAddToBackStack()
+                .addToBackStack(null)
                 .add(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .commit();
+    }
+
+    @Override
+    public void openSensorDetailFragment(Sensor sensor) {
+        lockDrawer();
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
+        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
+            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
+                    .getView())
+                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(null)
+                .add(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor), DetailSensorFragment.TAG)
                 .commit();
     }
 
@@ -332,5 +335,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void fabClicked() {
         mPresenter.onFabClicked();
+    }
+
+    @Override
+    public void onItemClicked(Sensor sensor) {
+        mPresenter.onSensorItemClicked(sensor);
+
     }
 }

@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.DataManager;
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 import eu.waziup.waziup_da_app.utils.rx.SchedulerProvider;
@@ -24,5 +25,25 @@ public class DetailSensorPresenter<V extends DetailSensorMvpView> extends BasePr
                                  SchedulerProvider schedulerProvider,
                                  CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
+    }
+
+    @Override
+    public void onEditMeasurementClicked(Measurement measurement) {
+
+    }
+
+    @Override
+    public void onDeleteMeasurementClicked(Measurement measurement) {
+
+    }
+
+    @Override
+    public void onDeploySensorClicked() {
+
+    }
+
+    @Override
+    public void onUndeploySensorClicked() {
+
     }
 }

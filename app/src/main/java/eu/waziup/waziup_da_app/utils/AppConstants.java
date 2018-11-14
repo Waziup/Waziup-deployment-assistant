@@ -5,6 +5,8 @@ public final class AppConstants {
     public static final String STATUS_CODE_SUCCESS = "success";
     public static final String STATUS_CODE_FAILED = "failed";
 
+    public static final String DETAIL_SENSOR_KEY = "sensor_key";
+
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
 
     public static final String DB_NAME = "mindorks_mvp.db";

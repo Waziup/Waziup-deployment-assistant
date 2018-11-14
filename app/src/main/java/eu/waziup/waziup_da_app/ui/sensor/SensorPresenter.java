@@ -59,9 +59,4 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
                 }));
     }
 
-    @Override
-    public void onSensorItemClicked(Sensor sensor) {
-        getMvpView().openDetailSensorActivity(sensor);
-    }
-
 }
