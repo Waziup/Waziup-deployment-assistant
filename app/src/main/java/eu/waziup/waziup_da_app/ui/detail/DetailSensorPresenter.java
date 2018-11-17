@@ -16,7 +16,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class DetailSensorPresenter<V extends DetailSensorMvpView> extends BasePresenter<V>
         implements DetailSensorMvpPresenter<V> {
 
-    private static final String TAG = "RegisterSensorPresenter";
+    private static final String TAG = "QRScanPresenter";
 
     @Inject
     public DetailSensorPresenter(DataManager dataManager,

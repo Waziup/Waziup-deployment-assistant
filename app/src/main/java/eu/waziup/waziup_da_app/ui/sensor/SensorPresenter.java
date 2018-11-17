@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
         implements SensorMvpPresenter<V> {
 
-    private static final String TAG = "RegisterSensorPresenter";
+    private static final String TAG = "QRScanPresenter";
 
     @Inject
     public SensorPresenter(DataManager dataManager,

@@ -1,4 +1,4 @@
-package eu.waziup.waziup_da_app.ui.register;
+package eu.waziup.waziup_da_app.ui.qrscan;
 
 import eu.waziup.waziup_da_app.di.PerActivity;
 import eu.waziup.waziup_da_app.ui.base.MvpPresenter;
@@ -8,6 +8,6 @@ import eu.waziup.waziup_da_app.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface RegisterSensorMvpPresenter<V extends RegisterSensorMvpView> extends MvpPresenter<V> {
+public interface QRScanMvpPresenter<V extends QRScanMvpView> extends MvpPresenter<V> {
 
 }

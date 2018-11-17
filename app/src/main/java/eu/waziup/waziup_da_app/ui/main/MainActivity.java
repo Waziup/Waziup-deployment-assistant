@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 break;
             case R.id.nav_notification:
                 CommonUtils.toast("notification clicked");
-//                fragmentClass = RegisterSensorMvpView.class;
+//                fragmentClass = QRScanMvpView.class;
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;

@@ -22,6 +22,10 @@ import eu.waziup.waziup_da_app.ui.main.MainMvpView;
 import eu.waziup.waziup_da_app.ui.main.MainPresenter;
 import eu.waziup.waziup_da_app.ui.map.MapMvpPresenter;
 import eu.waziup.waziup_da_app.ui.map.MapMvpView;
+import eu.waziup.waziup_da_app.ui.map.MapPresenter;
+import eu.waziup.waziup_da_app.ui.qrscan.QRScanMvpPresenter;
+import eu.waziup.waziup_da_app.ui.qrscan.QRScanMvpView;
+import eu.waziup.waziup_da_app.ui.qrscan.QRScanPresenter;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorPresenter;
@@ -101,7 +105,14 @@ public class ActivityModule {
     @Provides
     @PerActivity
     MapMvpPresenter<MapMvpView> provideMapPresenter(
-            MapMvpPresenter<MapMvpView> presenter) {
+            MapPresenter<MapMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    QRScanMvpPresenter<QRScanMvpView> provideQRScanPresenter(
+            QRScanPresenter<QRScanMvpView> presenter) {
         return presenter;
     }
 
