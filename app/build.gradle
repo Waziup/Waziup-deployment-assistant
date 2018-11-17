@@ -90,6 +90,8 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
+    implementation 'com.google.zxing:core:3.3.0'
+
     // google play service
     implementation "com.google.android.gms:play-services-vision:$rootProject.visionVersion"
 

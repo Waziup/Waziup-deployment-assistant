@@ -40,4 +40,9 @@
         <item>Private</item>
     </string-array>
 
+    <string name="scan_code">Scan code</string>
+    <string name="activity_scan_code">Scan code</string>
+    <string name="shortcut_label_scan_code">Scan code</string>
+    <string name="unable_to_open_camera">Unable to open camera, please check it and try again later.</string>
+    <string name="error">Error</string>
 </resources>
