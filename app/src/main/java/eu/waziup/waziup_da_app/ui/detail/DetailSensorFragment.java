@@ -1,8 +1,11 @@
 package eu.waziup.waziup_da_app.ui.detail;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -105,45 +108,13 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @Override
     protected void setUp(View view) {
-
+        loadPage(mSensor);
         setUpRecyclerView();
+    }
 
-        if (mSensor != null) {
-
-            toolbarTitle.setText((TextUtils.isEmpty(mSensor.getId())) ? mSensor.getName() : mSensor.getId());
-
-            showLoading();
-            // todo tvNoMeasurements for the measurements and the whole sensor is different should be implemented
-            tvNoMeasurement.setVisibility(View.GONE);
-            showMeasurements(mSensor.getMeasurements());
-
-            if (!TextUtils.isEmpty(mSensor.getDateCreated()))
-                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mSensor.getDateCreated(),
-                        DateTimeStyle.MEDIUM)));
-
-
-            if (!TextUtils.isEmpty(mSensor.getOwner())) {
-                sensorOwnerTitle.setVisibility(View.VISIBLE);
-                sensorOwner.setVisibility(View.VISIBLE);
-                sensorOwner.setText(String.valueOf(mSensor.getOwner()));
-            } else {
-                sensorOwnerTitle.setVisibility(View.GONE);
-                sensorOwner.setVisibility(View.GONE);
-            }
-
-            if (!TextUtils.isEmpty(mSensor.getDomain())) {
-                sensorDomainTitle.setVisibility(View.VISIBLE);
-                sensorDomain.setVisibility(View.VISIBLE);
-                sensorDomain.setText(String.valueOf(mSensor.getDomain()));
-            } else {
-                sensorDomainTitle.setVisibility(View.GONE);
-                sensorDomain.setVisibility(View.GONE);
-            }
-
-        } else {// todo there has to be a way of expression the tvNoMeasurement in here in the else clause
-
-        }
-
+    @OnClick(R.id.detail_sensor_add_measurement)
+    void onAddMeasurementClicked() {
+        mPresenter.onAddMeasurementClicked();
     }
 
     @OnClick(R.id.btn_deploy)
@@ -153,10 +124,10 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @OnClick(R.id.btn_undeploy)
     void onUndeployClicked() {
-        mPresenter.onUndeploySensorClicked();
+        mPresenter.onUnDeploySensorClicked();
     }
 
-    @OnClick(R.id.sensor_detail_locate_on_map)
+    @OnClick(R.id.btn_locate_on_map)
     void onLocateOnMapClicked() {
         CommonUtils.toast("boom locate map opened");
     }
@@ -179,12 +150,12 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
-    public void showMeasurements(List<Measurement> measurements) {
+    public void showMeasurements(String sensorId,List<Measurement> measurements) {
         if (measurements != null) {
             if (measurements.size() > 0) {
                 tvNoMeasurement.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(measurements);
+                mAdapter.addItems(sensorId, measurements);
             } else {
                 mRecyclerView.setVisibility(View.GONE);
                 tvNoMeasurement.setVisibility(View.VISIBLE);
@@ -195,17 +166,78 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
+    public void loadPage(Sensor sensor) {
+        if (mSensor != null) {
+
+            toolbarTitle.setText((TextUtils.isEmpty(mSensor.getId())) ? mSensor.getName() : mSensor.getId());
+
+            showLoading();
+            // todo tvNoMeasurements for the measurements and the whole sensor is different should be implemented
+            tvNoMeasurement.setVisibility(View.GONE);
+            showMeasurements(mSensor.getId(), mSensor.getMeasurements());
+
+            if (!TextUtils.isEmpty(mSensor.getDateCreated()))
+                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mSensor.getDateCreated(),
+                        DateTimeStyle.MEDIUM)));
+
+            if (!TextUtils.isEmpty(mSensor.getOwner())) {
+                sensorOwnerTitle.setVisibility(View.VISIBLE);
+                sensorOwner.setVisibility(View.VISIBLE);
+                sensorOwner.setText(String.valueOf(mSensor.getOwner()));
+            } else {
+                sensorOwnerTitle.setVisibility(View.GONE);
+                sensorOwner.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(mSensor.getDomain())) {
+                sensorDomainTitle.setVisibility(View.VISIBLE);
+                sensorDomain.setVisibility(View.VISIBLE);
+                sensorDomain.setText(String.valueOf(mSensor.getDomain()));
+            } else {
+                sensorDomainTitle.setVisibility(View.GONE);
+                sensorDomain.setVisibility(View.GONE);
+            }
+
+        } else {// todo there has to be a way of expression the tvNoMeasurement in here in the else clause
+
+        }
+    }
+
+    @Override
+    public void showCreateMeasurementsDialog() {
+        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), new Measurement(), mPresenter);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.show();
+    }
+
+    @Override
     public void onItemClicked(Measurement measurement) {
-        CommonUtils.toast("onItemClicked");
+        CommonUtils.toast("onItemDeleteClicked");
     }
 
     @Override
     public void onItemEditClicked(Measurement measurement) {
-        CommonUtils.toast("onItemEditClicked");
+        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), measurement, mPresenter);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.show();
     }
 
     @Override
-    public void onItemDeleteClicked(Measurement measurement) {
-        CommonUtils.toast("onItemDeleteClicked");
+    public void onItemDeleteClicked(String sensorId, Measurement measurement) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
+        builder.setMessage("Are you sure you want to delete measurement?")
+                .setPositiveButton("Delete", (dialog, id) -> {
+                    mPresenter.onDeleteMeasurementClicked(sensorId, measurement.getId());
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, id) -> {
+                    dialog.dismiss();
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

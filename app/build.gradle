@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 28
@@ -14,12 +15,14 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", "\"https://api.waziup.io/api/v1/\"")
+            buildConfigField("String", "MAPBOX_TOKEN", "\"pk.eyJ1Ijoia2lkdXNtdCIsImEiOiJjam9rc2s5c2kwMmcwM3BxYmwwb3p1OTZuIn0.z2_v79Kx2QWk3PuPKyRzbA\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL", "\"https://api.waziup.io/api/v1/\"")
+            buildConfigField("String", "MAPBOX_TOKEN", "\"pk.eyJ1Ijoia2lkdXNtdCIsImEiOiJjam9rc2s5c2kwMmcwM3BxYmwwb3p1OTZuIn0.z2_v79Kx2QWk3PuPKyRzbA\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
         }
     }
@@ -81,6 +84,21 @@ dependencies {
 
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    // QR Scanner
+    implementation ('me.dm7.barcodescanner:zxing:1.9.8') {
+        exclude group: 'com.android.support'
+    }
+
+    // google play service
+    implementation "com.google.android.gms:play-services-vision:$rootProject.visionVersion"
+
+    // FCM - firebase Notification management
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
+    // ObjectBox - RXJava
+    implementation "io.objectbox:objectbox-rxjava:$oboxVersion"
+
 }
 configurations.all {
     resolutionStrategy.force "com.android.support:support-annotations:$supportLibraryVersion"

@@ -4,7 +4,9 @@ package eu.waziup.waziup_da_app.data.network.model.sensor;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Measurement {
+import java.io.Serializable;
+
+public class Measurement implements Serializable {
 
     @SerializedName("id")
     @Expose

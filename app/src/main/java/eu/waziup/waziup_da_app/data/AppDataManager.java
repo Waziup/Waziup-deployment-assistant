@@ -9,9 +9,12 @@ import javax.inject.Singleton;
 import eu.waziup.waziup_da_app.data.network.ApiHeader;
 import eu.waziup.waziup_da_app.data.network.ApiHelper;
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
+import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.data.prefs.PreferencesHelper;
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 
 @Singleton
 public class AppDataManager implements DataManager {
@@ -45,6 +48,21 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<Sensor>> fetchSensors() {
         return mApiHelper.fetchSensors();
+    }
+
+    @Override
+    public Observable<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
+        return mApiHelper.deleteMeasurement(sensorId, measurementId);
+    }
+
+    @Override
+    public Observable<List<Measurement>> getMeasurements(String sensor_id) {
+        return mApiHelper.getMeasurements(sensor_id);
+    }
+
+    @Override
+    public Observable<RegisterSensorResponse> registerSensor(Sensor sensor) {
+        return mApiHelper.registerSensor(sensor);
     }
 
     @Override

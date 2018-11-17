@@ -4,7 +4,9 @@ package eu.waziup.waziup_da_app.data.network.model.sensor;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LastValue {
+import java.io.Serializable;
+
+public class LastValue implements Serializable {
 
     @SerializedName("value")
     @Expose

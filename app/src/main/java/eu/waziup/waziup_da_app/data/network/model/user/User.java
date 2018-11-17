@@ -17,14 +17,19 @@ package eu.waziup.waziup_da_app.data.network.model.user;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+
 /**
  * User
  */
 
+@Entity
 public class User {
 
+    @Id
     @SerializedName("id")
-    public String id = null;
+    public Long id = null;
 
     @SerializedName("username")
     public String username = null;

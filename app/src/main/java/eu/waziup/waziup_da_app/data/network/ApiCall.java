@@ -9,17 +9,21 @@ import java.util.concurrent.TimeUnit;
 
 import eu.waziup.waziup_da_app.BuildConfig;
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
+import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
-import eu.waziup.waziup_da_app.network.EndPoints;
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * Created by KidusMT.
@@ -29,14 +33,26 @@ public interface ApiCall {
 
     String HEADER_PARAM_SEPARATOR = ":";
 
-    @GET(EndPoints.SENSOR)
+    @GET(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Observable<List<Sensor>> getSensors();
 
+    @POST(ApiEndPoint.SENSOR)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<RegisterSensorResponse> createSensor(Sensor sensor);
 
-    @POST(EndPoints.LOGIN)
+    @POST(ApiEndPoint.LOGIN)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
     Observable<String> login(@Body LoginRequest.ServerLoginRequest request);
+
+    @DELETE(ApiEndPoint.MEASUREMENT_DELETE)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
+
+
+    @GET(ApiEndPoint.MEASUREMENT_LIST)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
 
     class Factory {
 
@@ -68,10 +84,9 @@ public interface ApiCall {
 
             return retrofit.create(ApiCall.class);
 
-
         }
 
-        public static Retrofit retrofit(){
+        public static Retrofit retrofit() {
             return retrofit;
         }
     }

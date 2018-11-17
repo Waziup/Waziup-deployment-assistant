@@ -17,6 +17,7 @@ package eu.waziup.waziup_da_app.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -77,6 +79,10 @@ public final class CommonUtils {
 
     public static void toast(String msg) {
         Toast.makeText(DaApp.getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void hideKeyboard(Activity activity){
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public static String getFileName(Uri uri, Context context) {

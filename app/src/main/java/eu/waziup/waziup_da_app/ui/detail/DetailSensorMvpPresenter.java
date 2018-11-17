@@ -13,11 +13,15 @@ public interface DetailSensorMvpPresenter<V extends DetailSensorMvpView> extends
 
     void onEditMeasurementClicked(Measurement measurement);
 
-    void onDeleteMeasurementClicked(Measurement measurement);
+    void onDeleteMeasurementClicked(String sensorId, String measurementId);
 
     void onDeploySensorClicked();
 
-    void onUndeploySensorClicked();
+    void onUnDeploySensorClicked();
+
+    void onAddMeasurementClicked();
+
+    void loadMeasurements(String sensorId);
 
 //    void onLocateOnMapClicked(); // todo find a better way
 }

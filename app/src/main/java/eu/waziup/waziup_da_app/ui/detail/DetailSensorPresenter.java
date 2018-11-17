@@ -2,9 +2,7 @@ package eu.waziup.waziup_da_app.ui.detail;
 
 import javax.inject.Inject;
 
-import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.DataManager;
-import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.ui.base.BasePresenter;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
@@ -33,8 +31,23 @@ public class DetailSensorPresenter<V extends DetailSensorMvpView> extends BasePr
     }
 
     @Override
-    public void onDeleteMeasurementClicked(Measurement measurement) {
+    public void onDeleteMeasurementClicked(String sensorId, String measurementId) {
+        getMvpView().showLoading();
+        getCompositeDisposable().add(getDataManager().deleteMeasurement(sensorId, measurementId)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui()).subscribe(responseBody -> {
+                            if (!isViewAttached())
+                                return;
 
+                            loadMeasurements(sensorId);
+                        }, throwable -> {
+                            if (!isViewAttached())
+                                return;
+
+                            getMvpView().hideLoading();
+                            getMvpView().onError(CommonUtils.getErrorMessage(throwable));
+                        }
+                ));
     }
 
     @Override
@@ -43,7 +56,32 @@ public class DetailSensorPresenter<V extends DetailSensorMvpView> extends BasePr
     }
 
     @Override
-    public void onUndeploySensorClicked() {
+    public void onUnDeploySensorClicked() {
 
+    }
+
+    @Override
+    public void onAddMeasurementClicked() {
+        getMvpView().showCreateMeasurementsDialog();
+    }
+
+    @Override
+    public void loadMeasurements(String sensorId) {
+        getMvpView().showLoading();
+        getCompositeDisposable().add(getDataManager().getMeasurements(sensorId)
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(measurements -> {
+                    if (!isViewAttached())
+                        return;
+
+                    getMvpView().showMeasurements(sensorId, measurements);
+                }, throwable -> {
+                    if (!isViewAttached())
+                        return;
+
+                    getMvpView().hideLoading();
+                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
+                }));
     }
 }

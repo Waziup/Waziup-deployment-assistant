@@ -24,6 +24,7 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     Callback mCallback;
     EditCallback mEditCallback;
     DeleteCallback mDeleteCallback;
+    String sensorId = "";
 
     public MeasurementAdapter(List<Measurement> measurements) {
         this.measurements = measurements;
@@ -43,7 +44,8 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         baseViewHolder.onBind(i);
     }
 
-    public void addItems(List<Measurement> measurements) {
+    public void addItems(String sensorId, List<Measurement> measurements) {
+        this.sensorId = sensorId;
         this.measurements.clear();
         this.measurements.addAll(measurements);
         notifyDataSetChanged();
@@ -75,7 +77,7 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface DeleteCallback {
-        void onItemDeleteClicked(Measurement measurement);
+        void onItemDeleteClicked(String sensorId, Measurement measurement);
     }
 
     public class MeasurementViewHolder extends BaseViewHolder {
@@ -105,7 +107,7 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             ButterKnife.bind(this, itemView);
 
             mEdit.setOnClickListener(view -> mEditCallback.onItemEditClicked(measurements.get(getAdapterPosition())));
-            mDelete.setOnClickListener(view -> mDeleteCallback.onItemDeleteClicked(measurements.get(getAdapterPosition())));
+            mDelete.setOnClickListener(view -> mDeleteCallback.onItemDeleteClicked(sensorId, measurements.get(getAdapterPosition())));
             // todo find out how is it possible to separate the whole view onClickListener with just only some part of the view clickListener
             itemView.setOnClickListener(view -> mCallback.onItemClicked(measurements.get(getAdapterPosition())));
 

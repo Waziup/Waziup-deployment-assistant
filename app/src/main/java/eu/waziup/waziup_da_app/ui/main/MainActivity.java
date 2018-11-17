@@ -21,12 +21,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.Mapbox;
+
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import eu.waziup.waziup_da_app.BuildConfig;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         setContentView(R.layout.activity_main);
 
         getActivityComponent().inject(this);
@@ -75,6 +79,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mPresenter.onAttach(MainActivity.this);
 
         setUp();
+
+        SensorFragment sensorFragment = (SensorFragment)getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+        if (sensorFragment != null && sensorFragment.isVisible()) {
+            // add your code here
+            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
+                    .findFragmentByTag(SensorFragment.TAG))
+                    .getView())
+                    .findViewById(R.id.fab_sensor)
+                    .setVisibility(View.VISIBLE);
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -183,43 +197,41 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onBackPressed() {
-        // todo there has to be some way of handling the nullPointerException
         mDrawerToggle.setDrawerIndicatorEnabled(true);
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
-                    .findFragmentByTag(SensorFragment.TAG))
-                    .getView())
-                    .findViewById(R.id.fab_sensor)
-                    .setVisibility(View.VISIBLE);
-        }
-
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-            mDrawer.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStack();
-//            onFragmentDetached();
-        } else {
+        Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
+        if (fragment == null) {
             super.onBackPressed();
+        } else {
+            onFragmentDetached(DetailSensorFragment.TAG);
         }
 
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        Fragment fragment = fragmentManager.findFragmentByTag(RegisterSensorFragment.TAG);
+//        mDrawer.setVisibility(View.GONE);
+//        mDrawerToggle.setDrawerIndicatorEnabled(true);
+//        Log.e("-->FragmentNo",String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
+//        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+////            Log.e("-->","got in onBackPressed");
+//            mDrawer.setVisibility(View.VISIBLE);
+//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
+//                    .findFragmentByTag(SensorFragment.TAG))
+//                    .getView())
+//                    .findViewById(R.id.fab_sensor)
+//                    .setVisibility(View.VISIBLE);
+//        }
+
 //        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
 //            mDrawer.closeDrawer(GravityCompat.START);
-//        } else if (fragment == null) {
-//            super.onBackPressed();
-//        } else {
-//            if (fragment instanceof RegisterSensorFragment)
-//                onFragmentDetached(RegisterSensorFragment.TAG);
-//            if (fragment instanceof DetailSensorFragment)
-//                onFragmentDetached(DetailSensorFragment.TAG);
+//        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            getSupportFragmentManager().popBackStack();
+////            onFragmentDetached();
 //        }
     }
 
     @Override
     public void onFragmentDetached(String tag) {
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
@@ -230,6 +242,23 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     .commitNow();
             unlockDrawer();
         }
+
+//        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+//            Log.e("-->","got in onBackPressed");
+//            mDrawer.setVisibility(View.VISIBLE);
+//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
+//                    .findFragmentByTag(SensorFragment.TAG))
+//                    .getView())
+//                    .findViewById(R.id.fab_sensor)
+//                    .setVisibility(View.VISIBLE);
+//        }
+
+//        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+//            mDrawer.closeDrawer(GravityCompat.START);
+//        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            getSupportFragmentManager().popBackStack();
+////            onFragmentDetached();
+//        }
     }
 
     @Override
@@ -256,32 +285,33 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void openRegisterationSensor() {
         lockDrawer();
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
-        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
-            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
-                    .getView())
-                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
+//        mDrawerToggle.setDrawerIndicatorEnabled(false);
+//        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
+//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
+//                    .getView())
+//                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .addToBackStack(null)
-                .add(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .disallowAddToBackStack()
+                .replace(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
                 .commit();
     }
 
     @Override
     public void openSensorDetailFragment(Sensor sensor) {
         lockDrawer();
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
-        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
-            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
-                    .getView())
-                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
+//        mDrawerToggle.setDrawerIndicatorEnabled(false);
+//
+//        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
+//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
+//                    .getView())
+//                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .addToBackStack(null)
-                .add(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor), DetailSensorFragment.TAG)
+                .disallowAddToBackStack()
+                .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor), DetailSensorFragment.TAG)
                 .commit();
     }
 
@@ -340,6 +370,5 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void onItemClicked(Sensor sensor) {
         mPresenter.onSensorItemClicked(sensor);
-
     }
 }

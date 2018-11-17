@@ -29,5 +29,15 @@
     <string name="close_drawer">Drawer Close</string>
     <string name="sensor_registration">Sensor Registration</string>
     <string name="no_measurements_list_found">No measurements list found.</string>
+    <string name="cancel">CANCEL</string>
+    <string name="submit">SUBMIT</string>
+    <string name="edit_measurement">Edit Measurement</string>
+    <string name="dialog_add_measurement">Add Measurement</string>
+    <string name="add_sensor_node">Add Sensor Node</string>
+
+    <string-array name="visibility_options">
+        <item>Public</item>
+        <item>Private</item>
+    </string-array>
 
 </resources>

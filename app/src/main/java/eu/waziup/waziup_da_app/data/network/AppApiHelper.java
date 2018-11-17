@@ -8,10 +8,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
+import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
+import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.data.network.model.user.User;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import okhttp3.ResponseBody;
 
 /**
  * Created by KidusMT.
@@ -51,6 +54,21 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<List<Sensor>> fetchSensors() {
         return mApiCall.getSensors();
+    }
+
+    @Override
+    public Observable<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
+        return mApiCall.deleteMeasurement(sensorId, measurementId);
+    }
+
+    @Override
+    public Observable<List<Measurement>> getMeasurements(String sensor_id) {
+        return mApiCall.getMeasurement(sensor_id);
+    }
+
+    @Override
+    public Observable<RegisterSensorResponse> registerSensor(Sensor sensor) {
+        return mApiCall.createSensor(sensor);
     }
 
 }

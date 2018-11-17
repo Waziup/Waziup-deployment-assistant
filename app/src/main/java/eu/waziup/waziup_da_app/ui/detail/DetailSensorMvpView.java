@@ -12,5 +12,9 @@ import eu.waziup.waziup_da_app.ui.base.MvpView;
 
 public interface DetailSensorMvpView extends MvpView {
 
-    void showMeasurements(List<Measurement> measurements);
+    void showMeasurements(String sensorId, List<Measurement> measurements);
+
+    void loadPage(Sensor sensor);
+
+    void showCreateMeasurementsDialog();
 }
