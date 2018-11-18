@@ -106,8 +106,7 @@
                         android:layout_height="46dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="5dp"
-                        android:entries="@array/visibility_options"
-                        android:padding="5dp" />
+                        android:entries="@array/visibility_options" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -142,7 +141,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/btn_register_cancel"
+                        android:id="@+id/btn_register_submit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -154,7 +153,7 @@
                         android:paddingTop="2dp"
                         android:paddingEnd="5dp"
                         android:paddingBottom="2dp"
-                        android:text="@string/cancel"
+                        android:text="@string/submit"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
 

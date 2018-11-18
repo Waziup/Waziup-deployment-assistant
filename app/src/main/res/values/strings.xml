@@ -49,4 +49,12 @@
     <string name="shortcut_label_scan_code">Scan code</string>
     <string name="unable_to_open_camera">Unable to open camera, please check it and try again later.</string>
     <string name="error">Error</string>
+
+    <!--Permission-->
+    <string name="location_access_required">GPS access is required to display the camera preview.</string>
+    <string name="ok">OK</string>
+    <string name="location_permission_not_available">Permission is not available. Requesting GPS permission.</string>
+    <string name="location_permission_available">GPS permission is available. Starting preview.</string>
+    <string name="location_permission_granted">GPS permission was granted. Starting preview.</string>
+    <string name="location_permission_denied">GPS permission request was denied.</string>
 </resources>

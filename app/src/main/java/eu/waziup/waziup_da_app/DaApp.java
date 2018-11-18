@@ -1,5 +1,6 @@
 package eu.waziup.waziup_da_app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
@@ -40,6 +41,7 @@ public class DaApp extends Application {
 
         context = this;
 
+
         boxStore = MyObjectBox.builder().androidContext(DaApp.this).build();
 //        daoSession = new DaoSession(boxStore);
 
@@ -62,6 +64,7 @@ public class DaApp extends Application {
     public static Context getContext(){
         return context;
     }
+
 
     @Override
     protected void attachBaseContext(Context base) {
