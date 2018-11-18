@@ -46,6 +46,16 @@ public class Sensor implements Serializable {
         this.visibility = visibility;
     }
 
+
+
+    public Sensor(String id, String name, String domain, String visibility, Location location) {
+        this.id = id;
+        this.name = name;
+        this.domain = domain;
+        this.visibility = visibility;
+        this.location = location;
+    }
+
     public String getId() {
         return id;
     }

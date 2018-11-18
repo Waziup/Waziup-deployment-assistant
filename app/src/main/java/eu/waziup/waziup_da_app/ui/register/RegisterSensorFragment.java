@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -60,12 +59,8 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @BindView(R.id.register_sensor_domain)
     EditText sensorDomain;
 
-    //todo current location by default should be stored in sharedPreference and later be displayed
     @BindView(R.id.register_current_location_value)
-    EditText currentLocation;
-
-    @BindView(R.id.btn_register_get_current_location)
-    ImageView btnCurrentLocation;
+    EditText sensorLocation;
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -113,38 +108,27 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
             mPresenter.onAttach(this);
         }
 
-
         setUp(view);
 
-        btnCurrentLocation.setOnClickListener(view1 -> {
-
-            if (getView() != null)
-                getLocation(getView());
-            if (canGetLocation()) {
-                latitude = getLatitude();
-                longitude = getLongitude();
-                //                // \n is for new line
-//                Toast.makeText(getBaseActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                currentLocation.setText(format("%.4f", latitude) + "  " + format("%.4f", longitude));
-            } else {
-                // can't get location
-                // GPS or Network is not enabled
-                // Ask user to enable GPS/network in settings
-                showSettingsAlert();
-            }
-
-        });
-
-        if (getActivity() != null) {
-            String action = getActivity().getIntent().getAction();
-            if (action != null && action.equals(ACTION_SCAN_CODE)) {
-                checkPermissionOrToScan();
-            }
-        }
-
-        setHasOptionsMenu(true);
-
         return view;
+    }
+
+    @OnClick(R.id.btn_register_get_current_location)
+    void onGetLocationClicked() {
+        if (getView() != null)
+            getLocation(getView());
+        if (canGetLocation()) {
+            latitude = getLatitude();
+            longitude = getLongitude();
+            //                // \n is for new line
+//                Toast.makeText(getBaseActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            sensorLocation.setText(format("%.4f", latitude) + "  " + format("%.4f", longitude));
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            showSettingsAlert();
+        }
     }
 
     @OnClick(R.id.nav_back_btn)
@@ -159,10 +143,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     @OnClick(R.id.btn_register_submit)
     void onSubmitClicked() {
-//        this.id = id;
-//        this.name = name;
-//        this.domain = domain;
-//        this.visibility = visibility;
         if (TextUtils.isEmpty(sensorId.getText())) {
             sensorId.requestFocus();
             sensorId.setError("sensorId can't be empty");
@@ -181,16 +161,24 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
             return;
         }
 
+        if (TextUtils.isEmpty(sensorLocation.getText())) {
+            sensorLocation.requestFocus();
+            sensorLocation.setError("location can't be empty");
+            return;
+        }
+
         String mSensorVisibility = "";
         if (sensorVisibility.getSelectedItem() == null) {
             mSensorVisibility = "public";
         }
 
-        mPresenter.onSubmitRegisterClicked(new Sensor(sensorId.getText().toString().trim(),
-                sensorName.getText().toString().trim(),
-                sensorDomain.getText().toString().trim(),
-                ((TextUtils.isEmpty(mSensorVisibility) ? sensorVisibility.getSelectedItem().toString().trim() : mSensorVisibility))
-        ));
+        mPresenter.onSubmitRegisterClicked(
+                new Sensor(sensorId.getText().toString().trim(),
+                        sensorName.getText().toString().trim(),
+                        sensorDomain.getText().toString().trim(),
+                        TextUtils.isEmpty(mSensorVisibility) ? sensorVisibility.getSelectedItem().toString().trim() : mSensorVisibility,
+                        new eu.waziup.waziup_da_app.data.network.model.sensor.Location(latitude, longitude))
+        );
     }
 
 
