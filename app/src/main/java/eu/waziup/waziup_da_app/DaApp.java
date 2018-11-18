@@ -2,6 +2,7 @@ package eu.waziup.waziup_da_app;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import javax.inject.Inject;
 
@@ -60,5 +61,11 @@ public class DaApp extends Application {
 
     public static Context getContext(){
         return context;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

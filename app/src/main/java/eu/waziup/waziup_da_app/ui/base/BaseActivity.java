@@ -30,7 +30,6 @@ import eu.waziup.waziup_da_app.di.component.DaggerActivityComponent;
 import eu.waziup.waziup_da_app.di.module.ActivityModule;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
-import eu.waziup.waziup_da_app.utils.LocaleManager;
 import eu.waziup.waziup_da_app.utils.NetworkUtils;
 
 import static android.content.pm.PackageManager.GET_META_DATA;

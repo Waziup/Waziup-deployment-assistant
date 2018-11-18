@@ -40,6 +40,10 @@
         <item>Private</item>
     </string-array>
 
+    <string name="permission_denied">Permission Denied</string>
+    <string name="require_permission">To support barcode scan, you need to grant camera permission.</string>
+    <string name="go_to_settings">Go to settings</string>
+
     <string name="scan_code">Scan code</string>
     <string name="activity_scan_code">Scan code</string>
     <string name="shortcut_label_scan_code">Scan code</string>

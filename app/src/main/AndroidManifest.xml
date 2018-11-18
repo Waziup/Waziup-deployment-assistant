@@ -3,13 +3,15 @@
     package="eu.waziup.waziup_da_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".DaApp"
         android:allowBackup="true"
@@ -33,9 +35,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:theme="@style/AppTheme.no_toolbar" />
+
+        <activity
+            android:name=".ui.zxing.CaptureActivity"
+            android:label="@string/activity_scan_code"
+            android:theme="@style/AppTheme.no_toolbar">
+            <intent-filter>
+                <action android:name="eu.waziup.waziup_da_app.ui.main.MainActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.register.SimpleScannerActivity"
+            android:theme="@style/AppTheme.no_toolbar"/>
     </application>
 
 </manifest>

@@ -8,5 +8,4 @@ import eu.waziup.waziup_da_app.ui.base.MvpView;
 
 public interface RegisterSensorMvpView extends MvpView {
 
-//  void finishActivity();
 }

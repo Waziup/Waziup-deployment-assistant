@@ -24,10 +24,4 @@ public class RegisterSensorPresenter<V extends RegisterSensorMvpView> extends Ba
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-    @Override
-    public void onSubmitClicked() {
-        getMvpView().showLoading();
-//        getCompositeDisposable().add(getDataManager().)
-        getMvpView().hideLoading();
-    }
 }

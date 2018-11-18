@@ -74,7 +74,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/dialog_sensor_id"
+                        android:id="@+id/register_sensor_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -83,7 +83,7 @@
                         android:textSize="16sp" />
 
                     <EditText
-                        android:id="@+id/dialog_sensor_name"
+                        android:id="@+id/register_sensor_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -92,7 +92,7 @@
                         android:textSize="16sp" />
 
                     <EditText
-                        android:id="@+id/dialog_sensor_domain"
+                        android:id="@+id/register_sensor_domain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -101,7 +101,7 @@
                         android:textSize="16sp" />
 
                     <Spinner
-                        android:id="@+id/dialog_sensor_visibility"
+                        android:id="@+id/register_sensor_visibility"
                         android:layout_width="match_parent"
                         android:layout_height="46dp"
                         android:layout_marginTop="5dp"
@@ -116,6 +116,7 @@
                         android:orientation="horizontal">
 
                         <EditText
+                            android:hint="location"
                             android:id="@+id/register_current_location_value"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -137,6 +138,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
+                    android:paddingTop="30dp"
                     android:orientation="horizontal">
 
                     <Button

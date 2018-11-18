@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -76,7 +77,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
 
-//     date formatter
+    // date formatter
     implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
 
     // MapBox
@@ -90,24 +91,17 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    implementation 'com.google.zxing:core:3.3.0'
-
     // google play service
     implementation "com.google.android.gms:play-services-vision:$rootProject.visionVersion"
 
     // FCM - firebase Notification management
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
-    implementation 'com.google.firebase:firebase-ml-model-interpreter:16.2.3'
-    implementation 'com.google.firebase:firebase-ml-vision:18.0.1'
-
-
     // ObjectBox - RXJava
     implementation "io.objectbox:objectbox-rxjava:$oboxVersion"
 
-    // CameraKit - https://github.com/CameraKit/camerakit-android
-    implementation 'com.camerakit:camerakit:1.0.0-beta3.9'
-    implementation 'com.camerakit:jpegkit:0.1.0'
+    // allowing multi-dex for api < 20
+    implementation 'com.android.support:multidex:1.0.3'
 
 }
 

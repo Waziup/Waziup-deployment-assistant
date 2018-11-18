@@ -8,7 +8,6 @@ import eu.waziup.waziup_da_app.ui.detail.MeasurementAdapter;
 import eu.waziup.waziup_da_app.ui.login.LoginActivity;
 import eu.waziup.waziup_da_app.ui.main.MainActivity;
 import eu.waziup.waziup_da_app.ui.map.MapFragment;
-import eu.waziup.waziup_da_app.ui.qrscan.QRScanFragment;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
 import eu.waziup.waziup_da_app.ui.sensor.SensorAdapter;
 import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
@@ -32,7 +31,5 @@ public interface ActivityComponent {
     void inject(DetailSensorFragment fragment);
 
     void inject(MapFragment fragment);
-
-    void inject(QRScanFragment fragment);
 
 }
