@@ -30,6 +30,7 @@ import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
 import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
+import eu.waziup.waziup_da_app.ui.main.MainActivity;
 import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 
@@ -131,6 +132,11 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     @Override
     public void openDetailSensorActivity(Sensor sensor) {
 
+    }
+
+    @Override
+    public void loadPage() {
+        mPresenter.loadSensors();
     }
 
     @Override

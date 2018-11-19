@@ -7,6 +7,7 @@ import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
+import eu.waziup.waziup_da_app.data.network.model.user.User;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 
@@ -29,4 +30,6 @@ public interface ApiHelper {
     Observable<List<Measurement>> getMeasurements(String sensor_id);
 
     Observable<RegisterSensorResponse> registerSensor(Sensor sensor);
+
+    Observable<List<User>> getUsers();
 }

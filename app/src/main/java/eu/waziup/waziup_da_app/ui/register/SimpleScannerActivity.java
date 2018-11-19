@@ -1,16 +1,16 @@
 package eu.waziup.waziup_da_app.ui.register;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.google.zxing.Result;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
 import eu.waziup.waziup_da_app.utils.BeepManager;
@@ -19,8 +19,10 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class SimpleScannerActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
 
-    @BindView(R.id.scan_toolbar)
-    Toolbar mToolbar;
+//    @BindView(R.id.scan_toolbar)
+//    Toolbar mToolbar;
+
+    public static final String TAG = "SimpleScannerActivity";
 
     private BeepManager beepManager;
 
@@ -38,12 +40,15 @@ public class SimpleScannerActivity extends BaseActivity implements ZXingScannerV
         contentFrame.addView(mScannerView);
     }
 
+
+    @OnClick(R.id.nav_back_btn)
+    void onNavBackClick() {
+        finish();
+    }
+
+
     @Override
     protected void setUp() {
-        Log.e("--->setup","got in");
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -55,9 +60,10 @@ public class SimpleScannerActivity extends BaseActivity implements ZXingScannerV
     }
 
     @Override
-    public boolean onNavigateUp() {
-        finish();
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            finish();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

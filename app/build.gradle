@@ -98,7 +98,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     // ObjectBox - RXJava
-    implementation "io.objectbox:objectbox-rxjava:$oboxVersion"
+//    implementation "io.objectbox:objectbox-rxjava:$oboxVersion"
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'

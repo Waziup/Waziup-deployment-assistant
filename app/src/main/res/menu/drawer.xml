@@ -8,11 +8,11 @@
             android:checked="true"
             android:icon="@drawable/ic_sensors"
             android:title="Sensors" />
-        <item
-            android:id="@+id/nav_gateway"
-            android:checked="true"
-            android:icon="@drawable/ic_gateway"
-            android:title="Gateways" />
+        <!--<item-->
+            <!--android:id="@+id/nav_gateway"-->
+            <!--android:checked="true"-->
+            <!--android:icon="@drawable/ic_gateway"-->
+            <!--android:title="Gateways" />-->
         <item
             android:id="@+id/nav_notification"
             android:checked="true"

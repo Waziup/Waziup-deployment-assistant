@@ -12,6 +12,7 @@ import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
+import eu.waziup.waziup_da_app.data.network.model.user.User;
 import eu.waziup.waziup_da_app.data.prefs.PreferencesHelper;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
@@ -63,6 +64,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<RegisterSensorResponse> registerSensor(Sensor sensor) {
         return mApiHelper.registerSensor(sensor);
+    }
+
+    @Override
+    public Observable<List<User>> getUsers() {
+        return mApiHelper.getUsers();
     }
 
     @Override

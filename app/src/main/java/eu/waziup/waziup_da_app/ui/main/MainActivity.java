@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.Mapbox;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -80,16 +79,25 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         setUp();
 
-        SensorFragment sensorFragment = (SensorFragment)getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-        if (sensorFragment != null && sensorFragment.isVisible()) {
-            // add your code here
-            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
-                    .findFragmentByTag(SensorFragment.TAG))
-                    .getView())
-                    .findViewById(R.id.fab_sensor)
-                    .setVisibility(View.VISIBLE);
-        }
+//        SensorFragment sensorFragment = (SensorFragment)getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+//        if (sensorFragment != null && sensorFragment.isVisible()) {
+//            // add your code here
+//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager()
+//                    .findFragmentByTag(SensorFragment.TAG))
+//                    .getView())
+//                    .findViewById(R.id.fab_sensor)
+//                    .setVisibility(View.VISIBLE);
+//        }
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                .commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
@@ -142,10 +150,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             case R.id.nav_sensor:
                 fragmentClass = SensorFragment.class;
                 break;
-            case R.id.nav_gateway:
-                CommonUtils.toast("gateway clicked");
-//                fragmentClass = DetailSensorFragment.class;
-                break;
+//            case R.id.nav_gateway:
+//                CommonUtils.toast("gateway clicked");
+////                fragmentClass = DetailSensorFragment.class;
+//                break;
             case R.id.nav_notification:
                 CommonUtils.toast("notification clicked");
 //                fragmentClass = QRScanMvpView.class;
@@ -241,6 +249,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     .remove(fragment)
                     .commitNow();
             unlockDrawer();
+        }
+
+        if (TextUtils.equals(tag, RegisterSensorFragment.TAG)) {
+            FragmentManager fm = getSupportFragmentManager();
+
+            //if you added fragment via layout xml
+            SensorFragment sensorFragment = (SensorFragment) fm.findFragmentByTag(SensorFragment.TAG);
+            if (sensorFragment != null){
+                sensorFragment.loadPage();
+            }else{
+                Log.e("---FragmentSensor", "null");
+            }
         }
 
 //        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {

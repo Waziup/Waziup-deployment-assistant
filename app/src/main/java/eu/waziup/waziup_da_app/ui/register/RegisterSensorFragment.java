@@ -78,8 +78,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public static final String ACTION_SCAN_CODE = "eu.waziup.waziup_da_app.ui.main.MainActivity";
-
     public final static int SCANNING_REQUEST_CODE = 1;
 
     public final static int REQUEST_CAMERA_PERMISSION_CODE = 0;
@@ -110,6 +108,8 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
         setUp(view);
 
+
+
         return view;
     }
 
@@ -122,7 +122,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
             longitude = getLongitude();
             //                // \n is for new line
 //                Toast.makeText(getBaseActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-            sensorLocation.setText(format("%.4f", latitude) + "  " + format("%.4f", longitude));
+            sensorLocation.setText(format("Lat %.4f", latitude) + ",  " + format("Lang %.4f", longitude));
         } else {
             // can't get location
             // GPS or Network is not enabled
@@ -181,7 +181,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
         );
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -221,7 +220,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                 break;
         }
     }
-
 
     private void checkPermissionOrToScan() {
         if (getContext() != null)
@@ -501,6 +499,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @Override
     public void openSensorListFragment() {
         hideLoading();
-        getBaseActivity().onBackPressed();
+        getBaseActivity().onFragmentDetached(TAG);
     }
 }

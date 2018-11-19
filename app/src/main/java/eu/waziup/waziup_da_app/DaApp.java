@@ -1,6 +1,5 @@
 package eu.waziup.waziup_da_app;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
@@ -8,13 +7,10 @@ import android.support.multidex.MultiDex;
 import javax.inject.Inject;
 
 import eu.waziup.waziup_da_app.data.DataManager;
-import eu.waziup.waziup_da_app.data.network.model.user.MyObjectBox;
 import eu.waziup.waziup_da_app.di.component.ApplicationComponent;
 import eu.waziup.waziup_da_app.di.component.DaggerApplicationComponent;
 import eu.waziup.waziup_da_app.di.module.ApplicationModule;
 import eu.waziup.waziup_da_app.utils.AppLogger;
-import io.objectbox.BoxStore;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 public class DaApp extends Application {
 
@@ -25,7 +21,7 @@ public class DaApp extends Application {
 
     private ApplicationComponent mApplicationComponent;
 
-    private BoxStore boxStore;
+//    private BoxStore boxStore;
 //    private DaoSession daoSession;
 
     @Override
@@ -42,7 +38,7 @@ public class DaApp extends Application {
         context = this;
 
 
-        boxStore = MyObjectBox.builder().androidContext(DaApp.this).build();
+//        boxStore = MyObjectBox.builder().androidContext(DaApp.this).build();
 //        daoSession = new DaoSession(boxStore);
 
 
@@ -61,10 +57,9 @@ public class DaApp extends Application {
         mApplicationComponent = applicationComponent;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return context;
     }
-
 
     @Override
     protected void attachBaseContext(Context base) {

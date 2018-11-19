@@ -71,5 +71,10 @@ public class AppApiHelper implements ApiHelper {
         return mApiCall.createSensor(sensor);
     }
 
+    @Override
+    public Observable<List<User>> getUsers() {
+        return mApiCall.getUsers();
+    }
+
 }
 

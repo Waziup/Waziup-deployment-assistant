@@ -10,4 +10,6 @@ import eu.waziup.waziup_da_app.ui.register.RegisterSensorMvpView;
 
 @PerActivity
 public interface MapMvpPresenter<V extends MapMvpView> extends MvpPresenter<V> {
+
+    void loadSensors();
 }

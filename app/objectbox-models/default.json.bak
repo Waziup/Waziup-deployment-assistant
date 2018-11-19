@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:6012030309280667636",
-      "lastPropertyId": "11:8976916801457194457",
+      "lastPropertyId": "9:6942072252489945797",
       "name": "User",
       "properties": [
         {
@@ -43,14 +43,6 @@
         {
           "id": "9:6942072252489945797",
           "name": "twitter"
-        },
-        {
-          "id": "10:6194003565410861035",
-          "name": "createdTime"
-        },
-        {
-          "id": "11:8976916801457194457",
-          "name": "subservice"
         }
       ],
       "relations": []

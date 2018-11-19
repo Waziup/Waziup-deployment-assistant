@@ -12,6 +12,7 @@ import eu.waziup.waziup_da_app.data.network.model.LoginRequest;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Measurement;
 import eu.waziup.waziup_da_app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
+import eu.waziup.waziup_da_app.data.network.model.user.User;
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -39,7 +40,7 @@ public interface ApiCall {
 
     @POST(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<RegisterSensorResponse> createSensor(Sensor sensor);
+    Observable<RegisterSensorResponse> createSensor(@Body Sensor sensor);
 
     @POST(ApiEndPoint.LOGIN)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
@@ -49,10 +50,13 @@ public interface ApiCall {
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Observable<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
 
-
     @GET(ApiEndPoint.MEASUREMENT_LIST)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Observable<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
+
+    @GET(ApiEndPoint.USERS)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<List<User>> getUsers();
 
     class Factory {
 
