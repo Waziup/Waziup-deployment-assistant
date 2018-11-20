@@ -82,6 +82,7 @@ dependencies {
 
     // MapBox
     implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxVersion"
+    implementation "com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:$rootProject.mapboxLocationLayerVersion"
 
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"

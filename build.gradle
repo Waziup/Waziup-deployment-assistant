@@ -59,6 +59,7 @@ ext {
     timberVersion = '4.7.0'
 
     mapboxVersion = '6.7.0'
+    mapboxLocationLayerVersion = '0.11.0'
     qrsScannerVersion = '1.9.8'
     visionVersion = '16.2.0'
 

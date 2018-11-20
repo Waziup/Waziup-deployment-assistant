@@ -1,19 +1,25 @@
 package eu.waziup.waziup_da_app.ui.map;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mapbox.android.core.permissions.PermissionsListener;
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -27,8 +33,11 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
+import eu.waziup.waziup_da_app.utils.CommonUtils;
 
-public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener {
+//import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
+
+public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener, PermissionsListener {
 
     @Inject
     MapMvpPresenter<MapMvpView> mPresenter;
@@ -38,9 +47,13 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     List<Sensor> sensorList = new ArrayList<>();
 
     MapCommunicator communicator;
-
-
+    private static final int PERMISSIONS_LOCATION = 9910;
     public static final String TAG = "MapFragment";
+
+    // variables for adding location layer
+    private MapboxMap map;
+    private PermissionsManager permissionsManager;
+    private Location originLocation;
 
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
@@ -65,6 +78,37 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         mapView = view.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
 
+        mapView.getMapAsync(mapboxMap -> {
+
+            map = mapboxMap;
+
+            enableLocationComponent(mapboxMap);
+
+            // checks if permission has been granted already and if so it starts Location indicator
+//            checkPermissionAndEnableLocation();
+
+            mapboxMap.setOnInfoWindowClickListener(this);
+
+            // custom info window for the markers
+            mapboxMap.setInfoWindowAdapter(marker -> {
+
+                View v = getLayoutInflater().inflate(R.layout.layout_callout, null);
+
+                TextView sensorName = v.findViewById(R.id.info_sensor_name);
+                TextView sensorDomain = v.findViewById(R.id.info_sensor_domain);
+
+                sensorName.setText(marker.getTitle());
+                sensorDomain.setText(marker.getSnippet());
+
+                return v;
+
+            });
+
+            // setting the UI for the mapView
+            settingUi();
+
+        });
+
         mPresenter.loadSensors();
 
         return view;
@@ -74,6 +118,39 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     protected void setUp(View view) {
 
     }
+
+    public void settingUi() {
+        if (map != null){
+            map.getUiSettings().setZoomControlsEnabled(false);//hide zoom control button
+            map.getUiSettings().setCompassEnabled(false);//hide compass
+            map.getUiSettings().setRotateGesturesEnabled(false);
+            map.getUiSettings().setLogoEnabled(false);
+            map.getUiSettings().setZoomGesturesEnabled(true);
+            map.getUiSettings().setScrollGesturesEnabled(false);
+            map.getUiSettings().setRotateGesturesEnabled(false);
+            map.getUiSettings().setAllGesturesEnabled(true);
+        }
+    }
+
+    /**
+     * --> VERY USEFUL
+     * For animating the camera to the specific location on a map
+     *
+     * @param latitude  (required)
+     * @param longitude (required)
+     */
+    private void updateMap(double latitude, double longitude, MapboxMap mapboxMap) {
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude)) // Sets the new camera position
+                .zoom(17) // Sets the zoom
+                .bearing(180) // Rotate the camera
+                .tilt(30) // Set the camera tilt
+                .build(); // Creates a CameraPosition from the builder
+
+        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 7000, null);
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -122,47 +199,99 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         hideLoading();
         sensorList.addAll(sensors);
 
-
-        mapView.getMapAsync(mapboxMap -> {
-
-            mapboxMap.setOnInfoWindowClickListener(this);
-
-            mapboxMap.setInfoWindowAdapter(marker -> {
-
-                View view = getBaseActivity().getLayoutInflater().inflate(R.layout.layout_callout, null);
-
-                TextView sensorName = view.findViewById(R.id.info_sensor_name);
-                TextView sensorDomain = view.findViewById(R.id.info_sensor_domain);
-
-                sensorName.setText(marker.getTitle());
-                sensorDomain.setText(marker.getSnippet());
-
-                return view;
-
-            });
-
-            mapboxMap.getUiSettings().setZoomControlsEnabled(false);//hide zoom control button
-            mapboxMap.getUiSettings().setCompassEnabled(false);//hide compass
-            mapboxMap.getUiSettings().setZoomGesturesEnabled(true);
-            mapboxMap.getUiSettings().setScrollGesturesEnabled(true);
-            mapboxMap.getUiSettings().setAllGesturesEnabled(true);
-
-            // One way to add a marker view
-            // Filling up the list
+        // One way to add a marker view
+        // Filling up the list
+        if (map != null)
             for (int i = 0; i < sensorList.size(); i++) {
                 if (sensorList.get(i).getLocation() != null) {
                     if (sensorList.get(i).getLocation().getLatitude() != null &&
                             sensorList.get(i).getLocation().getLongitude() != null)
-                        mapboxMap.addMarker(new MarkerOptions()
+                        map.addMarker(new MarkerOptions()
                                 .position(new LatLng(sensorList.get(i).getLocation().getLatitude(), sensorList.get(i).getLocation().getLongitude()))
                                 .title(String.valueOf(sensorList.get(i).getId())))
                                 .setSnippet(String.valueOf(sensorList.get(i).getDomain()));
                 }
             }
-
-
-        });
     }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void enableLocationComponent(MapboxMap mapboxMap) {
+        // Check if permissions are enabled and if not request
+        if (PermissionsManager.areLocationPermissionsGranted(getBaseActivity())) {
+            // Activate the MapboxMap LocationComponent to show user location
+            // Adding in LocationComponentOptions is also an optional parameter
+            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+            locationComponent.activateLocationComponent(getBaseActivity());
+            locationComponent.setLocationComponentEnabled(true);
+            // Set the component's camera mode
+            locationComponent.setCameraMode(CameraMode.TRACKING);
+            originLocation = locationComponent.getLastKnownLocation();
+
+        } else {
+            permissionsManager = new PermissionsManager(this);
+            permissionsManager.requestLocationPermissions(getBaseActivity());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onExplanationNeeded(List<String> permissionsToExplain) {
+        CommonUtils.toast("This app needs location permissions in order to show its functionality.");
+    }
+
+    // todo find a better implementation for this activity
+    private void toggleGps(boolean enableGps) {
+        if (enableGps) {
+            // Check if user has granted location permission
+            permissionsManager = new PermissionsManager(this);
+            if (!PermissionsManager.areLocationPermissionsGranted(getBaseActivity())) {
+                permissionsManager.requestLocationPermissions(getBaseActivity());
+            } else {
+//                enableLocation(true);
+            }
+        } else {
+//            enableLocation(false);
+        }
+    }
+
+    @Override
+    public void onPermissionResult(boolean granted) {
+        if (granted) {
+            if (map != null)
+                enableLocationComponent(map);
+        } else {
+            CommonUtils.toast("You didn't grant location permissions.");
+//            finish();
+        }
+    }
+
+//    private void checkPermissionAndEnableLocation() {
+//        if (!PermissionsManager.areLocationPermissionsGranted(getBaseActivity())) {
+//            ActivityCompat.requestPermissions(getBaseActivity(), new String[]{
+//                    Manifest.permission.ACCESS_COARSE_LOCATION,
+//                    Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_LOCATION);
+//        } else {
+//            enableLocation();
+//        }
+//    }
+
+//    private void enableLocation() {
+//        map.setMyLocationEnabled(true);
+//    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode == PERMISSIONS_LOCATION) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                enableLocation();
+//                CommonUtils.toast("Location permission granted");
+//            }
+//        }
+//    }
 
     @Override
     public boolean onInfoWindowClick(@NonNull Marker marker) {
@@ -179,10 +308,10 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         return true;
     }
 
-
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
+
 }

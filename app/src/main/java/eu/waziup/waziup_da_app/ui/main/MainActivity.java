@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import javax.inject.Inject;
@@ -134,9 +135,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mEmailTextView = headerView.findViewById(R.id.tv_email);
         mNameTextView = headerView.findViewById(R.id.tv_name);
 
-        // todo get the current user information from his "username"
-        mNameTextView.setText("Corentin Dupont");
-        mEmailTextView.setText("test@gmail.com");
+        loadNavHeader();
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
@@ -293,6 +292,31 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         }
 
     }
+
+    private void loadNavHeader() {
+        // name, website
+        // todo get the current user information from his "username"
+        mNameTextView.setText("Corentin Dupont");
+        mEmailTextView.setText("test@gmail.com");
+
+        // loading header background image
+//        Glide.with(this).load(urlNavHeaderBg)
+//                .crossFade()
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(imgNavHeaderBg);
+
+        // Loading profile image
+//        Glide.with(this).load(urlProfileImg)
+//                .crossFade()
+//                .thumbnail(0.5f)
+//                .bitmapTransform(new CircleTransform(this))
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(imgProfile);
+
+        // showing dot next to notifications label
+        nvDrawer.getMenu().getItem(1).setActionView(R.layout.menu_dot);
+    }
+
 
     @Override
     public void onBackPressed(String tag, String parentFragment) {

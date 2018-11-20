@@ -60,6 +60,9 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @BindView(R.id.register_sensor_domain)
     EditText sensorDomain;
 
+    @BindView(R.id.register_sensor_gateway)
+    EditText sensorGateway;
+
     @BindView(R.id.register_current_location_value)
     EditText sensorLocation;
 
