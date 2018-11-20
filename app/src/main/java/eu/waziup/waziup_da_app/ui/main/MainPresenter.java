@@ -55,13 +55,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     @Override
     public void onFabClicked() {
         getMvpView().lockDrawer();
-        getMvpView().openRegisterationSensor();
+        getMvpView().openRegistrationSensor();
     }
 
     @Override
-    public void onSensorItemClicked(Sensor sensor) {
+    public void onSensorItemClicked(Sensor sensor, String parent) {
         getMvpView().lockDrawer();
-        getMvpView().openSensorDetailFragment(sensor);
+        getMvpView().openSensorDetailFragment(sensor, parent);
     }
 
 }

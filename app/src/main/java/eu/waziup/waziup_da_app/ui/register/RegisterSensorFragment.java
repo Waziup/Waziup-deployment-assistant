@@ -36,6 +36,7 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
+import eu.waziup.waziup_da_app.ui.sensor.SensorFragment;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 
 import static android.app.Activity.RESULT_OK;
@@ -133,7 +134,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     @OnClick(R.id.nav_back_btn)
     void onNavBackClick() {
-        getBaseActivity().onFragmentDetached(TAG);
+        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
     }
 
     @OnClick(R.id.register_scan_qr)
@@ -499,6 +500,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @Override
     public void openSensorListFragment() {
         hideLoading();
-        getBaseActivity().onFragmentDetached(TAG);
+        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
     }
 }

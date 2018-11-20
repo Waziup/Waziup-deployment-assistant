@@ -73,7 +73,18 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     Sensor mSensor;
 
+    public static String parentFragment;
+
     //    https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+    public static DetailSensorFragment newInstance(Sensor sensor, String fragmentPassed) {
+        Bundle args = new Bundle();
+        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
+        DetailSensorFragment fragment = new DetailSensorFragment();
+        fragment.setArguments(args);
+        parentFragment = fragmentPassed;
+        return fragment;
+    }
+
     public static DetailSensorFragment newInstance(Sensor sensor) {
         Bundle args = new Bundle();
         args.putSerializable(DETAIL_SENSOR_KEY, sensor);
@@ -140,7 +151,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @OnClick(R.id.nav_back_btn)
     void onNavBackClick() {
-        getBaseActivity().onFragmentDetached(TAG);
+        getBaseActivity().onFragmentDetached(TAG, parentFragment);
     }
 
     @Override

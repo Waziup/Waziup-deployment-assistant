@@ -10,8 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,10 +27,6 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
-import eu.waziup.waziup_da_app.ui.detail.DetailSensorFragment;
-import eu.waziup.waziup_da_app.ui.main.MainActivity;
-import eu.waziup.waziup_da_app.ui.register.RegisterSensorFragment;
-import eu.waziup.waziup_da_app.utils.CommonUtils;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback {
 
@@ -117,6 +111,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     public void showSensors(List<Sensor> sensors) {
         if (sensors != null) {
             if (sensors.size() > 0) {
+//                if (tvNoSensors.getVisibility() == View.VISIBLE)
                 tvNoSensors.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(sensors);
@@ -136,7 +131,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
     @Override
     public void loadPage() {
-        mPresenter.loadSensors();
+//        mPresenter.loadSensors();
     }
 
     @Override

@@ -7,9 +7,9 @@ public interface MainMvpView extends MvpView {
 
     void openLoginActivity();
 
-    void openRegisterationSensor();
+    void openRegistrationSensor();
 
-    void openSensorDetailFragment(Sensor sensor);
+    void openSensorDetailFragment(Sensor sensor, String parentFragment);
 
     void lockDrawer();
 
@@ -21,4 +21,6 @@ public interface MainMvpView extends MvpView {
     void updateUserEmail(String currentUserEmail);
 
     void updateUserProfilePic(String currentUserProfilePicUrl);
+
+    void onBackPressed(String tag, String parentFragment);
 }

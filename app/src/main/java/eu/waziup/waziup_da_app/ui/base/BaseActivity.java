@@ -166,7 +166,12 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentDetached(String tag) {
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onFragmentDetached(String tag, String parent) {
 
     }
 

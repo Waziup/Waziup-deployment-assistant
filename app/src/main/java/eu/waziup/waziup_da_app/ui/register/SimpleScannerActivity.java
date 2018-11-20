@@ -2,14 +2,12 @@ package eu.waziup.waziup_da_app.ui.register;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.google.zxing.Result;
 
-import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.ui.base.BaseActivity;
@@ -30,6 +28,8 @@ public class SimpleScannerActivity extends BaseActivity implements ZXingScannerV
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_simple_scanner);
+
+        ButterKnife.bind(this);
 
         setUp();
 

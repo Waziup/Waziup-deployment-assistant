@@ -17,5 +17,5 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void onFabClicked();
 
-    void onSensorItemClicked(Sensor sensor);
+    void onSensorItemClicked(Sensor sensor, String parent);
 }

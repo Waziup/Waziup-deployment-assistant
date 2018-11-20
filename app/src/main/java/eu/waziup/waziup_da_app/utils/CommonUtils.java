@@ -15,26 +15,18 @@
 
 package eu.waziup.waziup_da_app.utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -44,7 +36,6 @@ import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.ApiError;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
 /**
@@ -60,16 +51,22 @@ public final class CommonUtils {
     }
 
     public static ProgressDialog showLoadingDialog(Context context) {
-        ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.show();
-        if (progressDialog.getWindow() != null) {
-            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        progressDialog.setContentView(R.layout.progress_dialog);
-        progressDialog.setIndeterminate(true);
+        if (context != null) {
+            ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.show();
+            if (progressDialog.getWindow() != null) {
+                progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+            progressDialog.setContentView(R.layout.progress_dialog);
+            progressDialog.setIndeterminate(true);
 //        progressDialog.setCancelable(false);//todo cancel this when needed
 //        progressDialog.setCanceledOnTouchOutside(false);
-        return progressDialog;
+            return progressDialog;
+        } else {
+            return null;
+        }
+
+
     }
 
     @SuppressLint("all")
@@ -81,7 +78,7 @@ public final class CommonUtils {
         Toast.makeText(DaApp.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static void hideKeyboard(Activity activity){
+    public static void hideKeyboard(Activity activity) {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
@@ -146,8 +143,13 @@ public final class CommonUtils {
         }
         //todo find out if this is the right way of handling this condition
         else {
-            ApiError apiError = ErrorUtils.parseError(((com.jakewharton.retrofit2.adapter.rxjava2.HttpException) throwable).response());
-            return apiError.getMessage();
+            if (throwable!=null){
+                ApiError apiError = ErrorUtils.parseError(((com.jakewharton.retrofit2.adapter.rxjava2.HttpException) throwable).response());
+                return apiError.getMessage();
+            }else{
+                return null;
+            }
+
         }
     }
 }
