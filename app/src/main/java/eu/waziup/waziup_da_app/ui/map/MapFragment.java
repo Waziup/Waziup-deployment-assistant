@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,26 +95,26 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     public void onPause() {
-        super.onPause();
         mapView.onPause();
+        super.onPause();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         mapView.onStop();
+        super.onStop();
     }
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         mapView.onLowMemory();
+        super.onLowMemory();
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         mapView.onDestroy();
+        super.onDestroyView();
     }
 
     @Override
@@ -121,9 +122,33 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         hideLoading();
         sensorList.addAll(sensors);
 
+
         mapView.getMapAsync(mapboxMap -> {
+
+            mapboxMap.setOnInfoWindowClickListener(this);
+
+            mapboxMap.setInfoWindowAdapter(marker -> {
+
+                View view = getBaseActivity().getLayoutInflater().inflate(R.layout.layout_callout, null);
+
+                TextView sensorName = view.findViewById(R.id.info_sensor_name);
+                TextView sensorDomain = view.findViewById(R.id.info_sensor_domain);
+
+                sensorName.setText(marker.getTitle());
+                sensorDomain.setText(marker.getSnippet());
+
+                return view;
+
+            });
+
+            mapboxMap.getUiSettings().setZoomControlsEnabled(false);//hide zoom control button
+            mapboxMap.getUiSettings().setCompassEnabled(false);//hide compass
+            mapboxMap.getUiSettings().setZoomGesturesEnabled(true);
+            mapboxMap.getUiSettings().setScrollGesturesEnabled(true);
+            mapboxMap.getUiSettings().setAllGesturesEnabled(true);
+
             // One way to add a marker view
-            //Filling up the list
+            // Filling up the list
             for (int i = 0; i < sensorList.size(); i++) {
                 if (sensorList.get(i).getLocation() != null) {
                     if (sensorList.get(i).getLocation().getLatitude() != null &&
@@ -135,23 +160,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
                 }
             }
 
-            mapboxMap.setInfoWindowAdapter(marker -> {
 
-
-                View view = getBaseActivity().getLayoutInflater().inflate(R.layout.layout_callout, null);
-                if (marker.getInfoWindow() != null) {
-                    TextView sensorName = view.findViewById(R.id.info_sensor_name);
-                    TextView sensorDomain = view.findViewById(R.id.info_sensor_domain);
-
-                    sensorName.setText(marker.getTitle());
-                    sensorDomain.setText(marker.getSnippet());
-                }
-
-                return view;
-
-            });
-
-            mapboxMap.setOnInfoWindowClickListener(this);
         });
     }
 
@@ -170,9 +179,10 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         return true;
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mapView.onSaveInstanceState(outState);
-//    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
 }

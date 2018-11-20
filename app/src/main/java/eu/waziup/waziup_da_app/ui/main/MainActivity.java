@@ -6,9 +6,11 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -64,6 +66,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     private ActionBarDrawerToggle mDrawerToggle;
 
+
+    public static String CURRENT_TAG = SensorFragment.TAG;
+    private Handler mHandler;
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -74,12 +79,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         setContentView(R.layout.activity_main);
 
+        mHandler = new Handler();
+
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.onAttach(MainActivity.this);
 
         setUp();
 
+        // todo check the saved instance state before opening the sensorFragment
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
@@ -144,6 +152,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         switch (menuItem.getItemId()) {
             case R.id.nav_sensor:
                 fragmentClass = SensorFragment.class;
+                CURRENT_TAG = SensorFragment.TAG;
                 break;
 //            case R.id.nav_gateway:
 //                CommonUtils.toast("gateway clicked");
@@ -151,14 +160,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                break;
             case R.id.nav_notification:
                 CommonUtils.toast("notification clicked");
+                CURRENT_TAG = SensorFragment.TAG;
 //                fragmentClass = QRScanMvpView.class;
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
+                CURRENT_TAG = MapFragment.TAG;
                 break;
             case R.id.nav_setting://todo remove if nothing goes in here
 //                fragmentClass = MapFragment.class;
                 CommonUtils.toast("settings clicked");
+                CURRENT_TAG = SensorFragment.TAG;
                 break;
             case R.id.nav_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -176,6 +188,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 fragmentClass = SensorFragment.class;
         }
 
+        //Checking if the item is in checked state or not, if not make it in checked state
+        if (menuItem.isChecked()) {
+            menuItem.setChecked(false);
+        } else {
+            menuItem.setChecked(true);
+        }
+        menuItem.setChecked(true);
+
         try {
             if (fragmentClass != null)
                 fragment = (Fragment) fragmentClass.newInstance();
@@ -183,12 +203,45 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragment != null)
+
+        // if user select the current navigation menu again, don't do anything
+        // just close the navigation drawer
+        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+            mDrawer.closeDrawers();
+
+            // show or hide the fab button
+//            toggleFab();
+            return;
+        }
+
+        // Sometimes, when fragment has huge data, screen seems hanging
+        // when switching between navigation menus
+        // So using runnable, the fragment is loaded with cross fade effect
+        // This effect can be seen in GMail app
+        Fragment finalFragment = fragment;
+        Runnable mPendingRunnable = () -> {
+            // update the main content by replacing fragments
+//            Fragment fragment1 = getHomeFragment();
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+//                    android.R.anim.fade_out);
+//            fragmentTransaction.replace(R.id.frame, fragment1, CURRENT_TAG);
+//            fragmentTransaction.commitAllowingStateLoss();
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (finalFragment != null)
+
             fragmentManager.beginTransaction()
-                    .replace(R.id.flContent, fragment)
+                    .replace(R.id.flContent, finalFragment, CURRENT_TAG)
                     .commit();
+
+        };
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
 
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
@@ -200,7 +253,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers();
+            return;
+        }
+
         super.onBackPressed();
+
+//        Fragment f = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
+//        if(f instanceof CustomFragmentClass)
+//             do something with f
+//            ((CustomFragmentClass) f).doSomething();
     }
 
     @Override
@@ -232,6 +295,19 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     @Override
+    public void onBackPressed(String tag, String parentFragment) {
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
+        if (fragment == null) {
+            onBackPressed();
+        } else {
+            onFragmentDetached(tag, parentFragment);
+        }
+    }
+
+    @Override
     public void updateUserName(String currentUserName) {
         mNameTextView.setText(currentUserName);
     }
@@ -244,19 +320,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void updateUserProfilePic(String currentUserProfilePicUrl) {
         //load profile pic url into ANImageView
-    }
-
-    @Override
-    public void onBackPressed(String tag, String parentFragment) {
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
-        if (fragment == null) {
-            onBackPressed();
-        } else {
-            onFragmentDetached(tag, parentFragment);
-        }
     }
 
     @Override
