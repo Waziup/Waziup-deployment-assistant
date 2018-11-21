@@ -85,8 +85,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
             enableLocationComponent(mapboxMap);
 
             // checks if permission has been granted already and if so it starts Location indicator
-//            checkPermissionAndEnableLocation();
-
+            // checkPermissionAndEnableLocation();
             mapboxMap.setOnInfoWindowClickListener(this);
 
             // custom info window for the markers
@@ -150,7 +149,6 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
         mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 7000, null);
     }
-
 
     @Override
     public void onAttach(Context context) {

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -60,8 +61,8 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @BindView(R.id.register_sensor_domain)
     EditText sensorDomain;
 
-    @BindView(R.id.register_sensor_gateway)
-    EditText sensorGateway;
+//    @BindView(R.id.register_sensor_gateway)
+//    EditText sensorGateway;
 
     @BindView(R.id.register_current_location_value)
     EditText sensorLocation;
@@ -147,30 +148,43 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     @OnClick(R.id.btn_register_submit)
     void onSubmitClicked() {
+
+        // ID
         if (TextUtils.isEmpty(sensorId.getText())) {
             sensorId.requestFocus();
             sensorId.setError("sensorId can't be empty");
             return;
         }
 
+        // Name
         if (TextUtils.isEmpty(sensorName.getText())) {
             sensorName.requestFocus();
             sensorName.setError("sensorName can't be empty");
             return;
         }
 
+        // Domain
         if (TextUtils.isEmpty(sensorDomain.getText())) {
             sensorDomain.requestFocus();
             sensorDomain.setError("sensorDomain can't be empty");
             return;
         }
 
+//        // Gateway
+//        if (TextUtils.isEmpty(sensorGateway.getText())) {
+//            sensorGateway.requestFocus();
+//            sensorGateway.setError("gateway can't be empty");
+//            return;
+//        }
+
+        // Location
         if (TextUtils.isEmpty(sensorLocation.getText())) {
             sensorLocation.requestFocus();
             sensorLocation.setError("location can't be empty");
             return;
         }
 
+        // Visibility
         String mSensorVisibility = "";
         if (sensorVisibility.getSelectedItem() == null) {
             mSensorVisibility = "public";
@@ -181,7 +195,9 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                         sensorName.getText().toString().trim(),
                         sensorDomain.getText().toString().trim(),
                         TextUtils.isEmpty(mSensorVisibility) ? sensorVisibility.getSelectedItem().toString().trim() : mSensorVisibility,
-                        new eu.waziup.waziup_da_app.data.network.model.sensor.Location(latitude, longitude))
+                        new eu.waziup.waziup_da_app.data.network.model.sensor.Location(latitude, longitude)
+//                        ,sensorGateway.getText().toString().trim()
+                )
         );
     }
 
@@ -200,11 +216,11 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                             sensorId.setText(obj.getString("sensor_id"));
                             sensorName.setText(obj.getString("sensor_name"));
                             sensorDomain.setText(obj.getString("domain"));
-                            Log.e("---->", String.valueOf(bundle.getString("result")));
+//                            Log.e("---->", String.valueOf(bundle.getString("result")));
                         } catch (JSONException e) {
                             e.printStackTrace();
 
-                            Log.e("---->JSONException", String.valueOf(bundle.getString("result")));
+//                            Log.e("---->JSONException", String.valueOf(bundle.getString("result")));
                             Toast.makeText(getBaseActivity(), String.valueOf(bundle.getString("result")),
                                     Toast.LENGTH_LONG).show();
                         }
@@ -249,13 +265,12 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                                 .setMessage(R.string.require_permission)
                                 .setPositiveButton(R.string.go_to_settings, (dialog1, which) -> {
 
-                                    //todo handle this later
                                     // Go to the detail settings of our application
-//                                    Intent intent = new Intent();
-//                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                                    Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
-//                                    intent.setData(uri);
-//                                    startActivity(intent);
+                                    Intent intent = new Intent();
+                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getContext().getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivity(intent);
 
                                     dialog1.dismiss();
                                 })
@@ -277,7 +292,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                     longitude = getLongitude();
                 } else {
                     // Permission request was denied.
-                    // todo display alert dialog than snackBar
+                    // todo display alert dialog rather than snackBar
                     if (getView() != null)
                         Snackbar.make(getView(), R.string.location_permission_denied,
                                 Snackbar.LENGTH_SHORT)
@@ -355,7 +370,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                                     LocationManager.NETWORK_PROVIDER,
                                     MIN_TIME_BW_UPDATES,
                                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                            Log.d("Network", "Network");
+//                            Log.d("Network", "Network");
                             if (locationManager != null) {
                                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                                 if (location != null) {
@@ -371,7 +386,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
                                         LocationManager.GPS_PROVIDER,
                                         MIN_TIME_BW_UPDATES,
                                         MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                                Log.d("GPS Enabled", "GPS Enabled");
+//                                Log.d("GPS Enabled", "GPS Enabled");
                                 if (locationManager != null) {
                                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                                     if (location != null) {

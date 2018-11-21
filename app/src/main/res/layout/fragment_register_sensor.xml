@@ -97,14 +97,14 @@
                         android:hint="domain"
                         android:textSize="16sp" />
 
-                    <EditText
-                        android:id="@+id/register_sensor_gateway"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="gateway"
-                        android:textSize="16sp" />
+                    <!--<EditText-->
+                        <!--android:id="@+id/register_sensor_gateway"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:hint="gateway"-->
+                        <!--android:textSize="16sp" />-->
 
                     <Spinner
                         android:id="@+id/register_sensor_visibility"

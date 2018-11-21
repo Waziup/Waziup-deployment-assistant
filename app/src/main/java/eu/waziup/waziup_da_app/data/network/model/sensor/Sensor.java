@@ -48,12 +48,13 @@ public class Sensor implements Serializable {
 
 
 
-    public Sensor(String id, String name, String domain, String visibility, Location location) {
+    public Sensor(String id, String name, String domain, String visibility, Location location) {//, String gatewayId
         this.id = id;
         this.name = name;
         this.domain = domain;
         this.visibility = visibility;
         this.location = location;
+//        this.gatewayId = gatewayId;
     }
 
     public String getId() {

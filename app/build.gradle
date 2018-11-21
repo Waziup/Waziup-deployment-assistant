@@ -93,13 +93,10 @@ dependencies {
     }
 
     // google play service
-    implementation "com.google.android.gms:play-services-vision:$rootProject.visionVersion"
+    implementation "com.google.android.gms:play-services-location:$rootProject.gpsVersion"
 
     // FCM - firebase Notification management
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-
-    // ObjectBox - RXJava
-//    implementation "io.objectbox:objectbox-rxjava:$oboxVersion"
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'
