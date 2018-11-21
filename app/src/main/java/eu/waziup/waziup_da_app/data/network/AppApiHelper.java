@@ -40,8 +40,8 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public void setApiHeader(ApiHeader apiHeader) {
         if (apiHeader != null) {
-            mApiHeader.setApiKey(apiHeader.getApiKey());
-            mApiHeader.setUserId(apiHeader.getUserId());
+//            mApiHeader.setApiKey(apiHeader.getApiKey());
+//            mApiHeader.setUserId(apiHeader.getUserId());
             mApiHeader.setAccessToken(apiHeader.getAccessToken());
         }
     }

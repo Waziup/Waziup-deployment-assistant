@@ -29,6 +29,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import eu.waziup.waziup_da_app.R;
 import eu.waziup.waziup_da_app.data.network.model.sensor.Sensor;
 import eu.waziup.waziup_da_app.di.component.ActivityComponent;
@@ -118,8 +119,15 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     }
 
+    @OnClick(R.id.gps_fab)
+    void onFabClicked() {
+        if (map != null)
+            enableLocationComponent(map);
+
+    }
+
     public void settingUi() {
-        if (map != null){
+        if (map != null) {
             map.getUiSettings().setZoomControlsEnabled(false);//hide zoom control button
             map.getUiSettings().setCompassEnabled(false);//hide compass
             map.getUiSettings().setRotateGesturesEnabled(false);

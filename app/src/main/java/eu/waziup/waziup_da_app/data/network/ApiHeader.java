@@ -17,27 +17,27 @@ public class ApiHeader {
     private Long mUserId;
     private String mAccessToken;
 
-    public ApiHeader(String mApiKey, Long mUserId, String mAccessToken) {
-        this.mApiKey = mApiKey;
-        this.mUserId = mUserId;
+    public ApiHeader(String mAccessToken) {
+//        this.mApiKey = mApiKey;
+//        this.mUserId = mUserId;
         this.mAccessToken = mAccessToken;
     }
 
-    public String getApiKey() {
-        return mApiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        mApiKey = apiKey;
-    }
-
-    public Long getUserId() {
-        return mUserId;
-    }
-
-    public void setUserId(Long userId) {
-        mUserId = userId;
-    }
+//    public String getApiKey() {
+//        return mApiKey;
+//    }
+//
+//    public void setApiKey(String apiKey) {
+//        mApiKey = apiKey;
+//    }
+//
+//    public Long getUserId() {
+//        return mUserId;
+//    }
+//
+//    public void setUserId(Long userId) {
+//        mUserId = userId;
+//    }
 
     public String getAccessToken() {
         return "Bearer "+ mAccessToken;
