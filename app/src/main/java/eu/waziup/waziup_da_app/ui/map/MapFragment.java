@@ -36,8 +36,6 @@ import eu.waziup.waziup_da_app.di.component.ActivityComponent;
 import eu.waziup.waziup_da_app.ui.base.BaseFragment;
 import eu.waziup.waziup_da_app.utils.CommonUtils;
 
-//import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
-
 public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener, PermissionsListener {
 
     @Inject
@@ -48,8 +46,13 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     List<Sensor> sensorList = new ArrayList<>();
 
     MapCommunicator communicator;
-    private static final int PERMISSIONS_LOCATION = 9910;
+    //    private static final int PERMISSIONS_LOCATION = 9910;
     public static final String TAG = "MapFragment";
+
+//    private LocationRequest mLocationRequest;
+
+//    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+//    private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
     // variables for adding location layer
     private MapboxMap map;
@@ -116,13 +119,15 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     protected void setUp(View view) {
-
     }
 
     @OnClick(R.id.gps_fab)
     void onFabClicked() {
+
         if (map != null)
-            enableLocationComponent(map);
+            updateMap(originLocation.getLatitude(), originLocation.getLongitude(), map);
+
+//            enableLocationComponent(map);
 
     }
 
@@ -264,6 +269,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         }
     }
 
+
     @Override
     public void onPermissionResult(boolean granted) {
         if (granted) {
@@ -274,6 +280,101 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 //            finish();
         }
     }
+
+//    private boolean checkPermissions() {
+//        if (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            return true;
+//        } else {
+//            requestPermissions();
+//            return false;
+//        }
+//    }
+
+//    private void requestPermissions() {
+//        ActivityCompat.requestPermissions(this,
+//                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                REQUEST_FINE_LOCATION);
+//    }
+
+    // Trigger new location updates at interval
+//    protected void startLocationUpdates() {
+//
+//        // Create the location request to start receiving updates
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        mLocationRequest.setInterval(UPDATE_INTERVAL);
+//        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+//
+//        // Create LocationSettingsRequest object using location request
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+//        builder.addLocationRequest(mLocationRequest);
+//        LocationSettingsRequest locationSettingsRequest = builder.build();
+//
+//        // Check whether location settings are satisfied
+//        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+//        SettingsClient settingsClient = LocationServices.getSettingsClient(getBaseActivity());
+//        settingsClient.checkLocationSettings(locationSettingsRequest);
+//
+//
+//        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+//        if (ActivityCompat.checkSelfPermission(getBaseActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        LocationServices.getFusedLocationProviderClient(getBaseActivity()).requestLocationUpdates(mLocationRequest,
+//                new LocationCallback() {
+//                    @Override
+//                    public void onLocationResult(LocationResult locationResult) {
+//                        // do work here
+//                        onLocationChanged(locationResult.getLastLocation());
+//                    }
+//                },
+//                Looper.myLooper());
+//    }
+
+//    public void getLastLocation() {
+//        // Get last known recent location using new Google Play Services SDK (v11+)
+//        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(getBaseActivity());
+//
+//        if (ActivityCompat.checkSelfPermission(getBaseActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        locationClient.getLastLocation()
+//                .addOnSuccessListener(location -> {
+//                    // GPS location can be null if GPS is switched off
+//                    if (location != null) {
+//                        onLocationChanged(location);
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.d("MapDemoActivity", "Error trying to get last GPS location");
+//                    e.printStackTrace();
+//                });
+//    }
+
+//    public void onLocationChanged(Location location) {
+//        // New location has now been determined
+//        String msg = "Updated Location: " +
+//                Double.toString(location.getLatitude()) + "," +
+//                Double.toString(location.getLongitude());
+////        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//        // You can now create a LatLng Object for use with maps
+//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//    }
 
 //    private void checkPermissionAndEnableLocation() {
 //        if (!PermissionsManager.areLocationPermissionsGranted(getBaseActivity())) {
