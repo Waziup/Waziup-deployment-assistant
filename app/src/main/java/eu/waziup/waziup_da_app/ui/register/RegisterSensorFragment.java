@@ -113,8 +113,6 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
         setUp(view);
 
-
-
         return view;
     }
 

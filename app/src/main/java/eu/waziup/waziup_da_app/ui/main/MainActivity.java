@@ -1,6 +1,7 @@
 package eu.waziup.waziup_da_app.ui.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
@@ -325,7 +326,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
         if (fragment == null) {
-            onBackPressed();
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Closing Activity")
+                    .setMessage("Are you sure you want to close this activity?")
+                    .setPositiveButton("Yes", (dialog, which) -> onBackPressed())
+                    .setNegativeButton("No", null)
+                    .show();
+
         } else {
             onFragmentDetached(tag, parentFragment);
         }
