@@ -260,9 +260,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Closing Activity")
-                .setMessage("Are you sure you want to close this activity?")
-                .setPositiveButton("Yes", (dialog, which) -> onBackPressed())
+                .setTitle("WAZIUP")
+                .setMessage("Are you sure you want to close WAZIUP?")
+                .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
 
@@ -337,7 +337,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Closing Activity")
                     .setMessage("Are you sure you want to close this activity?")
-                    .setPositiveButton("Yes", (dialog, which) -> onBackPressed())
+                    .setPositiveButton("Yes", (dialog, which) -> finish())
                     .setNegativeButton("No", null)
                     .show();
 

@@ -161,16 +161,21 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
-    public void showMeasurements(String sensorId,List<Measurement> measurements) {
+    public void showMeasurements(String sensorId, List<Measurement> measurements) {
         if (measurements != null) {
             if (measurements.size() > 0) {
-                tvNoMeasurement.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                if (tvNoMeasurement != null && tvNoMeasurement.getVisibility() == View.VISIBLE)
+                    tvNoMeasurement.setVisibility(View.GONE);
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
+                    mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(sensorId, measurements);
             } else {
-                mRecyclerView.setVisibility(View.GONE);
-                tvNoMeasurement.setVisibility(View.VISIBLE);
-                tvNoMeasurement.setText(R.string.no_measurements_list_found);
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
+                    mRecyclerView.setVisibility(View.GONE);
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE){
+                    tvNoMeasurement.setVisibility(View.VISIBLE);
+                    tvNoMeasurement.setText(R.string.no_measurements_list_found);
+                }
             }
         }
         hideLoading();

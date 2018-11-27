@@ -111,13 +111,18 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     public void showSensors(List<Sensor> sensors) {
         if (sensors != null) {
             if (sensors.size() > 0) {
-                tvNoSensors.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
+                    tvNoSensors.setVisibility(View.GONE);
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
+                    mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(sensors);
             } else {
-                mRecyclerView.setVisibility(View.GONE);
-                tvNoSensors.setVisibility(View.VISIBLE);
-                tvNoSensors.setText(R.string.no_sensors_list_found);
+                if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
+                    tvNoSensors.setVisibility(View.VISIBLE);
+                    tvNoSensors.setText(R.string.no_sensors_list_found);
+                }
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
+                    mRecyclerView.setVisibility(View.GONE);
             }
         }
         hideLoading();
