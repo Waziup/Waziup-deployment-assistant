@@ -258,7 +258,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             return;
         }
 
-        super.onBackPressed();
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Closing Activity")
+                .setMessage("Are you sure you want to close this activity?")
+                .setPositiveButton("Yes", (dialog, which) -> onBackPressed())
+                .setNegativeButton("No", null)
+                .show();
 
 //        Fragment f = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
 //        if(f instanceof CustomFragmentClass)
@@ -326,6 +332,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
         if (fragment == null) {
+            Log.e("--->Fragemtn","null");
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Closing Activity")
@@ -335,6 +342,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     .show();
 
         } else {
+            Log.e("--->Fragemtn","not null");
             onFragmentDetached(tag, parentFragment);
         }
     }
