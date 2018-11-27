@@ -36,7 +36,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/waziup_logo"
+                    app:srcCompat="@drawable/waziup_logo_png"
                     android:layout_width="match_parent"
                     android:scaleType="centerCrop"
                     android:layout_height="100dp" />

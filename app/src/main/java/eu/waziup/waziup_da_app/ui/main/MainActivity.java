@@ -1,7 +1,6 @@
 package eu.waziup.waziup_da_app.ui.main;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
@@ -11,21 +10,18 @@ import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import javax.inject.Inject;
@@ -71,6 +67,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     public static String CURRENT_TAG = SensorFragment.TAG;
     private Handler mHandler;
+
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -143,6 +140,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     selectDrawerItem(menuItem);
                     return true;
                 });
+
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -161,14 +159,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             case R.id.nav_notification:
                 CommonUtils.toast("notification clicked");
                 CURRENT_TAG = SensorFragment.TAG;
-//                fragmentClass = QRScanMvpView.class;
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
                 CURRENT_TAG = MapFragment.TAG;
                 break;
-            case R.id.nav_setting://todo remove if nothing goes in here
-//                fragmentClass = MapFragment.class;
+            case R.id.nav_setting:
                 CommonUtils.toast("settings clicked");
                 CURRENT_TAG = SensorFragment.TAG;
                 break;
@@ -188,14 +184,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 fragmentClass = SensorFragment.class;
         }
 
-        //Checking if the item is in checked state or not, if not make it in checked state
-        if (menuItem.isChecked()) {
-            menuItem.setChecked(false);
-        } else {
-            menuItem.setChecked(true);
-        }
-        menuItem.setChecked(true);
-
         try {
             if (fragmentClass != null)
                 fragment = (Fragment) fragmentClass.newInstance();
@@ -203,38 +191,21 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             e.printStackTrace();
         }
 
-
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             mDrawer.closeDrawers();
-
-            // show or hide the fab button
-//            toggleFab();
             return;
         }
 
-        // Sometimes, when fragment has huge data, screen seems hanging
-        // when switching between navigation menus
-        // So using runnable, the fragment is loaded with cross fade effect
-        // This effect can be seen in GMail app
         Fragment finalFragment = fragment;
         Runnable mPendingRunnable = () -> {
-            // update the main content by replacing fragments
-//            Fragment fragment1 = getHomeFragment();
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-//                    android.R.anim.fade_out);
-//            fragmentTransaction.replace(R.id.frame, fragment1, CURRENT_TAG);
-//            fragmentTransaction.commitAllowingStateLoss();
-
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (finalFragment != null)
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.flContent, finalFragment, CURRENT_TAG)
-                    .commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.flContent, finalFragment, CURRENT_TAG)
+                        .commit();
 
         };
 
@@ -243,8 +214,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mHandler.post(mPendingRunnable);
         }
 
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
+
         // Set action bar title
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
@@ -259,17 +229,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         }
 
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("WAZIUP")
                 .setMessage("Are you sure you want to close WAZIUP?")
                 .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
-
-//        Fragment f = getActivity().getFragmentManager().findFragmentById(R.id.fragment_container);
-//        if(f instanceof CustomFragmentClass)
-//             do something with f
-//            ((CustomFragmentClass) f).doSomething();
     }
 
     @Override
@@ -306,24 +271,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mNameTextView.setText("Corentin Dupont");
         mEmailTextView.setText("test@gmail.com");
 
-        // loading header background image
-//        Glide.with(this).load(urlNavHeaderBg)
-//                .crossFade()
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(imgNavHeaderBg);
-
-        // Loading profile image
-//        Glide.with(this).load(urlProfileImg)
-//                .crossFade()
-//                .thumbnail(0.5f)
-//                .bitmapTransform(new CircleTransform(this))
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(imgProfile);
-
         // showing dot next to notifications label
         nvDrawer.getMenu().getItem(1).setActionView(R.layout.menu_dot);
     }
-
 
     @Override
     public void onBackPressed(String tag, String parentFragment) {
@@ -332,17 +282,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
         if (fragment == null) {
-            Log.e("--->Fragemtn","null");
             new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Closing Activity")
-                    .setMessage("Are you sure you want to close this activity?")
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("WAZIUP")
+                    .setMessage("Are you sure you want to close WAZIUP?")
                     .setPositiveButton("Yes", (dialog, which) -> finish())
                     .setNegativeButton("No", null)
                     .show();
 
         } else {
-            Log.e("--->Fragemtn","not null");
             onFragmentDetached(tag, parentFragment);
         }
     }

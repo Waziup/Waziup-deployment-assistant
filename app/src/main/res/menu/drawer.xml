@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:id="@+id/menu_top"
-        android:checkableBehavior="single">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedIds">
+
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_sensor"
-            android:checked="true"
+            android:checkable="true"
             android:icon="@drawable/ic_sensors"
-            android:title="Sensors" />
-        <!--<item-->
-            <!--android:id="@+id/nav_gateway"-->
-            <!--android:checked="true"-->
-            <!--android:icon="@drawable/ic_gateway"-->
-            <!--android:title="Gateways" />-->
+            android:title="@string/nav_sensors" />
         <item
             android:id="@+id/nav_notification"
-            android:checked="true"
+            android:checkable="true"
             android:icon="@drawable/ic_notification"
-            android:title="Notification" />
+            android:title="@string/nav_notification" />
         <item
             android:id="@+id/nav_map"
-            android:checked="true"
+            android:checkable="true"
             android:icon="@drawable/ic_map"
-            android:title="Map" />
+            android:title="@string/nav_map" />
         <item
             android:id="@+id/nav_setting"
-            android:checked="true"
+            android:checkable="true"
             android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            android:title="@string/nav_settings" />
         <item
             android:id="@+id/nav_logout"
-            android:checked="true"
+            android:checkable="false"
             android:icon="@drawable/ic_exit"
-            android:title="Logout" />
+            android:title="@string/nav_logout" />
     </group>
+
 </menu>
