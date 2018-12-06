@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:556484818818:android:e1e64a13a23d7db2",
         "android_client_info": {
-          "package_name": "eu.waziup.waziup_da_app"
+          "package_name": "eu.waziup.app"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "556484818818-ab0um9hcicacv9g1tb0ar8i2gu5htre3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "eu.waziup.waziup_da_app",
+            "package_name": "eu.waziup.app",
             "certificate_hash": "dc2fb86895cf7f50f4764d7389a6fd2da476ab37"
           }
         },
