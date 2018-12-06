@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="eu.waziup.waziup_da_app">
+    package="eu.waziup.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".DaApp"
+        android:name="eu.waziup.app.DaApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -37,9 +37,10 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <service android:name=".service.SyncService" />
+        <service android:name="eu.waziup.app.service.SyncService" />
+
         <service
-            android:name=".fcm.MyFirebaseMessagingService"
+            android:name="eu.waziup.app.fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -47,7 +48,7 @@
         </service>
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name="eu.waziup.app.ui.login.LoginActivity"
             android:theme="@style/AppTheme.no_toolbar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -57,12 +58,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="eu.waziup.app.ui.main.MainActivity"
             android:theme="@style/AppTheme.no_toolbar" />
         <activity
-            android:name=".ui.register.SimpleScannerActivity"
+            android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
-        <activity android:name=".ui.notification.NotificationActivity"
+        <activity android:name="eu.waziup.app.ui.notification.NotificationActivity"
             android:theme="@style/AppTheme.no_toolbar"/>
     </application>
 

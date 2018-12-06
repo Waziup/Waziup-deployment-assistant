@@ -4,7 +4,7 @@ apply plugin: 'io.objectbox'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "eu.waziup.waziup_da_app"
+        applicationId "eu.waziup.app"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 1
@@ -100,6 +100,9 @@ dependencies {
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'
+
+    // keyCloak - AppAuth
+    implementation 'net.openid:appauth:0.2.0'
 
 }
 

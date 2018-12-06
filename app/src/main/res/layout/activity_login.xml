@@ -108,9 +108,22 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="60dp"
+                    android:layout_marginTop="20dp"
                     android:text="login"
+                    android:textSize="18dp" />
+
+                <Button
+                    android:background="@drawable/bg_curved_primary_color"
+                    android:id="@+id/btn_google_login"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:text="google"
                     android:textSize="18dp" />
 
             </LinearLayout>
