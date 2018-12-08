@@ -16,6 +16,8 @@ public class DaApp extends Application {
 
     public static Context context;
 
+    public static final String LOG_TAG = "AppAuthSample";
+
     @Inject
     DataManager mDataManager;
 

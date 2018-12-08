@@ -19,5 +19,6 @@
 
     <dimen name="poster_hero_height">192dp</dimen>
 
+    <dimen name="action_margin">16dp</dimen>
     <dimen name="fab_dimen">16dp</dimen>
 </resources>

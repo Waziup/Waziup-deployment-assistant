@@ -18,6 +18,10 @@ public final class AppConstants {
 
     public static final String TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss";
 
+    public static final String AUTH_CLIENT_ID = "556484818818-4am2rqla0pdrked873u9rq4ohrvdhpoh.apps.googleusercontent.com";
+    public static final String AUTH_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+
+
     private AppConstants() {
         // This utility class is not publicly instantiable
     }

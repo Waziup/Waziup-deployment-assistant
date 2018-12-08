@@ -47,13 +47,27 @@
             </intent-filter>
         </service>
 
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="eu.waziup.app" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="eu.waziup.app.ui.login.LoginActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.no_toolbar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- made two filter on purpose: find out if this is possible or not-->
+            <intent-filter>
+                <action android:name="eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -63,8 +77,9 @@
         <activity
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
-        <activity android:name="eu.waziup.app.ui.notification.NotificationActivity"
-            android:theme="@style/AppTheme.no_toolbar"/>
+        <activity
+            android:name="eu.waziup.app.ui.notification.NotificationActivity"
+            android:theme="@style/AppTheme.no_toolbar" />
     </application>
 
 </manifest>
