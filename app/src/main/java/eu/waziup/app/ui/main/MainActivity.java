@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
+//        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         setContentView(R.layout.activity_main);
 
         mHandler = new Handler();
