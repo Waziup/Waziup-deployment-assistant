@@ -2,18 +2,11 @@ package eu.waziup.app.ui.notification;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.thunder413.datetimeutils.DateTimeStyle;
-import com.github.thunder413.datetimeutils.DateTimeUtils;
 
 import java.util.List;
 
@@ -21,8 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
-import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseViewHolder;
 
 public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -38,7 +29,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public SensorViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.card_sensor, viewGroup, false);
+                .inflate(R.layout.card_notification, viewGroup, false);
         return new SensorViewHolder(view);
     }
 
@@ -68,26 +59,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     public class SensorViewHolder extends BaseViewHolder {
 
-        @BindView(R.id.sensor_date)
-        TextView mSensorDate;
+        @BindView(R.id.notification_sensor_name)
+        TextView mNotificationSensorName;
 
-        @BindView(R.id.sensor_id)
-        TextView mSensorId;
+        @BindView(R.id.notification_measurement)
+        TextView mNotificationMeasurement;
 
-        @BindView(R.id.sensor_owner)
-        TextView mSensorOwner;
+        @BindView(R.id.notification_expression)
+        TextView mNotificationExpression;
 
-        @BindView(R.id.sensor_domain)
-        TextView mSensorDomain;
+        @BindView(R.id.notification_message)
+        TextView mNotificationMessage;
 
-        @BindView(R.id.measurement_container)
-        LinearLayout measurementContainer;
+        @BindView(R.id.notification_owner)
+        TextView mNotificationOwner;
 
-        @BindView(R.id.icon_sensor_owner)
-        ImageView ownerIcon;
-
-        @BindView(R.id.sensor_measurements_title)
-        TextView measurementsTitle;
+        @BindView(R.id.notification_shared_at)
+        TextView mNotificationSharedAt;
 
         NotificationResponse notification;
 
@@ -104,6 +92,70 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 notification = notificationResponse.get(position);
 
+                // sensor name
+                if (notification.getCondition().getSensors().size() > 0) {
+                    for (int i = 0; i < notification.getCondition().getSensors().size(); i++) {
+                        mNotificationSensorName.setText(String.valueOf(
+                                (notification.getCondition().getSensors().size() == 1) ? notification.getCondition().getSensors().get(i)
+                                        : (notification.getCondition().getSensors().size() == i) ? notification.getCondition().getSensors().get(i)
+                                        : notification.getCondition().getSensors().get(i) + ", "));
+                    }
+                } else {
+                    mNotificationSensorName.setVisibility(View.GONE);
+                }
+
+                // measurement
+                if (notification.getCondition().getMeasurements().size() > 0) {
+                    for (int i = 0; i < notification.getCondition().getMeasurements().size(); i++) {
+                        mNotificationMeasurement.setText(String.valueOf(
+                                (notification.getCondition().getMeasurements().size() == 1) ? notification.getCondition().getMeasurements().get(i)
+                                        : (notification.getCondition().getMeasurements().size() == i) ? notification.getCondition().getMeasurements().get(i)
+                                        : notification.getCondition().getMeasurements().get(i) + ", "));
+                    }
+                } else {
+                    mNotificationMeasurement.setVisibility(View.GONE);
+                }
+
+                // expression
+                if (!TextUtils.isEmpty(notification.getCondition().getExpression())) {
+                    mNotificationExpression.setText(String.valueOf(notification.getCondition().getExpression()));
+                } else {
+                    mNotificationExpression.setVisibility(View.GONE);
+                }
+
+                // message
+                if (!TextUtils.isEmpty(notification.getNotification().getMessage())) {
+                    mNotificationMessage.setText(String.valueOf(notification.getNotification().getMessage()));
+                } else {
+                    mNotificationMessage.setVisibility(View.GONE);
+                }
+
+                // owner
+                if (notification.getNotification().getUsernames().size() > 0) {
+                    for (int i = 0; i < notification.getNotification().getUsernames().size(); i++) {
+                        mNotificationOwner.setText(String.valueOf(
+                                (notification.getNotification().getUsernames().size() == 1) ? notification.getNotification().getUsernames().get(i)
+                                        : (notification.getNotification().getUsernames().size() == i) ? notification.getNotification().getUsernames().get(i)
+                                        : notification.getNotification().getUsernames().get(i) + ", "));
+                    }
+                } else {
+                    mNotificationOwner.setVisibility(View.GONE);
+                }
+
+                // shared at
+                if (notification.getCondition().getSensors().size() > 0) {
+                    for (int i = 0; i < notification.getNotification().getChannels().size(); i++) {
+                        mNotificationOwner.setText(String.valueOf(
+                                (notification.getNotification().getChannels().size() == 1) ?
+                                        notification.getNotification().getChannels().get(i)
+                                        : (notification.getNotification().getChannels().size() == i) ?
+                                        notification.getNotification().getChannels().get(i)
+                                        : notification.getNotification().getChannels().get(i) + ", "));
+                    }
+                } else {
+                    mNotificationSharedAt.setVisibility(View.GONE);
+                }
+
             } else {
                 // todo find a better way of handling this condition
             }
@@ -114,10 +166,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         protected void clear() {
-            mSensorId.setText("");
-            mSensorDomain.setText("");
-            mSensorOwner.setText("");
-            mSensorDate.setText("");
+            mNotificationSensorName.setText("");
+            mNotificationMeasurement.setText("");
+            mNotificationExpression.setText("");
+            mNotificationMessage.setText("");
+            mNotificationOwner.setText("");
+            mNotificationSharedAt.setText("");
         }
     }
 }

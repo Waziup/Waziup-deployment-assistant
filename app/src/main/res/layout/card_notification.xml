@@ -60,48 +60,53 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
                 android:text="measurement"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/action_menu_presenter"
+                android:id="@+id/notification_expression"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
                 android:text="expression"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/notification_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
                 android:text="message"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
                 android:textSize="16sp" />
+
             <TextView
+                android:id="@+id/notification_owner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_regular"
+                android:maxLines="1"
                 android:text="owner"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
                 android:textSize="16sp" />
+
             <TextView
+                android:id="@+id/notification_shared_at"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
-                android:text="shared_at"
                 android:fontFamily="@font/roboto_regular"
                 android:maxLines="1"
+                android:text="shared_at"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
