@@ -37,7 +37,7 @@ public class EditMeasurementDialog extends Dialog {
 
         mId = findViewById(R.id.dialog_measurement_id);
         mName = findViewById(R.id.dialog_measurement_name);
-        mSensor = findViewById(R.id.dialog_measurement_sensor);
+//        mSensor = findViewById(R.id.dialog_measurement_sensor);
         mQuantityKind = findViewById(R.id.dialog_measurement_quantity_kind);
         mUnit = findViewById(R.id.dialog_measurement_unit);
         title = findViewById(R.id.dialog_measurement_title);
@@ -54,8 +54,8 @@ public class EditMeasurementDialog extends Dialog {
             if (!TextUtils.isEmpty(measurement.getName()))
                 mName.setText(measurement.getName());
 
-            if (!TextUtils.isEmpty(measurement.getSensingDevice()))
-                mSensor.setText(measurement.getSensingDevice());
+//            if (!TextUtils.isEmpty(measurement.getSensingDevice()))
+//                mSensor.setText(measurement.getSensingDevice());
 
             if (!TextUtils.isEmpty(measurement.getQuantityKind()))
                 mQuantityKind.setText(measurement.getQuantityKind());

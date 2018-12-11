@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -37,6 +38,10 @@ public interface ApiCall {
     @GET(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Observable<List<Sensor>> getSensors();
+
+    @GET(ApiEndPoint.NOTIFICATION)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Observable<List<NotificationResponse>> getNotifications();
 
     @POST(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)

@@ -15,7 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import eu.waziup.app.R;
-import eu.waziup.app.ui.notification.NotificationActivity;
+import eu.waziup.app.ui.notification.NotificationFragment;
 
 import static eu.waziup.app.utils.AppConstants.PREF_KEY_FCM_ACCESS_TOKEN_NAME;
 
@@ -49,7 +49,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 //        if(logged_in != null) {
 
-            Intent intent = new Intent(this, NotificationActivity.class);
+            Intent intent = new Intent(this, NotificationFragment.class);
             intent.putExtra(NotificationData.TEXT, notificationData.getTextMessage());
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

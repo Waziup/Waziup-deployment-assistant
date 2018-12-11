@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -73,6 +74,11 @@ public class AppApiHelper implements ApiHelper {
     @Override
     public Observable<List<User>> getUsers() {
         return mApiCall.getUsers();
+    }
+
+    @Override
+    public Observable<List<NotificationResponse>> getNotifications() {
+        return mApiCall.getNotifications();
     }
 
 }

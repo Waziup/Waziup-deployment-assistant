@@ -77,9 +77,7 @@
         <activity
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
-        <activity
-            android:name="eu.waziup.app.ui.notification.NotificationActivity"
-            android:theme="@style/AppTheme.no_toolbar" />
+
     </application>
 
 </manifest>

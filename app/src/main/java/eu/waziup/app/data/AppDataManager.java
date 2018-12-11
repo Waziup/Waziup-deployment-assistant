@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import eu.waziup.app.data.network.ApiHeader;
 import eu.waziup.app.data.network.ApiHelper;
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -69,6 +70,11 @@ public class AppDataManager implements DataManager {
     @Override
     public Observable<List<User>> getUsers() {
         return mApiHelper.getUsers();
+    }
+
+    @Override
+    public Observable<List<NotificationResponse>> getNotifications() {
+        return mApiHelper.getNotifications();
     }
 
     @Override

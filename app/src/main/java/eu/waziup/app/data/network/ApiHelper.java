@@ -4,6 +4,7 @@ package eu.waziup.app.data.network;
 import java.util.List;
 
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -32,4 +33,6 @@ public interface ApiHelper {
     Observable<RegisterSensorResponse> registerSensor(Sensor sensor);
 
     Observable<List<User>> getUsers();
+
+    Observable<List<NotificationResponse>> getNotifications();
 }

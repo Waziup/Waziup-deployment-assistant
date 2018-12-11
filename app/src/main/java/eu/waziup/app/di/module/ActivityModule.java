@@ -23,6 +23,10 @@ import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.ui.map.MapMvpPresenter;
 import eu.waziup.app.ui.map.MapMvpView;
 import eu.waziup.app.ui.map.MapPresenter;
+import eu.waziup.app.ui.notification.NotificationAdapter;
+import eu.waziup.app.ui.notification.NotificationMvpPresenter;
+import eu.waziup.app.ui.notification.NotificationMvpView;
+import eu.waziup.app.ui.notification.NotificationPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpView;
 import eu.waziup.app.ui.register.RegisterSensorPresenter;
@@ -108,8 +112,21 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
+    NotificationMvpPresenter<NotificationMvpView> provideNotificationPresenter(
+            NotificationPresenter<NotificationMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
     SensorAdapter provideSensorAdapter() {
         return new SensorAdapter(new ArrayList<>());
+    }
+
+    @Provides
+    @PerActivity
+    NotificationAdapter provideNotificationAdapter() {
+        return new NotificationAdapter(new ArrayList<>());
     }
 
     @Provides
