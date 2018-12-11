@@ -36,7 +36,7 @@
                 android:layout_centerInParent="true"
                 android:layout_margin="5dp"
                 android:fontFamily="@font/roboto_light"
-                android:text="@string/no_sensors_list_found"
+                android:text="@string/no_notification_list_found"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:visibility="gone" />

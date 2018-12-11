@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
 
     @BindView(R.id.sensor_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView(R.id.tv_no_notification)
+    TextView tvNoNotification;
 
     public static final String TAG = "NotificationFragment";
 
@@ -92,15 +96,15 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     public void showNotifications(List<NotificationResponse> notificationResponses) {
         if (notificationResponses != null) {
             if (notificationResponses.size() > 0) {
-                if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
-                    tvNoSensors.setVisibility(View.GONE);
+                if (tvNoNotification != null && tvNoNotification.getVisibility() == View.VISIBLE)
+                    tvNoNotification.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(notificationResponses);
             } else {
-                if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
-                    tvNoSensors.setVisibility(View.VISIBLE);
-                    tvNoSensors.setText(R.string.no_sensors_list_found);
+                if (tvNoNotification != null && tvNoNotification.getVisibility() == View.GONE) {
+                    tvNoNotification.setVisibility(View.VISIBLE);
+                    tvNoNotification.setText(R.string.no_notification_list_found);
                 }
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
                     mRecyclerView.setVisibility(View.GONE);
@@ -110,7 +114,7 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     }
 
     @Override
-    public void onItemClicked(Sensor sensor) {
+    public void onItemClicked(NotificationResponse notification) {
 
     }
 }

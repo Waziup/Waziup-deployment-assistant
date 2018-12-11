@@ -66,4 +66,5 @@
     <string name="make_api_call">Make API Call</string>
     <string name="make_authorization_request">Make Authorization Request</string>
     <string name="sign_out">Sign Out</string>
+    <string name="no_notification_list_found">No notification list found.</string>
 </resources>

@@ -36,6 +36,7 @@ import eu.waziup.app.ui.detail.DetailSensorFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
+import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
@@ -157,8 +158,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 ////                fragmentClass = DetailSensorFragment.class;
 //                break;
             case R.id.nav_notification:
-                CommonUtils.toast("notification clicked");
-                CURRENT_TAG = SensorFragment.TAG;
+                fragmentClass = NotificationFragment.class;
+                CURRENT_TAG = NotificationFragment.TAG;
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
@@ -329,6 +330,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .beginTransaction()
                 .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
+                .commit();
+    }
+
+    @Override
+    public void openNotificationFragment() {
+//        todo remove it if not being used
+        lockDrawer();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .replace(R.id.cl_root_view, NotificationFragment.newInstance(), NotificationFragment.TAG)
                 .commit();
     }
 

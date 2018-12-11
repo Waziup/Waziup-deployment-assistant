@@ -9,6 +9,8 @@ public interface MainMvpView extends MvpView {
 
     void openRegistrationSensor();
 
+    void openNotificationFragment();
+
     void openSensorDetailFragment(Sensor sensor, String parentFragment);
 
     void lockDrawer();
