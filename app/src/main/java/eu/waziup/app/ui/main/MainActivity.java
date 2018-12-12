@@ -226,16 +226,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     public void changeToolbarTitle(String title) {
-        if (getSupportActionBar() != null) {
-            mToolbar.setTitle(String.valueOf(title));
-            setSupportActionBar(mToolbar);
-            if (title.equals(getString(R.string.map))) {
-                Log.e("---->", "map");
+        mToolbar.setTitle(String.valueOf(title));
+        setSupportActionBar(mToolbar);
+        Log.e("====>", title);
+        if (title.equals(getString(R.string.map))) {
+            Log.e("---->", "map");
+            if (getSupportActionBar() != null)
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
-            } else {
-                Log.e("---->", "other fragment");
+        } else {
+            Log.e("---->", "other fragment");
+            if (getSupportActionBar() != null)
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.colorPrimary));
-            }
         }
     }
 
