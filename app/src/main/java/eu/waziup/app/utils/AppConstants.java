@@ -7,6 +7,8 @@ public final class AppConstants {
 
     public static final String DETAIL_SENSOR_KEY = "sensor_key";
 
+    public static final String BASE_URL_ONTOLOGY = "http://35.157.161.231:8081/api/v1/";
+
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
 
     public static final String DB_NAME = "mindorks_mvp.db";

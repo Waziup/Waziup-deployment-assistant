@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="UnusedIds">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group_feature"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_sensor"
             android:checkable="true"
@@ -19,6 +21,11 @@
             android:checkable="true"
             android:icon="@drawable/ic_map"
             android:title="@string/nav_map" />
+
+    </group>
+    <group
+        android:id="@+id/group_settings"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_setting"
             android:checkable="true"

@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,7 +141,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     selectDrawerItem(menuItem);
                     return true;
                 });
-
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -152,7 +152,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 fragmentClass = SensorFragment.class;
                 CURRENT_TAG = SensorFragment.TAG;
                 changeToolbarTitle(getString(R.string.sensors));
-                changeToolbarBackground("default");
                 break;
 //            case R.id.nav_gateway:
 //                CommonUtils.toast("gateway clicked");
@@ -167,16 +166,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
                 CURRENT_TAG = MapFragment.TAG;
-                changeToolbarBackground("map");
                 changeToolbarTitle(getString(R.string.map));
                 break;
             case R.id.nav_setting:
                 CommonUtils.toast("settings clicked");
                 CURRENT_TAG = SensorFragment.TAG;
-                changeToolbarBackground("default");
                 break;
             case R.id.nav_logout:
-                changeToolbarBackground("default");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Are you sure you want to logout?")
                         .setPositiveButton("Logout", (dialog, id) -> {
@@ -230,8 +226,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     public void changeToolbarTitle(String title) {
-        mToolbar.setTitle(String.valueOf(title));
-        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            mToolbar.setTitle(String.valueOf(title));
+            setSupportActionBar(mToolbar);
+            if (title.equals(getString(R.string.map))) {
+                Log.e("---->", "map");
+                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+            } else {
+                Log.e("---->", "other fragment");
+                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.colorPrimary));
+            }
+        }
     }
 
     @Override
@@ -354,17 +359,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, NotificationFragment.newInstance(), NotificationFragment.TAG)
                 .commit();
-    }
-
-    @Override
-    public void changeToolbarBackground(String option) {
-        if (getSupportActionBar() != null) {
-            if (option.equals("map")) {
-                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
-            } else {
-                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.colorPrimary));
-            }
-        }
     }
 
     @Override
