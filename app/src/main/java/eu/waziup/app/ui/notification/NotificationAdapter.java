@@ -145,7 +145,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 // shared at
                 if (notification.getCondition().getSensors().size() > 0) {
                     for (int i = 0; i < notification.getNotification().getChannels().size(); i++) {
-                        mNotificationOwner.setText(String.valueOf(
+                        mNotificationSharedAt.setText(String.valueOf(
                                 (notification.getNotification().getChannels().size() == 1) ?
                                         notification.getNotification().getChannels().get(i)
                                         : (notification.getNotification().getChannels().size() == i) ?

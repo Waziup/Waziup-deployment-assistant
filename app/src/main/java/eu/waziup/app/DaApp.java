@@ -23,9 +23,6 @@ public class DaApp extends Application {
 
     private ApplicationComponent mApplicationComponent;
 
-//    private BoxStore boxStore;
-//    private DaoSession daoSession;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -38,15 +35,6 @@ public class DaApp extends Application {
         AppLogger.init();
 
         context = this;
-
-
-//        boxStore = MyObjectBox.builder().androidContext(DaApp.this).build();
-//        daoSession = new DaoSession(boxStore);
-
-
-        // todo has to identify if the app run is for the first time
-        // todo if fo the first time
-
 
     }
 

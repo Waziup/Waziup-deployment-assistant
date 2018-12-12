@@ -20,12 +20,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.main.MainMvpPresenter;
-import eu.waziup.app.ui.main.MainMvpView;
-import eu.waziup.app.ui.sensor.SensorAdapter;
 
 public class NotificationFragment extends BaseFragment implements NotificationMvpView, NotificationAdapter.Callback {
 
@@ -38,11 +34,14 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     @Inject
     LinearLayoutManager mLayoutManager;
 
-    @BindView(R.id.sensor_recycler)
+    @BindView(R.id.notification_recycler)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.sensor_swipe_to_refresh)
+    @BindView(R.id.notification_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+//    @BindView(R.id.fragment_toolbar)
+//    TextView mToolbarTitle;
 
     @BindView(R.id.tv_no_notification)
     TextView tvNoNotification;
@@ -83,6 +82,8 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
 
     @Override
     protected void setUp(View view) {
+        if (getBaseActivity().getSupportActionBar() != null)
+            getBaseActivity().getSupportActionBar().setTitle(getString(R.string.notification));
         setUpRecyclerView();
     }
 

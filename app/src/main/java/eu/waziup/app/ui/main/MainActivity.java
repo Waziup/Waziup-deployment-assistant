@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
+        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         setContentView(R.layout.activity_main);
 
         mHandler = new Handler();
@@ -101,8 +101,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     protected void setUp() {
-        mToolbar.setTitle(R.string.app_name);
-        setSupportActionBar(mToolbar);
+        changeToolbarTitle(getString(R.string.sensors));
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -152,24 +151,32 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             case R.id.nav_sensor:
                 fragmentClass = SensorFragment.class;
                 CURRENT_TAG = SensorFragment.TAG;
+                changeToolbarTitle(getString(R.string.sensors));
+                changeToolbarBackground("default");
                 break;
 //            case R.id.nav_gateway:
 //                CommonUtils.toast("gateway clicked");
 ////                fragmentClass = DetailSensorFragment.class;
 //                break;
             case R.id.nav_notification:
+//                openNotificationFragment();
                 fragmentClass = NotificationFragment.class;
                 CURRENT_TAG = NotificationFragment.TAG;
+                changeToolbarTitle(getString(R.string.notification));
                 break;
             case R.id.nav_map:
                 fragmentClass = MapFragment.class;
                 CURRENT_TAG = MapFragment.TAG;
+                changeToolbarBackground("map");
+                changeToolbarTitle(getString(R.string.map));
                 break;
             case R.id.nav_setting:
                 CommonUtils.toast("settings clicked");
                 CURRENT_TAG = SensorFragment.TAG;
+                changeToolbarBackground("default");
                 break;
             case R.id.nav_logout:
+                changeToolbarBackground("default");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Are you sure you want to logout?")
                         .setPositiveButton("Logout", (dialog, id) -> {
@@ -220,6 +227,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
         mDrawer.closeDrawers();
+    }
+
+    public void changeToolbarTitle(String title) {
+        mToolbar.setTitle(String.valueOf(title));
+        setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -342,6 +354,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, NotificationFragment.newInstance(), NotificationFragment.TAG)
                 .commit();
+    }
+
+    @Override
+    public void changeToolbarBackground(String option) {
+        if (getSupportActionBar() != null) {
+            if (option.equals("map")) {
+                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
+            } else {
+                getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.colorPrimary));
+            }
+        }
     }
 
     @Override

@@ -11,6 +11,8 @@ public interface MainMvpView extends MvpView {
 
     void openNotificationFragment();
 
+    void changeToolbarBackground(String option);
+
     void openSensorDetailFragment(Sensor sensor, String parentFragment);
 
     void lockDrawer();

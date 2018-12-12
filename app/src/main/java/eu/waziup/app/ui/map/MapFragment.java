@@ -82,6 +82,8 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         mapView = view.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
 
+        setUp(view);
+
         mapView.getMapAsync(mapboxMap -> {
 
             map = mapboxMap;
@@ -119,13 +121,15 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     protected void setUp(View view) {
+
     }
 
     @OnClick(R.id.gps_fab)
     void onFabClicked() {
 
         if (map != null)
-            updateMap(originLocation.getLatitude(), originLocation.getLongitude(), map);
+            if (originLocation != null && originLocation.getLatitude() != 0 && originLocation.getLongitude() != 0)
+                updateMap(originLocation.getLatitude(), originLocation.getLongitude(), map);
 
 //            enableLocationComponent(map);
 
