@@ -375,6 +375,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         getSupportFragmentManager()
                 .beginTransaction()
                 .disallowAddToBackStack()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
                 .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor, parentFragment), DetailSensorFragment.TAG)
                 .commit();
     }

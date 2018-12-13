@@ -147,7 +147,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         TextView measurementValue = new TextView(itemView.getContext());
                         measurementValue.setTextColor(itemView.getResources().getColor(R.color.white));
                         measurementValue.setGravity(Gravity.CENTER);
-                        measurementValue.setBackground(itemView.getResources().getDrawable(R.drawable.bg_curved_primary_color));
+                        measurementValue.setBackground(itemView.getResources().getDrawable(R.drawable.bg_curved_accent_color));
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT
