@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         // todo check the saved instance state before opening the sensorFragment
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
     }
@@ -208,6 +209,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (finalFragment != null)
                 fragmentManager.beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, finalFragment, CURRENT_TAG)
                         .commit();
 
@@ -228,13 +230,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     public void changeToolbarTitle(String title) {
         mToolbar.setTitle(String.valueOf(title));
         setSupportActionBar(mToolbar);
-        Log.e("====>", title);
         if (title.equals(getString(R.string.map))) {
-            Log.e("---->", "map");
             if (getSupportActionBar() != null)
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
         } else {
-            Log.e("---->", "other fragment");
             if (getSupportActionBar() != null)
                 getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.colorPrimary));
         }
@@ -248,11 +247,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         }
 
         new AlertDialog.Builder(this)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("WAZIUP")
-                .setMessage("Are you sure you want to close WAZIUP?")
-                .setPositiveButton("Yes", (dialog, which) -> finish())
-                .setNegativeButton("No", null)
+                .setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
                 .show();
     }
 
@@ -264,6 +262,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         if (fragment != null) {
             fragmentManager
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     .disallowAddToBackStack()
                     .remove(fragment)
                     .commitNow();
@@ -272,11 +271,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             if (TextUtils.equals(parent, MapFragment.TAG)) {
                 getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
             } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
                 getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                         .commit();
             }
@@ -346,6 +347,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
                 .commit();
@@ -357,6 +359,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         lockDrawer();
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, NotificationFragment.newInstance(), NotificationFragment.TAG)
                 .commit();
@@ -374,6 +377,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .disallowAddToBackStack()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
                 .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor, parentFragment), DetailSensorFragment.TAG)

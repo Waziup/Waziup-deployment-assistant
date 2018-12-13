@@ -70,4 +70,5 @@
     <string name="notification">Notifications</string>
     <string name="sensors">Sensors</string>
     <string name="map">Sensor\'s location</string>
+    <string name="yes">Yes</string>
 </resources>
