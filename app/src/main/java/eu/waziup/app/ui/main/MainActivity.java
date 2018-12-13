@@ -305,26 +305,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     @Override
-    public void onBackPressed(String tag, String parentFragment) {
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = fragmentManager.findFragmentByTag(DetailSensorFragment.TAG);
-        if (fragment == null) {
-            new AlertDialog.Builder(this)
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("WAZIUP")
-                    .setMessage("Are you sure you want to close WAZIUP?")
-                    .setPositiveButton("Yes", (dialog, which) -> finish())
-                    .setNegativeButton("No", null)
-                    .show();
-
-        } else {
-            onFragmentDetached(tag, parentFragment);
-        }
-    }
-
-    @Override
     public void updateUserName(String currentUserName) {
         mNameTextView.setText(currentUserName);
     }

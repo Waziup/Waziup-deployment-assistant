@@ -23,6 +23,4 @@ public interface MainMvpView extends MvpView {
     void updateUserEmail(String currentUserEmail);
 
     void updateUserProfilePic(String currentUserProfilePicUrl);
-
-    void onBackPressed(String tag, String parentFragment);
 }
