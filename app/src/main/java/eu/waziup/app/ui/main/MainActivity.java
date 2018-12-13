@@ -245,13 +245,22 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mDrawer.closeDrawers();
             return;
         }
-
-        new AlertDialog.Builder(this)
-                .setMessage("Are you sure you want to exit?")
-                .setCancelable(false)
-                .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
-                .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
-                .show();
+        SensorFragment sensorFragment = (SensorFragment)getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+        if (sensorFragment != null && sensorFragment.isVisible()) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to exit?")
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
+                    .show();
+        }else{
+            // if the opened fragment is beside the sensorFragment which is the home fragment
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                    .commit();
+        }
     }
 
     @Override
