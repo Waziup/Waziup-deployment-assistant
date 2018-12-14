@@ -28,6 +28,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Sensor> sensors;
     private Callback mCallback;
+    private MeasurementCallback mMeasurementCallback;
 
     public SensorAdapter(List<Sensor> sensors) {
         this.sensors = sensors;
@@ -61,8 +62,16 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mCallback = callback;
     }
 
+    public void setMeasurementCallback(MeasurementCallback callback) {
+        mMeasurementCallback = callback;
+    }
+
     public interface Callback {
         void onItemClicked(Sensor sensor);
+    }
+
+    public interface MeasurementCallback {
+        void onItemClicked(Measurement measurement);
     }
 
     public class SensorViewHolder extends BaseViewHolder {
@@ -164,6 +173,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         if (measurementValue.getParent() != null)
                             ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
                         measurementValue.setText(measurement.getId());
+                        measurementValue.setOnClickListener(view -> mMeasurementCallback.onItemClicked(measurement));
                         measurementContainer.addView(measurementValue);
                     }
                 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
 import com.github.thunder413.datetimeutils.DateTimeUtils;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.utils.CommonUtils;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
@@ -141,7 +143,8 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @OnClick(R.id.btn_locate_on_map)
     void onLocateOnMapClicked() {
-        CommonUtils.toast("boom locate map opened");
+        if (mSensor != null && mSensor.getLocation() != null)
+            openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
     }
 
     private void setUpRecyclerView() {
@@ -173,7 +176,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
             } else {
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
                     mRecyclerView.setVisibility(View.GONE);
-                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE){
+                if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE) {
                     tvNoMeasurement.setVisibility(View.VISIBLE);
                     tvNoMeasurement.setText(R.string.no_measurements_list_found);
                 }
@@ -230,8 +233,23 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
+    public void openMapFragment(LatLng latLng) {
+        if (getBaseActivity() != null)
+            getBaseActivity().getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.flContent, MapFragment.newInstance(latLng), MapFragment.TAG)
+                    .commit();
+
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
+//                .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor, parentFragment), DetailSensorFragment.TAG)
+//                .commit();
+    }
+
+    @Override
     public void onItemClicked(Measurement measurement) {
-        CommonUtils.toast("onItemDeleteClicked");
+//        CommonUtils.toast("onItemDeleteClicked");
     }
 
     @Override

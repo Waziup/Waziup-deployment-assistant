@@ -1,7 +1,9 @@
 package eu.waziup.app.ui.sensor;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,11 +26,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.detail.EditMeasurementDialog;
 
-public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback {
+public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback, SensorAdapter.MeasurementCallback {
 
     @Inject
     SensorMvpPresenter<SensorMvpView> mPresenter;
@@ -70,6 +74,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             setUnBinder(ButterKnife.bind(this, view));
             mPresenter.onAttach(this);
             mAdapter.setCallback(this);
+            mAdapter.setMeasurementCallback(this);
         }
 
         setUp(view);
@@ -154,4 +159,12 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         communicator.onItemClicked(sensor);
     }
 
+    @Override
+    public void onItemClicked(Measurement measurement) {
+        MeasurementDetailDialog dialog = new MeasurementDetailDialog(getBaseActivity(), measurement);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.show();
+    }
 }

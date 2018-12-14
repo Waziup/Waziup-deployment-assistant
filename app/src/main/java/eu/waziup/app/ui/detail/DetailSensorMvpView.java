@@ -1,5 +1,7 @@
 package eu.waziup.app.ui.detail;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
 import java.util.List;
 
 import eu.waziup.app.data.network.model.sensor.Measurement;
@@ -17,4 +19,6 @@ public interface DetailSensorMvpView extends MvpView {
     void loadPage(Sensor sensor);
 
     void showCreateMeasurementsDialog();
+
+    void openMapFragment(LatLng latLng);
 }

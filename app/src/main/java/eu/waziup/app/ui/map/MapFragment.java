@@ -59,6 +59,16 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     private PermissionsManager permissionsManager;
     private Location originLocation;
 
+    public static LatLng sensorLatLng;
+
+    public static MapFragment newInstance(LatLng latLng) {
+        Bundle args = new Bundle();
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(args);
+        sensorLatLng = latLng;
+        return fragment;
+    }
+
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
         MapFragment fragment = new MapFragment();

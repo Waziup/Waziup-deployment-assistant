@@ -247,6 +247,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
                     .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
 
+            // this is like popping out the top fragment on the fragment stack list
             if (fragment != null)
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -262,6 +263,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
                         .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
                         .show();
+            } else {
+                // if the opened fragment is beside the sensorFragment which is the home fragment
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                        .commit();
             }
         }
     }
