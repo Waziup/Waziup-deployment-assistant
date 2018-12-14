@@ -115,6 +115,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 // id
                 mSensorId.setText((TextUtils.isEmpty(sensor.getId())) ? sensor.getName() : sensor.getId());
 
+                // TODO check visibility first for every view before setting visibility
                 // date
                 if (!TextUtils.isEmpty(sensor.getDateCreated())) {
                     mSensorDate.setVisibility(View.VISIBLE);

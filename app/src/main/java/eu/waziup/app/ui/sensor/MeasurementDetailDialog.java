@@ -5,15 +5,11 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.BindView;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.ui.detail.DetailSensorMvpPresenter;
@@ -24,7 +20,6 @@ public class MeasurementDetailDialog extends Dialog {
     public Activity c;
     private Measurement measurement;
     private TextView btnCancel;
-    DetailSensorMvpPresenter<DetailSensorMvpView> mPresenter;
 
 
     TextView mMeasurementValue;
@@ -36,7 +31,6 @@ public class MeasurementDetailDialog extends Dialog {
         super(activity);
         this.c = activity;
         this.measurement = measurement;
-        this.mPresenter = mPresenter;
     }
 
     @Override
@@ -58,22 +52,28 @@ public class MeasurementDetailDialog extends Dialog {
                 if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
                     mIcon.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_mesurement_temp));
 
+            // todo get back here and resolve this later on : measurementName being given different value on the same view
             if (!TextUtils.isEmpty(measurement.getId())) {
-                mMeasurementName.setVisibility(View.VISIBLE);
-                mMeasurementName.setText(measurement.getId());
+                if (mMeasurementName.getVisibility() != View.VISIBLE) {
+                    mMeasurementName.setVisibility(View.VISIBLE);
+                    mMeasurementName.setText(measurement.getId());
+                }
             } else if (!TextUtils.isEmpty(measurement.getName())) {
-                mMeasurementName.setVisibility(View.VISIBLE);
-                mMeasurementName.setText(measurement.getName());
+                if (mMeasurementName.getVisibility() != View.VISIBLE) {
+                    mMeasurementName.setVisibility(View.VISIBLE);
+                    mMeasurementName.setText(measurement.getName());
+                }
             } else {
                 mMeasurementName.setVisibility(View.GONE);
             }
 
             mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
 
-
             if (!TextUtils.isEmpty(measurement.getQuantityKind())) {
-                mMeasurementKind.setVisibility(View.VISIBLE);
-                mMeasurementKind.setText(measurement.getQuantityKind());
+                if (mMeasurementKind.getVisibility() != View.VISIBLE) {
+                    mMeasurementKind.setVisibility(View.VISIBLE);
+                    mMeasurementKind.setText(measurement.getQuantityKind());
+                }
             } else {
                 mMeasurementKind.setVisibility(View.GONE);
             }
@@ -81,8 +81,10 @@ public class MeasurementDetailDialog extends Dialog {
             // for the value
             if (measurement.getLastValue() != null)
                 if (!TextUtils.isEmpty(measurement.getLastValue().getValue())) {
-                    mMeasurementValue.setVisibility(View.VISIBLE);
-                    mMeasurementValue.setText(measurement.getLastValue().getValue());
+                    if (mMeasurementValue.getVisibility() != View.VISIBLE) {
+                        mMeasurementValue.setVisibility(View.VISIBLE);
+                        mMeasurementValue.setText(measurement.getLastValue().getValue());
+                    }
                 } else {
                     mMeasurementValue.setVisibility(View.GONE);
                 }
