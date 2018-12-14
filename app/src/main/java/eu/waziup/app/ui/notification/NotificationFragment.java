@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.sensor.SensorFragment;
 
 public class NotificationFragment extends BaseFragment implements NotificationMvpView, NotificationAdapter.Callback {
 

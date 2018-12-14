@@ -105,6 +105,9 @@ dependencies {
     // keyCloak - AppAuth
     implementation 'net.openid:appauth:0.2.0'
 
+    // for handling the time
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
+
 }
 
 configurations.all {

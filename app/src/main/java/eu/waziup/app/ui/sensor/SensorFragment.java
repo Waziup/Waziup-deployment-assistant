@@ -99,6 +99,8 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     protected void setUp(View view) {
         setUpRecyclerView();
         mPresenter.loadSensors();
+        if (getBaseActivity().getSupportActionBar() != null)
+            getBaseActivity().getSupportActionBar().setTitle(R.string.sensors);
     }
 
     private void setUpRecyclerView() {

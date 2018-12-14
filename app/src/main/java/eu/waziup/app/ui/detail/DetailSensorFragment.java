@@ -85,13 +85,14 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         return fragment;
     }
 
-    public static DetailSensorFragment newInstance(Sensor sensor) {
-        Bundle args = new Bundle();
-        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
-        DetailSensorFragment fragment = new DetailSensorFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    NOT BEING USED
+//    public static DetailSensorFragment newInstance(Sensor sensor) {
+//        Bundle args = new Bundle();
+//        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
+//        DetailSensorFragment fragment = new DetailSensorFragment();
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Nullable
     @Override

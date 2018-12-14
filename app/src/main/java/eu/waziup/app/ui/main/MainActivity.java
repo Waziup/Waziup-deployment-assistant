@@ -16,13 +16,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import javax.inject.Inject;
@@ -78,6 +78,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
+        AndroidThreeTen.init(this);
         setContentView(R.layout.activity_main);
 
         mHandler = new Handler();
@@ -154,12 +155,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 CURRENT_TAG = SensorFragment.TAG;
                 changeToolbarTitle(getString(R.string.sensors));
                 break;
-//            case R.id.nav_gateway:
-//                CommonUtils.toast("gateway clicked");
-////                fragmentClass = DetailSensorFragment.class;
-//                break;
             case R.id.nav_notification:
-//                openNotificationFragment();
                 fragmentClass = NotificationFragment.class;
                 CURRENT_TAG = NotificationFragment.TAG;
                 changeToolbarTitle(getString(R.string.notification));
@@ -245,34 +241,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mDrawer.closeDrawers();
             return;
         }
-        SensorFragment sensorFragment = (SensorFragment)getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-        if (sensorFragment != null && sensorFragment.isVisible()) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Are you sure you want to exit?")
-                    .setCancelable(false)
-                    .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
-                    .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
-                    .show();
-        }else{
-            // if the opened fragment is beside the sensorFragment which is the home fragment
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-                    .commit();
+
+        if (getSupportFragmentManager().getFragments().size() > 1) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
+                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
+
+            if (fragment != null)
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .remove(fragment)
+                        .commitNow();
+            unlockDrawer();
+        } else {
+            SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+            if (sensorFragment != null && sensorFragment.isVisible()) {
+                new AlertDialog.Builder(this)
+                        .setMessage("Are you sure you want to exit?")
+                        .setCancelable(false)
+                        .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                        .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
+                        .show();
+            }
         }
     }
 
     @Override
     public void onFragmentDetached(String tag, String parent) {
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
             fragmentManager
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .disallowAddToBackStack()
                     .remove(fragment)
                     .commitNow();
             unlockDrawer();
@@ -291,11 +291,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .commit();
             }
         }
-
     }
 
     private void loadNavHeader() {
-        // name, website
         // todo get the current user information from his "username"
         mNameTextView.setText("Corentin Dupont");
         mEmailTextView.setText("test@gmail.com");
@@ -328,46 +326,19 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void openRegistrationSensor() {
         lockDrawer();
-//        mDrawerToggle.setDrawerIndicatorEnabled(false);
-//        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
-//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
-//                    .getView())
-//                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .disallowAddToBackStack()
                 .replace(R.id.cl_root_view, RegisterSensorFragment.newInstance(), RegisterSensorFragment.TAG)
-                .commit();
-    }
-
-    @Override
-    public void openNotificationFragment() {
-//        todo remove it if not being used
-        lockDrawer();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .disallowAddToBackStack()
-                .replace(R.id.cl_root_view, NotificationFragment.newInstance(), NotificationFragment.TAG)
                 .commit();
     }
 
     @Override
     public void openSensorDetailFragment(Sensor sensor, String parentFragment) {
         lockDrawer();
-//        mDrawerToggle.setDrawerIndicatorEnabled(false);
-//
-//        if (getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG) != null)
-//            Objects.requireNonNull(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG))
-//                    .getView())
-//                    .findViewById(R.id.fab_sensor).setVisibility(View.GONE);
-
         getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .disallowAddToBackStack()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
                 .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor, parentFragment), DetailSensorFragment.TAG)
                 .commit();
