@@ -40,3 +40,4 @@ Documentation: http://www.waziup.io/documentation/api/
   ```
   ./gradlew task-name
   ```
+for more information on how to build and run from command line check: https://developer.android.com/studio/build/building-cmdline
