@@ -31,3 +31,12 @@ Documentation: http://www.waziup.io/documentation/api/
 4. AndroidDebugDatabase: https://github.com/amitshekhariitbhu/Android-Debug-Database
 5. ButterKnife: http://jakewharton.github.io/butterknife/
 
+#### FOR RUNNING THE PROJECT FROM COMMAND LINE
+**On Windows**:
+  ```
+  gradlew task-name
+  ```
+**On Mac or Linux**:
+```
+  ./gradlew task-name
+  ```
