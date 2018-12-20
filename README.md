@@ -32,11 +32,11 @@ Documentation: http://www.waziup.io/documentation/api/
 5. ButterKnife: http://jakewharton.github.io/butterknife/
 
 #### FOR RUNNING THE PROJECT FROM COMMAND LINE
-**On Windows**:
+- **On Windows**:
   ```
   gradlew task-name
   ```
-**On Mac or Linux**:
-```
+- **On Mac or Linux**:
+  ```
   ./gradlew task-name
   ```
