@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -67,7 +68,7 @@ public class MeasurementDetailDialog extends Dialog {
                 mMeasurementName.setVisibility(View.GONE);
             }
 
-            mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
+//            mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
 
             if (!TextUtils.isEmpty(measurement.getQuantityKind())) {
                 if (mMeasurementKind.getVisibility() != View.VISIBLE) {

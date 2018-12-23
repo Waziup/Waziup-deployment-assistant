@@ -29,7 +29,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
         getMvpView().openLoginActivity();
     }
 
-
     @Override
     public void onNavMenuCreated() {
         if (!isViewAttached()) {

@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-
     public static String CURRENT_TAG = SensorFragment.TAG;
     private Handler mHandler;
 

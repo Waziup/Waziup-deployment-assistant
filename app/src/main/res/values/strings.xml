@@ -57,6 +57,8 @@
     <string name="location_permission_available">GPS permission is available. Starting preview.</string>
     <string name="location_permission_granted">GPS permission was granted. Starting preview.</string>
     <string name="location_permission_denied">GPS permission request was denied.</string>
+
+    <!--Drawer Items-->
     <string name="nav_notification">Notification</string>
     <string name="nav_sensors">Sensors</string>
     <string name="nav_map">Map</string>
