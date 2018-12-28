@@ -5,11 +5,11 @@ This repository contains the deployment assistant android application that is to
 Documentation: http://www.waziup.io/documentation/api/
 <br>
 
-# Architecture Blueprint
+## Architecture Blueprint
 ![Blueprint](https://janishar.github.io/images/mvp-app-pics/mvp-arch.png)
 <br>
 
-# Project Structure
+## Project Structure
 ![Structure](https://janishar.github.io/images/mvp-app-pics/mvp-project-structure-diagram.png)
 <br>
 
@@ -31,3 +31,13 @@ Documentation: http://www.waziup.io/documentation/api/
 4. AndroidDebugDatabase: https://github.com/amitshekhariitbhu/Android-Debug-Database
 5. ButterKnife: http://jakewharton.github.io/butterknife/
 
+#### FOR RUNNING THE PROJECT FROM COMMAND LINE
+- **On Windows**:
+  ```
+  gradlew task-name
+  ```
+- **On Mac or Linux**:
+  ```
+  ./gradlew task-name
+  ```
+for more information on how to build and run from command line check: https://developer.android.com/studio/build/building-cmdline
