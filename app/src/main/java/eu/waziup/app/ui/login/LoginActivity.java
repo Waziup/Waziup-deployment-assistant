@@ -1,9 +1,11 @@
 package eu.waziup.app.ui.login;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,18 +25,28 @@ import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import eu.waziup.app.DaApp;
 import eu.waziup.app.R;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.utils.AppConstants;
+import eu.waziup.app.utils.CommonUtils;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static eu.waziup.app.DaApp.LOG_TAG;
+import static eu.waziup.app.utils.AppConstants.APP_ID;
+import static eu.waziup.app.utils.AppConstants.AUTH_CLIENT_ID;
+import static eu.waziup.app.utils.AppConstants.AUTH_ENDPOINT;
+import static eu.waziup.app.utils.AppConstants.AUTH_REDIRECT_URI;
+import static eu.waziup.app.utils.AppConstants.TOKEN_ENDPOINT;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
@@ -68,6 +80,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         setContentView(R.layout.activity_login);
         setUnBinder(ButterKnife.bind(this));
         setUp();
+
+        enablePostAuthorizationFlows();
     }
 
     @Override
@@ -79,32 +93,45 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @OnClick(R.id.btn_google_login)
     void onGoogleClicked() {
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
-                Uri.parse("https://accounts.google.com/o/oauth2/v2/auth") /* auth endpoint */,
-                Uri.parse("https://www.googleapis.com/oauth2/v4/token") /* token endpoint */
+                Uri.parse(AUTH_ENDPOINT) /* auth endpoint */,
+                Uri.parse(TOKEN_ENDPOINT) /* token endpoint */
         );
-
-//        Uri redirectUri = Uri.parse("eu.waziup.app:ietf:wg:oauth:2.0:oob");//com.google.codelabs.appauth:/oauth2callback
-        Uri redirectUri = Uri.parse(AppConstants.AUTH_REDIRECT_URI);//com.google.codelabs.appauth:/oauth2callback
+        AuthorizationService authorizationService = new AuthorizationService(this);
+        Uri redirectUri = Uri.parse(AUTH_REDIRECT_URI);//Uri.parse("com.google.codelabs.appauth:/oauth2callback");
         AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(
                 serviceConfiguration,
-                AppConstants.AUTH_CLIENT_ID,
+                AUTH_CLIENT_ID,
                 AuthorizationRequest.RESPONSE_TYPE_CODE,
                 redirectUri
         );
-        builder.setScopes("profile");
+
+        builder.setScopes("profile");// other available scopes are: email, username
+
         AuthorizationRequest request = builder.build();
-
-        AuthorizationService authorizationService = new AuthorizationService(this);
-
-        String action = "eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE";
-        Intent postAuthorizationIntent = new Intent(action);
+        Intent postAuthorizationIntent = new Intent(APP_ID);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
-    @OnClick(R.id.authorize)
-    void onAuthorizeClicked() {
-        new AuthorizeListener();
+    private void persistAuthState(@NonNull AuthState authState) {
+        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
+                .putString(AUTH_STATE, authState.toJsonString())
+                .apply();
+        enablePostAuthorizationFlows();
+    }
+
+    @Nullable
+    private AuthState restoreAuthState() {
+        String jsonString = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getString(AUTH_STATE, null);
+        if (!TextUtils.isEmpty(jsonString)) {
+            try {
+                return AuthState.fromJson(jsonString);
+            } catch (JSONException jsonException) {
+                // should never happen
+            }
+        }
+        return null;
     }
 
     @BindView(R.id.et_username)
@@ -126,17 +153,18 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     private void enablePostAuthorizationFlows() {
         mAuthState = restoreAuthState();
         if (mAuthState != null && mAuthState.isAuthorized()) {
-            if (mMakeApiCall.getVisibility() == View.GONE) {
-                mMakeApiCall.setVisibility(View.VISIBLE);
-                mMakeApiCall.setOnClickListener(new MakeApiCallListener(this, mAuthState, new AuthorizationService(this)));
-            }
-            if (mSignOut.getVisibility() == View.GONE) {
-                mSignOut.setVisibility(View.VISIBLE);
-                mSignOut.setOnClickListener(new SignOutListener(this));
-            }
+            new MakeApiCallListener(mAuthState, new AuthorizationService(this));
+//            if (mMakeApiCall.getVisibility() == View.GONE) {
+//                mMakeApiCall.setVisibility(View.VISIBLE);
+//                mMakeApiCall.setOnClickListener(new MakeApiCallListener(this, mAuthState, new AuthorizationService(this)));
+//            }
+//            if (mSignOut.getVisibility() == View.GONE) {
+//                mSignOut.setVisibility(View.VISIBLE);
+//                mSignOut.setOnClickListener(new SignOutListener(this));
+//            }
         } else {
-            mMakeApiCall.setVisibility(View.GONE);
-            mSignOut.setVisibility(View.GONE);
+//            mMakeApiCall.setVisibility(View.GONE);
+//            mSignOut.setVisibility(View.GONE);
         }
     }
 
@@ -145,12 +173,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             String action = intent.getAction();
             if (action == null) return;
             switch (action) {
-                case "eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE":
+                case APP_ID:
                     if (!intent.hasExtra(USED_INTENT)) {
                         handleAuthorizationResponse(intent);
                         intent.putExtra(USED_INTENT, true);
-                        // todo remove the below line
-                        Toast.makeText(this, USED_INTENT + String.valueOf(true), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -159,39 +185,88 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         }
     }
 
+    //    THIS IS THE METHOD WHICH IS USED FOR FETCHING THE USER INFORMATION FROM THE AUTHENTICATION SERVER
     public static class MakeApiCallListener implements Button.OnClickListener {
-
-        private final LoginActivity mMainActivity;
+        //        private final MainActivity mMainActivity;
         private AuthState mAuthState;
         private AuthorizationService mAuthorizationService;
 
-        public MakeApiCallListener(@NonNull LoginActivity mainActivity, @NonNull AuthState authState, @NonNull AuthorizationService authorizationService) {
-            mMainActivity = mainActivity;
+        public MakeApiCallListener(@NonNull AuthState authState, @NonNull AuthorizationService authorizationService) {
+//            mMainActivity = mainActivity;
             mAuthState = authState;
             mAuthorizationService = authorizationService;
         }
 
         @Override
         public void onClick(View view) {
+            mAuthState.performActionWithFreshTokens(mAuthorizationService, new AuthState.AuthStateAction() {
+                @SuppressLint("StaticFieldLeak")
+                @Override
+                public void execute(@Nullable String accessToken, @Nullable String idToken, @Nullable AuthorizationException exception) {
+                    new AsyncTask<String, Void, JSONObject>() {
+                        @Override
+                        protected JSONObject doInBackground(String... tokens) {
+                            OkHttpClient client = new OkHttpClient();
+                            Request request = new Request.Builder()
+                                    .url("https://www.googleapis.com/oauth2/v3/userinfo")
+                                    .addHeader("Authorization", String.format("Bearer %s", tokens[0]))
+                                    .build();
 
-            // code from the section 'Making API Calls' goes here
+                            try {
+                                Response response = client.newCall(request).execute();
+                                String jsonBody = response.body().string();
+                                Log.i(LOG_TAG, String.format("User Info Response %s", jsonBody));
+                                return new JSONObject(jsonBody);
+                            } catch (Exception exception) {
+                                Log.w(LOG_TAG, exception);
+                            }
+                            return null;
+                        }
 
-        }
-    }
+                        // todo think of adding this to main activity of the application
+                        @Override
+                        protected void onPostExecute(JSONObject userInfo) {
+                            if (userInfo != null) {
+                                String fullName = userInfo.optString("name", null);
+                                String givenName = userInfo.optString("given_name", null);
+                                String familyName = userInfo.optString("family_name", null);
+                                String imageUrl = userInfo.optString("picture", null);
+                                if (!TextUtils.isEmpty(imageUrl)) {
+                                    Log.e(LOG_TAG, "imageUrl" + imageUrl);
+//                                    Picasso.get()
+//                                            .load(imageUrl)
+//                                            .placeholder(R.drawable.ic_account_circle_black_48dp)
+//                                            .into(mMainActivity.mProfileView);
+                                }
+                                if (!TextUtils.isEmpty(fullName)) {
+                                    Log.e(LOG_TAG, "fullName" + fullName);
+//                                    mMainActivity.mFullName.setText(fullName);
+                                }
+                                if (!TextUtils.isEmpty(givenName)) {
+                                    Log.e(LOG_TAG, "givenName" + givenName);
+//                                    mMainActivity.mGivenName.setText(givenName);
+                                }
+                                if (!TextUtils.isEmpty(familyName)) {
+                                    Log.e(LOG_TAG, "familyName" + familyName);
+//                                    mMainActivity.mFamilyName.setText(familyName);
+                                }
 
-    public static class SignOutListener implements Button.OnClickListener {
-
-        private final LoginActivity mLoginActivity;
-
-        public SignOutListener(@NonNull LoginActivity mainActivity) {
-            mLoginActivity = mainActivity;
-        }
-
-        @Override
-        public void onClick(View view) {
-            mLoginActivity.mAuthState = null;
-            mLoginActivity.clearAuthState();
-            mLoginActivity.enablePostAuthorizationFlows();
+                                String message;
+                                if (userInfo.has("error")) {
+                                    message = String.format("%s [%s]", DaApp.getContext().getString(R.string.request_failed),
+                                            userInfo.optString("error_description", "No description"));
+                                } else {
+                                    message = DaApp.getContext().getString(R.string.request_complete);
+                                }
+                                CommonUtils.toast(message);
+                                Log.e(LOG_TAG, "message" + message);
+//                                Snackbar.make(, message, Snackbar.LENGTH_SHORT)
+//                                        .show();
+                            }
+                        }
+                    }.execute(accessToken);
+                }
+            });
         }
     }
 
@@ -222,46 +297,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         }
     }
 
-    /**
-     * Kicks off the authorization flow.
-     */
-    public static class AuthorizeListener implements Button.OnClickListener {
-        @Override
-        public void onClick(View view) {
-
-            // code from the step 'Create the Authorization Request',
-            // and the step 'Perform the Authorization Request' goes here.
-
-        }
-    }
-
-    private void persistAuthState(@NonNull AuthState authState) {
-        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
-                .putString(AUTH_STATE, authState.toJsonString())
-                .apply();// was commit()
-        enablePostAuthorizationFlows();
-    }
-
-    private void clearAuthState() {
-        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .remove(AUTH_STATE)
-                .apply();
-    }
-
-    @Nullable
-    private AuthState restoreAuthState() {
-        String jsonString = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .getString(AUTH_STATE, null);
-        if (!TextUtils.isEmpty(jsonString)) {
-            try {
-                return AuthState.fromJson(jsonString);
-            } catch (JSONException jsonException) {
-                // should never happen
-            }
-        }
-        return null;
-    }
 
     @OnClick(R.id.btn_login)
     void onLoginClicked() {

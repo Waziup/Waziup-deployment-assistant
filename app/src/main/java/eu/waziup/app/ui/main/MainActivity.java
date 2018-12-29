@@ -1,12 +1,16 @@
 package eu.waziup.app.ui.main;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,14 +20,29 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
+
+import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationResponse;
+import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.TokenResponse;
+
+import org.json.JSONException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -42,6 +61,11 @@ import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.utils.CommonUtils;
+
+import static eu.waziup.app.utils.AppConstants.APP_ID;
+import static eu.waziup.app.utils.AppConstants.AUTH_CLIENT_ID;
+import static eu.waziup.app.utils.AppConstants.AUTH_ENDPOINT;
+import static eu.waziup.app.utils.AppConstants.TOKEN_ENDPOINT;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -69,6 +93,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     public static String CURRENT_TAG = SensorFragment.TAG;
     private Handler mHandler;
 
+    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
+    private static final String AUTH_STATE = "AUTH_STATE";
+    AuthState mAuthState;
+
+    // broadcast receiver for app restrictions changed broadcast
+//    BroadcastReceiver mRestrictionsReceiver;
+
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -94,6 +125,36 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
+    }
+
+    // TODO all those things should be done when the user clicks logout button
+//    mMainActivity.mAuthState =null;
+//    mMainActivity.clearAuthState();
+//    mMainActivity.enablePostAuthorizationFlows();
+
+    //    SHOULD BE CALLED WHEN THE USER CLICK LOGOUT BUTTON SO HE CAN CLEAR THE STATE
+    private void clearAuthState() {
+        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .remove(AUTH_STATE)
+                .apply();
+    }
+
+    // todo check this out later - has it been implemented right ?
+    public static class SignOutListener implements Button.OnClickListener {
+
+        private final MainActivity mLoginActivity;
+
+        public SignOutListener(@NonNull MainActivity mainActivity) {
+            mLoginActivity = mainActivity;
+        }
+
+        @Override
+        public void onClick(View view) {
+            mLoginActivity.mAuthState = null;
+            mLoginActivity.clearAuthState();
+//            mLoginActivity.enablePostAuthorizationFlows();
+        }
     }
 
     @Override

@@ -24,6 +24,12 @@
     <string name="username">username</string>
     <string name="email">email</string>
 
+    <string name="request_complete">API Call Successful.</string>
+    <string name="request_failed">API Call Failed.</string>
+    <string name="login_hint_title">Login Hint</string>
+    <string name="login_hint_description">This key will allow you to send a
+        login hint to the identity provider such as email or username</string>
+
     <!--Drawer-->
     <string name="open_drawer">Drawer Open</string>
     <string name="close_drawer">Drawer Close</string>

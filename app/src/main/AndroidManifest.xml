@@ -24,7 +24,7 @@
         <!--
           Set custom default icon. This is used when no icon is set for incoming notification messages.
           See README(https://goo.gl/l4GJaQ) for more.
-     -->
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications" />
@@ -36,8 +36,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <!--
+            for the authorization and authentication from google
+        -->
+        <meta-data android:name="android.content.APP_RESTRICTIONS"
+            android:resource="@xml/app_restrictions" />
+
         <service android:name="eu.waziup.app.service.SyncService" />
 
+        <!-- FIREBASE CLOUD MESSAGING - FCM - SERVICE-->
         <service
             android:name="eu.waziup.app.fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
@@ -46,6 +53,7 @@
             </intent-filter>
         </service>
 
+        <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -55,6 +63,7 @@
             </intent-filter>
         </activity>
 
+        <!--LOGIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.login.LoginActivity"
             android:launchMode="singleInstance"
@@ -64,15 +73,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- made two filter on purpose: find out if this is possible or not-->
+            <!-- this is for OAuth 2.0 authentication schema-->
             <intent-filter>
-                <action android:name="eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="eu.waziup.app" />
             </intent-filter>
         </activity>
+
+        <!--MAIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.main.MainActivity"
             android:theme="@style/AppTheme.no_toolbar" />
+
+        <!--SCANNER ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
