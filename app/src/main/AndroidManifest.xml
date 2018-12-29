@@ -28,6 +28,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notifications" />
+
         <!--
              Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more.
@@ -56,9 +57,9 @@
         <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="eu.waziup.app" />
             </intent-filter>
         </activity>
@@ -75,10 +76,8 @@
             </intent-filter>
             <!-- this is for OAuth 2.0 authentication schema-->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="eu.waziup.app" />
             </intent-filter>
         </activity>
 

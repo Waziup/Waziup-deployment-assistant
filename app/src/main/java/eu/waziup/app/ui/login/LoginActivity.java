@@ -2,19 +2,20 @@ package eu.waziup.app.ui.login;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.RestrictionsManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import net.openid.appauth.AuthState;
@@ -26,6 +27,9 @@ import net.openid.appauth.AuthorizationServiceConfiguration;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -53,14 +57,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     private static final String AUTH_STATE = "AUTH_STATE";
     private static final String USED_INTENT = "USED_INTENT";
+    private static final String LOGIN_HINT = "login_hint";
 
     // state
     AuthState mAuthState;
 
-    // views
-    AppCompatButton mAuthorize;
-    AppCompatButton mMakeApiCall;
-    AppCompatButton mSignOut;
+    // login hint;
+    String mLoginHint;
+
+    // broadcast receiver for app restrictions changed broadcast
+    private BroadcastReceiver mRestrictionsReceiver;
 
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
@@ -82,16 +88,44 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         setUp();
 
         enablePostAuthorizationFlows();
+
+        // Retrieve app restrictions and take appropriate action
+        getAppRestrictions();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         checkIntent(getIntent());
+
+        // Register a receiver for app restrictions changed broadcast
+        registerRestrictionsReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(LOG_TAG, "onResume");
+
+        // Retrieve app restrictions and take appropriate action
+        getAppRestrictions();
+
+        // Register a receiver for app restrictions changed broadcast
+        registerRestrictionsReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(LOG_TAG, "onStop");
+
+        // Unregister receiver for app restrictions changed broadcast
+        unregisterReceiver(mRestrictionsReceiver);
     }
 
     @OnClick(R.id.btn_google_login)
     void onGoogleClicked() {
+        Log.e(LOG_TAG, "onGoogleClicked");
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
                 Uri.parse(AUTH_ENDPOINT) /* auth endpoint */,
                 Uri.parse(TOKEN_ENDPOINT) /* token endpoint */
@@ -107,13 +141,22 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         builder.setScopes("profile");// other available scopes are: email, username
 
+        if (getLoginHint() != null) {
+            Map<String, String> loginHintMap = new HashMap<>();
+            loginHintMap.put(LOGIN_HINT, getLoginHint());
+            builder.setAdditionalParameters(loginHintMap);
+
+            Log.i(LOG_TAG, String.format("login_hint: %s", getLoginHint()));
+        }
+
         AuthorizationRequest request = builder.build();
-        Intent postAuthorizationIntent = new Intent(APP_ID);
+        Intent postAuthorizationIntent = new Intent(APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE");
         PendingIntent pendingIntent = PendingIntent.getActivity(this, request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
     private void persistAuthState(@NonNull AuthState authState) {
+        Log.e(LOG_TAG, "persistAuthState");
         getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
                 .putString(AUTH_STATE, authState.toJsonString())
                 .apply();
@@ -122,6 +165,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Nullable
     private AuthState restoreAuthState() {
+        Log.e(LOG_TAG, "restoreAuthState");
         String jsonString = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getString(AUTH_STATE, null);
         if (!TextUtils.isEmpty(jsonString)) {
@@ -148,12 +192,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onNewIntent(Intent intent) {
         checkIntent(intent);
+        Log.e(LOG_TAG, "onNewIntent");
     }
 
     private void enablePostAuthorizationFlows() {
+        Log.e(LOG_TAG, "enablePostAuthorizationFlows");
         mAuthState = restoreAuthState();
         if (mAuthState != null && mAuthState.isAuthorized()) {
-            new MakeApiCallListener(mAuthState, new AuthorizationService(this));
+            makeApiCallListener(mAuthState, new AuthorizationService(this));
 //            if (mMakeApiCall.getVisibility() == View.GONE) {
 //                mMakeApiCall.setVisibility(View.VISIBLE);
 //                mMakeApiCall.setOnClickListener(new MakeApiCallListener(this, mAuthState, new AuthorizationService(this)));
@@ -162,18 +208,20 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //                mSignOut.setVisibility(View.VISIBLE);
 //                mSignOut.setOnClickListener(new SignOutListener(this));
 //            }
-        } else {
+//        } else {
 //            mMakeApiCall.setVisibility(View.GONE);
 //            mSignOut.setVisibility(View.GONE);
         }
     }
 
     private void checkIntent(@Nullable Intent intent) {
+        Log.e(LOG_TAG, "checkIntent");
         if (intent != null) {
             String action = intent.getAction();
             if (action == null) return;
+            Log.e(LOG_TAG, action);
             switch (action) {
-                case APP_ID:
+                case APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE":
                     if (!intent.hasExtra(USED_INTENT)) {
                         handleAuthorizationResponse(intent);
                         intent.putExtra(USED_INTENT, true);
@@ -182,92 +230,83 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 default:
                     // do nothing
             }
+        }else{
+            Log.e(LOG_TAG, "intent == null");
         }
     }
 
-    //    THIS IS THE METHOD WHICH IS USED FOR FETCHING THE USER INFORMATION FROM THE AUTHENTICATION SERVER
-    public static class MakeApiCallListener implements Button.OnClickListener {
-        //        private final MainActivity mMainActivity;
-        private AuthState mAuthState;
-        private AuthorizationService mAuthorizationService;
+    public void makeApiCallListener(@NonNull AuthState authState, @NonNull AuthorizationService authorizationService) {
+        Log.e(LOG_TAG, "makeApiCallListener");
+        // todo have to handle this or activity leaks
+        authState.performActionWithFreshTokens(authorizationService, new AuthState.AuthStateAction() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public void execute(@Nullable String accessToken, @Nullable String idToken, @Nullable AuthorizationException exception) {
+                new AsyncTask<String, Void, JSONObject>() {
+                    @Override
+                    protected JSONObject doInBackground(String... tokens) {
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url("https://www.googleapis.com/oauth2/v3/userinfo")
+                                .addHeader("Authorization", String.format("Bearer %s", tokens[0]))
+                                .build();
 
-        public MakeApiCallListener(@NonNull AuthState authState, @NonNull AuthorizationService authorizationService) {
-//            mMainActivity = mainActivity;
-            mAuthState = authState;
-            mAuthorizationService = authorizationService;
-        }
-
-        @Override
-        public void onClick(View view) {
-            mAuthState.performActionWithFreshTokens(mAuthorizationService, new AuthState.AuthStateAction() {
-                @SuppressLint("StaticFieldLeak")
-                @Override
-                public void execute(@Nullable String accessToken, @Nullable String idToken, @Nullable AuthorizationException exception) {
-                    new AsyncTask<String, Void, JSONObject>() {
-                        @Override
-                        protected JSONObject doInBackground(String... tokens) {
-                            OkHttpClient client = new OkHttpClient();
-                            Request request = new Request.Builder()
-                                    .url("https://www.googleapis.com/oauth2/v3/userinfo")
-                                    .addHeader("Authorization", String.format("Bearer %s", tokens[0]))
-                                    .build();
-
-                            try {
-                                Response response = client.newCall(request).execute();
-                                String jsonBody = response.body().string();
-                                Log.i(LOG_TAG, String.format("User Info Response %s", jsonBody));
-                                return new JSONObject(jsonBody);
-                            } catch (Exception exception) {
-                                Log.w(LOG_TAG, exception);
-                            }
-                            return null;
+                        try {
+                            Response response = client.newCall(request).execute();
+                            assert response.body() != null;
+                            String jsonBody = response.body().string();
+                            Log.i(LOG_TAG, String.format("User Info Response %s", jsonBody));
+                            return new JSONObject(jsonBody);
+                        } catch (Exception exception) {
+                            Log.w(LOG_TAG, exception);
                         }
+                        return null;
+                    }
 
-                        // todo think of adding this to main activity of the application
-                        @Override
-                        protected void onPostExecute(JSONObject userInfo) {
-                            if (userInfo != null) {
-                                String fullName = userInfo.optString("name", null);
-                                String givenName = userInfo.optString("given_name", null);
-                                String familyName = userInfo.optString("family_name", null);
-                                String imageUrl = userInfo.optString("picture", null);
-                                if (!TextUtils.isEmpty(imageUrl)) {
-                                    Log.e(LOG_TAG, "imageUrl" + imageUrl);
+                    // todo think of adding this to main activity of the application
+                    @Override
+                    protected void onPostExecute(JSONObject userInfo) {
+                        if (userInfo != null) {
+                            String fullName = userInfo.optString("name", null);
+                            String givenName = userInfo.optString("given_name", null);
+                            String familyName = userInfo.optString("family_name", null);
+                            String imageUrl = userInfo.optString("picture", null);
+                            if (!TextUtils.isEmpty(imageUrl)) {
+                                Log.e(LOG_TAG, "imageUrl" + imageUrl);
 //                                    Picasso.get()
 //                                            .load(imageUrl)
 //                                            .placeholder(R.drawable.ic_account_circle_black_48dp)
 //                                            .into(mMainActivity.mProfileView);
-                                }
-                                if (!TextUtils.isEmpty(fullName)) {
-                                    Log.e(LOG_TAG, "fullName" + fullName);
+                            }
+                            if (!TextUtils.isEmpty(fullName)) {
+                                Log.e(LOG_TAG, "fullName" + fullName);
 //                                    mMainActivity.mFullName.setText(fullName);
-                                }
-                                if (!TextUtils.isEmpty(givenName)) {
-                                    Log.e(LOG_TAG, "givenName" + givenName);
+                            }
+                            if (!TextUtils.isEmpty(givenName)) {
+                                Log.e(LOG_TAG, "givenName" + givenName);
 //                                    mMainActivity.mGivenName.setText(givenName);
-                                }
-                                if (!TextUtils.isEmpty(familyName)) {
-                                    Log.e(LOG_TAG, "familyName" + familyName);
+                            }
+                            if (!TextUtils.isEmpty(familyName)) {
+                                Log.e(LOG_TAG, "familyName" + familyName);
 //                                    mMainActivity.mFamilyName.setText(familyName);
-                                }
+                            }
 
-                                String message;
-                                if (userInfo.has("error")) {
-                                    message = String.format("%s [%s]", DaApp.getContext().getString(R.string.request_failed),
-                                            userInfo.optString("error_description", "No description"));
-                                } else {
-                                    message = DaApp.getContext().getString(R.string.request_complete);
-                                }
-                                CommonUtils.toast(message);
-                                Log.e(LOG_TAG, "message" + message);
+                            String message;
+                            if (userInfo.has("error")) {
+                                message = String.format("%s [%s]", DaApp.getContext().getString(R.string.request_failed),
+                                        userInfo.optString("error_description", "No description"));
+                            } else {
+                                message = DaApp.getContext().getString(R.string.request_complete);
+                            }
+                            CommonUtils.toast(message);
+                            Log.e(LOG_TAG, "message" + message);
 //                                Snackbar.make(, message, Snackbar.LENGTH_SHORT)
 //                                        .show();
-                            }
                         }
-                    }.execute(accessToken);
-                }
-            });
-        }
+                    }
+                }.execute(accessToken);
+            }
+        });
     }
 
     /**
@@ -276,6 +315,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
      * @param intent represents the {@link Intent} from the Custom Tabs or the System Browser.
      */
     private void handleAuthorizationResponse(@NonNull Intent intent) {
+        Log.e(LOG_TAG, "handleAuthorizationResponse");
         AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
         AuthorizationException error = AuthorizationException.fromIntent(intent);
         final AuthState authState = new AuthState(response, error);
@@ -288,15 +328,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     Log.w(LOG_TAG, "Token Exchange failed", exception);
                 } else {
                     if (tokenResponse != null) {
-                        authState.update(tokenResponse, exception);
+                        authState.update(tokenResponse, null);// was exception, not null
                         persistAuthState(authState);
                         Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
                     }
                 }
             });
+        }else{
+            Log.i(LOG_TAG, "Handled Authorization Response failed");
         }
     }
-
 
     @OnClick(R.id.btn_login)
     void onLoginClicked() {
@@ -307,8 +348,52 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Override
     public void openSensorActivity() {
+        Log.e(LOG_TAG, "openSensorActivity");
         hideLoading();
         startActivity(MainActivity.getStartIntent(LoginActivity.this));
         finish();
     }
+
+    public String getLoginHint() {
+        Log.e(LOG_TAG, "getLoginHint");
+        return mLoginHint;
+    }
+
+    private void getAppRestrictions() {
+        Log.e(LOG_TAG, "getAppRestrictions");
+        RestrictionsManager restrictionsManager =
+                (RestrictionsManager) this
+                        .getSystemService(Context.RESTRICTIONS_SERVICE);
+
+        assert restrictionsManager != null;
+        Bundle appRestrictions = restrictionsManager.getApplicationRestrictions();
+
+        // Block user if KEY_RESTRICTIONS_PENDING is true, and save login hint if available
+        if (!appRestrictions.isEmpty()) {
+            if (!appRestrictions.getBoolean(UserManager.
+                    KEY_RESTRICTIONS_PENDING)) {
+                mLoginHint = appRestrictions.getString(LOGIN_HINT);
+            } else {
+                Toast.makeText(this, R.string.restrictions_pending_block_user,
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+    }
+
+    private void registerRestrictionsReceiver() {
+        Log.e(LOG_TAG, "registerRestrictionsReceiver");
+        IntentFilter restrictionsFilter =
+                new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
+
+        mRestrictionsReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getAppRestrictions();
+            }
+        };
+
+        registerReceiver(mRestrictionsReceiver, restrictionsFilter);
+    }
+
 }
