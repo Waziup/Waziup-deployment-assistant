@@ -73,6 +73,11 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         getDataManager().setCurrentUserProfilePicUrl(pic);
     }
 
+    @Override
+    public void updateUserInfo(String s, DataManager.LoggedInMode mode) {
+        getDataManager().updateUserInfo(s, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
+    }
+
     public void onDecideNextActivity() {
         if (getDataManager().getCurrentUserLoggedInMode()
                 == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {

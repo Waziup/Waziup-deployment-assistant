@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.DaApp;
 import eu.waziup.app.R;
+import eu.waziup.app.data.DataManager;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.utils.CommonUtils;
@@ -93,6 +94,48 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         // Retrieve app restrictions and take appropriate action
         getAppRestrictions();
+
+        //Manage the callback case:
+//        Uri data = getIntent().getData();
+//        if (data != null && !TextUtils.isEmpty(data.getScheme())) {
+//            if (REDIRECT_URI_ROOT.equals(data.getScheme())) {
+//                code = data.getQueryParameter(CODE);
+//                error=data.getQueryParameter(ERROR_CODE);
+//                Log.e(TAG, "onCreate: handle result of authorization with code :" + code);
+//                if (!TextUtils.isEmpty(code)) {
+//                    getTokenFormUrl();
+//                }
+//                if(!TextUtils.isEmpty(error)) {
+//                    //a problem occurs, the user reject our granting request or something like that
+//                    Toast.makeText(this, R.string.loginactivity_grantsfails_quit,Toast.LENGTH_LONG).show();
+//                    Log.e(TAG, "onCreate: handle result of authorization with error :" + error);
+//                    //then die
+//                    finish();
+//                }
+//            }
+//        } else {
+//            //Manage the start application case:
+//            //If you don't have a token yet or if your token has expired , ask for it
+//            OAuthToken oauthToken=OAuthToken.Factory.create();
+//            if (oauthToken==null
+//                    ||oauthToken.getAccessToken()==null) {
+//                //first case==first token request
+//                if(oauthToken==null||oauthToken.getRefreshToken()==null){
+//                    Log.e(TAG, "onCreate: Launching authorization (first step)");
+//                    //first step of OAUth: the authorization step
+//                    makeAuthorizationRequest();
+//                }else{
+//                    Log.e(TAG, "onCreate: refreshing the token :" + oauthToken);
+//                    //refresh token case
+//                    refreshTokenFormUrl(oauthToken);
+//                }
+//            }
+//            //else just launch your MainActivity
+//            else {
+//                Log.e(TAG, "onCreate: Token available, just launch MainActivity");
+//                startMainActivity(false);
+//            }
+//        }
     }
 
     @Override
@@ -213,7 +256,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         if (intent != null) {
             String action = intent.getAction();
             if (action == null) return;
-            Log.e(LOG_TAG,"USED_INTENT--"+String.valueOf(USED_INTENT));
             switch (action) {
                 case APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE":
                     if (!intent.hasExtra(USED_INTENT)) {
@@ -246,12 +288,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             Response response = client.newCall(request).execute();
                             assert response.body() != null;
                             String jsonBody = response.body().string();
-                            JSONObject userInfo = new JSONObject(jsonBody);
                             Log.i(LOG_TAG, String.format("User Info Response %s", jsonBody));
-                            // todo find a better way of handling this later
-                            mPresenter.onSaveName(String.valueOf(userInfo.getString("name")));
-                            mPresenter.onSavePicture(String.valueOf(userInfo.getString("picture")));
-//                            return new JSONObject(jsonBody);
+                            return new JSONObject(jsonBody);
                         } catch (Exception exception) {
                             Log.w(LOG_TAG, exception);
                         }
@@ -267,6 +305,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             String familyName = userInfo.optString("family_name", null);
                             String imageUrl = userInfo.optString("picture", null);
                             if (!TextUtils.isEmpty(imageUrl)) {
+                                mPresenter.onSavePicture(imageUrl);
                                 Log.e(LOG_TAG, "imageUrl" + imageUrl);
 //                                    Picasso.get()
 //                                            .load(imageUrl)
@@ -276,6 +315,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             if (!TextUtils.isEmpty(fullName)) {
                                 Log.e(LOG_TAG, "fullName" + fullName);
 //                                    mMainActivity.mFullName.setText(fullName);
+                                mPresenter.onSaveName(String.valueOf(fullName));
                             }
                             if (!TextUtils.isEmpty(givenName)) {
                                 Log.e(LOG_TAG, "givenName" + givenName);
@@ -299,6 +339,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //                                        .show();
                         }
                     }
+
                 }.execute(accessToken);
             }
         });
@@ -326,6 +367,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         persistAuthState(authState);
                         Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]",
                                 tokenResponse.accessToken, tokenResponse.idToken));
+
+                        // for updating the user logged in mode status
+                        mPresenter.updateUserInfo(tokenResponse.accessToken, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
                     }
                 }
             });
@@ -360,6 +404,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         assert restrictionsManager != null;
         Bundle appRestrictions = restrictionsManager.getApplicationRestrictions();
 
+        // todo find out if this has to be removed later
         // Block user if KEY_RESTRICTIONS_PENDING is true, and save login hint if available
         if (!appRestrictions.isEmpty()) {
             if (!appRestrictions.getBoolean(UserManager.
