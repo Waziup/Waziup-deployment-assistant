@@ -63,4 +63,10 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
         getMvpView().openSensorDetailFragment(sensor, parent);
     }
 
+    @Override
+    public void initializedView() {
+        getMvpView().updateUserName(getDataManager().getCurrentUserName());
+        getMvpView().updateUserProfilePic(getDataManager().getCurrentUserProfilePicUrl());
+    }
+
 }

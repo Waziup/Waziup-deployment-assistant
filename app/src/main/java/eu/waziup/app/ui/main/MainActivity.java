@@ -1,16 +1,13 @@
 package eu.waziup.app.ui.main;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,19 +26,9 @@ import android.widget.TextView;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
-import net.openid.appauth.AuthorizationException;
-import net.openid.appauth.AuthorizationRequest;
-import net.openid.appauth.AuthorizationResponse;
-import net.openid.appauth.AuthorizationService;
-import net.openid.appauth.AuthorizationServiceConfiguration;
-import net.openid.appauth.TokenResponse;
-
-import org.json.JSONException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -52,6 +38,7 @@ import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
+import eu.waziup.app.ui.custom.RoundedImageView;
 import eu.waziup.app.ui.detail.DetailSensorFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
@@ -61,11 +48,6 @@ import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.utils.CommonUtils;
-
-import static eu.waziup.app.utils.AppConstants.APP_ID;
-import static eu.waziup.app.utils.AppConstants.AUTH_CLIENT_ID;
-import static eu.waziup.app.utils.AppConstants.AUTH_ENDPOINT;
-import static eu.waziup.app.utils.AppConstants.TOKEN_ENDPOINT;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -84,8 +66,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @BindView(R.id.navigation_view)
     NavigationView nvDrawer;
 
+    private RoundedImageView mProfileView;
     private TextView mNameTextView;
-
     private TextView mEmailTextView;
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -195,6 +177,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         View headerView = navigationView.getHeaderView(0);
         mEmailTextView = headerView.findViewById(R.id.tv_email);
         mNameTextView = headerView.findViewById(R.id.tv_name);
+        mProfileView = headerView.findViewById(R.id.nav_profile);
 
         loadNavHeader();
 
@@ -362,9 +345,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     private void loadNavHeader() {
-        // todo get the current user information from his "username"
-        mNameTextView.setText("Corentin Dupont");
-        mEmailTextView.setText("test@gmail.com");
+//        mNameTextView.setText("Corentin Dupont");
+//        mEmailTextView.setText("test@gmail.com");
 
         // showing dot next to notifications label
         nvDrawer.getMenu().getItem(1).setActionView(R.layout.menu_dot);
@@ -383,6 +365,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void updateUserProfilePic(String currentUserProfilePicUrl) {
         //load profile pic url into ANImageView
+        Picasso.get()
+                .load(currentUserProfilePicUrl)
+                .placeholder(R.drawable.ic_account)
+                .into(mProfileView);
     }
 
     @Override

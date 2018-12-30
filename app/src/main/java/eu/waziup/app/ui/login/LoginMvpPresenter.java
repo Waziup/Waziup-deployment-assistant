@@ -11,4 +11,6 @@ import eu.waziup.app.ui.base.MvpPresenter;
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
 
     void onServerLoginClick(String username, String password);
+    void onSaveName(String username);
+    void onSavePicture(String pic);
 }

@@ -63,6 +63,16 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                 }));
     }
 
+    @Override
+    public void onSaveName(String username) {
+        getDataManager().setCurrentUserName(username);
+    }
+
+    @Override
+    public void onSavePicture(String pic) {
+        getDataManager().setCurrentUserProfilePicUrl(pic);
+    }
+
     public void onDecideNextActivity() {
         if (getDataManager().getCurrentUserLoggedInMode()
                 == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {

@@ -18,6 +18,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
@@ -105,7 +107,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(LOG_TAG, "onResume");
 
         // Retrieve app restrictions and take appropriate action
         getAppRestrictions();
@@ -117,7 +118,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e(LOG_TAG, "onStop");
 
         // Unregister receiver for app restrictions changed broadcast
         unregisterReceiver(mRestrictionsReceiver);
@@ -125,7 +125,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @OnClick(R.id.btn_google_login)
     void onGoogleClicked() {
-        Log.e(LOG_TAG, "onGoogleClicked");
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
                 Uri.parse(AUTH_ENDPOINT) /* auth endpoint */,
                 Uri.parse(TOKEN_ENDPOINT) /* token endpoint */
@@ -156,7 +155,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     }
 
     private void persistAuthState(@NonNull AuthState authState) {
-        Log.e(LOG_TAG, "persistAuthState");
         getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
                 .putString(AUTH_STATE, authState.toJsonString())
                 .apply();
@@ -165,7 +163,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Nullable
     private AuthState restoreAuthState() {
-        Log.e(LOG_TAG, "restoreAuthState");
         String jsonString = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 .getString(AUTH_STATE, null);
         if (!TextUtils.isEmpty(jsonString)) {
@@ -192,11 +189,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     protected void onNewIntent(Intent intent) {
         checkIntent(intent);
-        Log.e(LOG_TAG, "onNewIntent");
     }
 
     private void enablePostAuthorizationFlows() {
-        Log.e(LOG_TAG, "enablePostAuthorizationFlows");
         mAuthState = restoreAuthState();
         if (mAuthState != null && mAuthState.isAuthorized()) {
             makeApiCallListener(mAuthState, new AuthorizationService(this));
@@ -215,11 +210,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     }
 
     private void checkIntent(@Nullable Intent intent) {
-        Log.e(LOG_TAG, "checkIntent");
         if (intent != null) {
             String action = intent.getAction();
             if (action == null) return;
-            Log.e(LOG_TAG, action);
+            Log.e(LOG_TAG,"USED_INTENT--"+String.valueOf(USED_INTENT));
             switch (action) {
                 case APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE":
                     if (!intent.hasExtra(USED_INTENT)) {
@@ -230,13 +224,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 default:
                     // do nothing
             }
-        }else{
-            Log.e(LOG_TAG, "intent == null");
         }
     }
 
     public void makeApiCallListener(@NonNull AuthState authState, @NonNull AuthorizationService authorizationService) {
-        Log.e(LOG_TAG, "makeApiCallListener");
         // todo have to handle this or activity leaks
         authState.performActionWithFreshTokens(authorizationService, new AuthState.AuthStateAction() {
             @SuppressLint("StaticFieldLeak")
@@ -255,8 +246,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             Response response = client.newCall(request).execute();
                             assert response.body() != null;
                             String jsonBody = response.body().string();
+                            JSONObject userInfo = new JSONObject(jsonBody);
                             Log.i(LOG_TAG, String.format("User Info Response %s", jsonBody));
-                            return new JSONObject(jsonBody);
+                            // todo find a better way of handling this later
+                            mPresenter.onSaveName(String.valueOf(userInfo.getString("name")));
+                            mPresenter.onSavePicture(String.valueOf(userInfo.getString("picture")));
+//                            return new JSONObject(jsonBody);
                         } catch (Exception exception) {
                             Log.w(LOG_TAG, exception);
                         }
@@ -315,7 +310,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
      * @param intent represents the {@link Intent} from the Custom Tabs or the System Browser.
      */
     private void handleAuthorizationResponse(@NonNull Intent intent) {
-        Log.e(LOG_TAG, "handleAuthorizationResponse");
         AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
         AuthorizationException error = AuthorizationException.fromIntent(intent);
         final AuthState authState = new AuthState(response, error);
@@ -330,7 +324,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     if (tokenResponse != null) {
                         authState.update(tokenResponse, null);// was exception, not null
                         persistAuthState(authState);
-                        Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
+                        Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]",
+                                tokenResponse.accessToken, tokenResponse.idToken));
                     }
                 }
             });
@@ -348,19 +343,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Override
     public void openSensorActivity() {
-        Log.e(LOG_TAG, "openSensorActivity");
         hideLoading();
         startActivity(MainActivity.getStartIntent(LoginActivity.this));
         finish();
     }
 
     public String getLoginHint() {
-        Log.e(LOG_TAG, "getLoginHint");
         return mLoginHint;
     }
 
     private void getAppRestrictions() {
-        Log.e(LOG_TAG, "getAppRestrictions");
         RestrictionsManager restrictionsManager =
                 (RestrictionsManager) this
                         .getSystemService(Context.RESTRICTIONS_SERVICE);
@@ -382,7 +374,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     }
 
     private void registerRestrictionsReceiver() {
-        Log.e(LOG_TAG, "registerRestrictionsReceiver");
         IntentFilter restrictionsFilter =
                 new IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
 

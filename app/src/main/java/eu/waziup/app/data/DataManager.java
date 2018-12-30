@@ -12,6 +12,8 @@ public interface DataManager extends PreferencesHelper, ApiHelper {
 
     void updateUserInfo(String accessToken, LoggedInMode loggedInMode);
 
+    void updateUserInfo(String accessToken, String name, String picture, LoggedInMode loggedInMode);
+
     void updateUserToken(String accessToken);
 
     enum LoggedInMode {

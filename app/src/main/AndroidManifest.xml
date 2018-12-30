@@ -84,7 +84,11 @@
         <!--MAIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.main.MainActivity"
-            android:theme="@style/AppTheme.no_toolbar" />
+            android:theme="@style/AppTheme.no_toolbar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 
         <!--SCANNER ACTIVITY-->
         <activity

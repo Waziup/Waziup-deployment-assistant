@@ -152,6 +152,15 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void updateUserInfo(String accessToken, String name, String picture, LoggedInMode loggedInMode) {
+        setAccessToken(accessToken);
+        setCurrentUserName(name);
+        setCurrentUserProfilePicUrl(picture);
+        updateApiHeader(accessToken);
+        setCurrentUserLoggedInMode(loggedInMode);
+    }
+
+    @Override
     public void updateApiHeader(String accessToken) {
         mApiHelper.getApiHeader().setAccessToken(accessToken);
     }
