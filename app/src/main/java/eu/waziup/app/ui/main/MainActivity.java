@@ -214,11 +214,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 break;
             case R.id.nav_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Are you sure you want to logout?")
-                        .setPositiveButton("Logout", (dialog, id) -> {
+                builder.setMessage(R.string.are_you_sure_you_want_to_logout)
+                        .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
                             mPresenter.onLogOutClicked();
                         })
-                        .setNegativeButton("Cancel", (dialog, id) -> {
+                        .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
                             dialog.dismiss();
                         });
                 AlertDialog alert = builder.create();
