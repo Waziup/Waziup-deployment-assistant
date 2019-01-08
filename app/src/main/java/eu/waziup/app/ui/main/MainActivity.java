@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
             if (sensorFragment != null && sensorFragment.isVisible()) {
                 new AlertDialog.Builder(this)
-                        .setMessage("Are you sure you want to exit?")
+                        .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
                         .setCancelable(false)
                         .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
                         .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
