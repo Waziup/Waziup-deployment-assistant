@@ -21,12 +21,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class MainActivityTest {
 
     @Rule
-    public ActivityTestRule rule = new ActivityTestRule(MainActivity.class, true, false);
+    public ActivityTestRule<MainActivity> mActivityRule =
+            new ActivityTestRule<>(MainActivity.class);
 
-    //    todo has to properly import ActivityTestRule from the espresso
     @Test
     public void onCalculateClicked() {
-        rule.launchActivity(new Intent());
+//        rule.launchActivity(new Intent());
 
 //        onView(withId(R.id.btn_calculate)).perform(click());
         onView(withText("Optimized Result")).check(matches(ViewMatchers.isDisplayed()));

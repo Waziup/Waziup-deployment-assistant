@@ -26,20 +26,34 @@ public class LoginActivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, false);
 
+    /**
+     * For checking whether the editTexts and the login button have been displayed or not
+     */
     @Test
-    public void onLoginButtonClicked() {
+    public void onEditTestAndButtonDisplayed(){
+        // launching the activity
         rule.launchActivity(new Intent());
+
         // username field
         onView(withId(R.id.et_username)).check(matches(isDisplayed()));
         // password field
         onView(withId(R.id.et_password)).check(matches(isDisplayed()));
         // login button
         onView(withId(R.id.btn_login)).check(matches(isDisplayed()));
+    }
 
-        // performing action for user login
+    /**
+     * For performing actions like typing in the username and password and then later clicking the
+     * login button
+     */
+    @Test
+    public void onLoginButtonClicked() {
+        // launching the activity
+        rule.launchActivity(new Intent());
+
+        // performing action for user login - typing username and password and clicking login button
         onView(withId(R.id.et_username)).perform(typeText("cdupont"), closeSoftKeyboard());
         onView(withId(R.id.et_password)).perform(typeText("password"), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
-        //        onView(withText("Optimized Result")).check(matches(ViewMatchers.isDisplayed()));
     }
 }
