@@ -58,8 +58,11 @@ import static eu.waziup.app.utils.AppConstants.TOKEN_ENDPOINT;
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
+
     private static final String AUTH_STATE = "AUTH_STATE";
+
     private static final String USED_INTENT = "USED_INTENT";
+
     private static final String LOGIN_HINT = "login_hint";
 
     // state
@@ -246,7 +249,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //                mSignOut.setVisibility(View.VISIBLE);
 //                mSignOut.setOnClickListener(new SignOutListener(this));
 //            }
-//        } else {
+//        } else { // this is when mAuthState is null which means the user hasn't logged in before or has logged out of his account
 //            mMakeApiCall.setVisibility(View.GONE);
 //            mSignOut.setVisibility(View.GONE);
         }
@@ -254,10 +257,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     private void checkIntent(@Nullable Intent intent) {
         if (intent != null) {
-            String action = intent.getAction();
+            String action = intent.getScheme();
             if (action == null) return;
             switch (action) {
-                case APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE":
+                case APP_ID ://+ ".HANDLE_AUTHORIZATION_RESPONSE":
                     if (!intent.hasExtra(USED_INTENT)) {
                         handleAuthorizationResponse(intent);
                         intent.putExtra(USED_INTENT, true);
@@ -306,23 +309,23 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             String imageUrl = userInfo.optString("picture", null);
                             if (!TextUtils.isEmpty(imageUrl)) {
                                 mPresenter.onSavePicture(imageUrl);
-                                Log.e(LOG_TAG, "imageUrl" + imageUrl);
+                                Log.e(LOG_TAG, "imageUrl " + imageUrl);
 //                                    Picasso.get()
 //                                            .load(imageUrl)
 //                                            .placeholder(R.drawable.ic_account_circle_black_48dp)
 //                                            .into(mMainActivity.mProfileView);
                             }
                             if (!TextUtils.isEmpty(fullName)) {
-                                Log.e(LOG_TAG, "fullName" + fullName);
+                                Log.e(LOG_TAG, "fullName " + fullName);
 //                                    mMainActivity.mFullName.setText(fullName);
                                 mPresenter.onSaveName(String.valueOf(fullName));
                             }
                             if (!TextUtils.isEmpty(givenName)) {
-                                Log.e(LOG_TAG, "givenName" + givenName);
+                                Log.e(LOG_TAG, "givenName " + givenName);
 //                                    mMainActivity.mGivenName.setText(givenName);
                             }
                             if (!TextUtils.isEmpty(familyName)) {
-                                Log.e(LOG_TAG, "familyName" + familyName);
+                                Log.e(LOG_TAG, "familyName " + familyName);
 //                                    mMainActivity.mFamilyName.setText(familyName);
                             }
 
@@ -333,13 +336,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             } else {
                                 message = DaApp.getContext().getString(R.string.request_complete);
                             }
+
+                            MainActivity.getStartIntent(LoginActivity.this);
                             CommonUtils.toast(message);
-                            Log.e(LOG_TAG, "message" + message);
+                            Log.e(LOG_TAG, "message " + message);
 //                                Snackbar.make(, message, Snackbar.LENGTH_SHORT)
 //                                        .show();
                         }
                     }
-
                 }.execute(accessToken);
             }
         });
@@ -363,13 +367,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     Log.w(LOG_TAG, "Token Exchange failed", exception);
                 } else {
                     if (tokenResponse != null) {
-                        authState.update(tokenResponse, null);// was exception, not null
+                        authState.update(tokenResponse, exception);// was exception, not null
                         persistAuthState(authState);
                         Log.i(LOG_TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]",
                                 tokenResponse.accessToken, tokenResponse.idToken));
 
                         // for updating the user logged in mode status
                         mPresenter.updateUserInfo(tokenResponse.accessToken, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
+                        MainActivity.getStartIntent(this);
                     }
                 }
             });

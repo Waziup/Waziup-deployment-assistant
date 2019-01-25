@@ -40,7 +40,8 @@
         <!--
             for the authorization and authentication from google
         -->
-        <meta-data android:name="android.content.APP_RESTRICTIONS"
+        <meta-data
+            android:name="android.content.APP_RESTRICTIONS"
             android:resource="@xml/app_restrictions" />
 
         <service android:name="eu.waziup.app.service.SyncService" />
@@ -55,14 +56,16 @@
         </service>
 
         <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
-        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="eu.waziup.app" />
-            </intent-filter>
-        </activity>
+        <!--<activity android:name="net.openid.appauth.RedirectUriReceiverActivity">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.VIEW" />-->
+
+        <!--<category android:name="android.intent.category.DEFAULT" />-->
+        <!--<category android:name="android.intent.category.BROWSABLE" />-->
+
+        <!--<data android:scheme="eu.waziup.app" />-->
+        <!--</intent-filter>-->
+        <!--</activity>-->
 
         <!--LOGIN ACTIVITY-->
         <activity
@@ -76,15 +79,17 @@
             </intent-filter>
             <!-- this is for OAuth 2.0 authentication schema-->
             <intent-filter>
-                <action android:name="eu.waziup.app.HANDLE_AUTHORIZATION_RESPONSE" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="eu.waziup.app" />
             </intent-filter>
         </activity>
 
         <!--MAIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.main.MainActivity"
-            android:theme="@style/AppTheme.no_toolbar" >
+            android:theme="@style/AppTheme.no_toolbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
