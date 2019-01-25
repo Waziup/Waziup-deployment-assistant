@@ -1,22 +1,45 @@
 package eu.waziup.app;
 
+import android.content.Intent;
+import android.support.test.filters.SmallTest;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.waziup.app.ui.login.LoginActivity;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 @RunWith(AndroidJUnit4.class)
+@SmallTest
 public class LoginActivityTest {
 
-//    @Rule
-//    public ActivityTestRule rule = new ActivityTestRule(MainActivity.class, true, false);
+    @Rule
+    public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, false);
 
-//    todo has to properly import ActivityTestRule from the espresso
     @Test
-    public void onCalculateClicked() {
-//        rule.launchActivity(new Intent());
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.btn_calculate)).perform(ViewActions.click());
-//        Espresso.onView(ViewMatchers.withText("Optimized Result")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+    public void onLoginButtonClicked() {
+        rule.launchActivity(new Intent());
+        // username field
+        onView(withId(R.id.et_username)).check(matches(isDisplayed()));
+        // password field
+        onView(withId(R.id.et_password)).check(matches(isDisplayed()));
+        // login button
+        onView(withId(R.id.btn_login)).check(matches(isDisplayed()));
+
+        // performing action for user login
+        onView(withId(R.id.et_username)).perform(typeText("cdupont"), closeSoftKeyboard());
+        onView(withId(R.id.et_password)).perform(typeText("password"), closeSoftKeyboard());
+        onView(withId(R.id.btn_login)).perform(click());
+        //        onView(withText("Optimized Result")).check(matches(ViewMatchers.isDisplayed()));
     }
 }

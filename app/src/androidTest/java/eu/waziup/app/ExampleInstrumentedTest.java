@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("eu.waziup.waziup_da_app", appContext.getPackageName());
+        assertEquals("eu.waziup.app", appContext.getPackageName());//eu.waziup.waziup_da_app - failing packageName
     }
 }
