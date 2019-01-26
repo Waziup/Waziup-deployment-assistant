@@ -12,8 +12,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.login.LoginActivity;
+import eu.waziup.app.ui.main.MainActivity;
+import eu.waziup.app.ui.sensor.SensorFragment;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -26,44 +30,59 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @SmallTest
 public class EditMeasurementDialogTest {
 
+    DetailSensorFragment mDetailSensorFragment;
+
     @Rule
-    public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, false);
-
-    /**
-     * For checking whether the editTexts and the login button have been displayed or not
-     */
-    @Test
-    public void onEditTestAndButtonDisplayed(){
-        // launching the activity
-        rule.launchActivity(new Intent());
-
-        // username field
-        onView(ViewMatchers.withId(R.id.et_username)).check(matches(isDisplayed()));
-        // password field
-        onView(withId(R.id.et_password)).check(matches(isDisplayed()));
-        // login button
-        onView(withId(R.id.btn_login)).check(matches(isDisplayed()));
-    }
-
-    /**
-     * For performing actions like typing in the username and password and then later clicking the
-     * login button
-     */
-    @Test
-    public void onLoginButtonClicked() {
-        // launching the activity
-        rule.launchActivity(new Intent());
-
-        // performing action for user login - typing username and password and clicking login button
-        onView(withId(R.id.et_username)).perform(typeText("cdupont"), closeSoftKeyboard());
-        onView(withId(R.id.et_password)).perform(typeText("password"), closeSoftKeyboard());
-        onView(withId(R.id.btn_login)).perform(click());
-        // todo - the id is not being found since the view is not being inflated. find a solution
-        // note: this linearLayout is on another activity - MainActivity.class
-//        onView(withId(R.id.main_parent_container)).check(matches(isDisplayed()));
-    }
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Before
     public void setUp() throws Exception {
+        // launching the activity
+        rule.launchActivity(new Intent());
+
+        // for inflating the fragment - with mock data
+        mDetailSensorFragment = DetailSensorFragment.newInstance(new Sensor("IST-AFRICA-2018_Sensor6", "",
+                "waziup", "public"), SensorFragment.TAG);
+
+        rule.getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.cl_root_view, mDetailSensorFragment, DetailSensorFragment.TAG)
+                .commit();
     }
+
+    @Test
+    public void onButtonsAndTextViewsDisplayed() throws Exception {
+        // add measurement button
+        onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
+
+        // -- below are views displayed on detail fragment
+        // unDeploy button
+        onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));
+        // deploy button
+        onView(withId(R.id.btn_deploy)).check(matches(isDisplayed()));
+        // sensor date
+        onView(withId(R.id.detail_sensor_date)).check(matches(isDisplayed()));
+        // toolbar title
+        onView(withId(R.id.toolbar_title)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void onAddButtonClicked() throws Exception {
+        // performs add button click
+        onView(withId(R.id.detail_sensor_add_measurement)).perform(click());
+        // tells the ide to wait for the button being clicked before checking
+        getInstrumentation().waitForIdleSync();
+        // check for the title being displayed - Edit Measurement
+        onView(withId(R.id.dialog_measurement_title)).check(matches(isDisplayed()));
+        // check for the id field being displayed
+        onView(withId(R.id.dialog_measurement_id)).check(matches(isDisplayed()));
+        // check for the name field being displayed
+        onView(withId(R.id.dialog_measurement_name)).check(matches(isDisplayed()));
+        // check for the quantity_kind being displayed
+        onView(withId(R.id.dialog_measurement_quantity_kind)).check(matches(isDisplayed()));
+        // check for the unit field being displayed
+        onView(withId(R.id.dialog_measurement_unit)).check(matches(isDisplayed()));
+    }
+
 }

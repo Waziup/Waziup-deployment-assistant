@@ -20,8 +20,10 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -50,6 +52,7 @@ public class AddMeasurementDialogTest {
 
     @Test
     public void onButtonsAndTextViewsDisplayed() throws Exception {
+
         // add measurement button
         onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
         // unDeploy button
@@ -66,6 +69,11 @@ public class AddMeasurementDialogTest {
     public void onAddButtonClicked() throws Exception {
         // performs add button click
         onView(withId(R.id.detail_sensor_add_measurement)).perform(click());
+
+        onView(withText(R.string.edit_measurement))
+                .inRoot(isDialog()) // <--- checking if the inflated view is a dialog with the textView
+                .check(matches(isDisplayed()));
+
         // tells the ide to wait for the button being clicked before checking
         getInstrumentation().waitForIdleSync();
         // check for the title being displayed - Edit Measurement
