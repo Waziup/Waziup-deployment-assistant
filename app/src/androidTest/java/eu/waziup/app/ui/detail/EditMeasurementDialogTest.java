@@ -1,14 +1,17 @@
-package eu.waziup.app;
+package eu.waziup.app.ui.detail;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.waziup.app.R;
 import eu.waziup.app.ui.login.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -21,7 +24,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class AddMeasurementDialogTest {
+public class EditMeasurementDialogTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(LoginActivity.class, true, false);
@@ -35,7 +38,7 @@ public class AddMeasurementDialogTest {
         rule.launchActivity(new Intent());
 
         // username field
-        onView(withId(R.id.et_username)).check(matches(isDisplayed()));
+        onView(ViewMatchers.withId(R.id.et_username)).check(matches(isDisplayed()));
         // password field
         onView(withId(R.id.et_password)).check(matches(isDisplayed()));
         // login button
@@ -58,5 +61,9 @@ public class AddMeasurementDialogTest {
         // todo - the id is not being found since the view is not being inflated. find a solution
         // note: this linearLayout is on another activity - MainActivity.class
 //        onView(withId(R.id.main_parent_container)).check(matches(isDisplayed()));
+    }
+
+    @Before
+    public void setUp() throws Exception {
     }
 }

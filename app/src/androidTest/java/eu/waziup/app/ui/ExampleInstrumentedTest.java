@@ -1,4 +1,4 @@
-package eu.waziup.app;
+package eu.waziup.app.ui.main;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

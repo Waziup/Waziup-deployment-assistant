@@ -1,4 +1,4 @@
-package eu.waziup.app;
+package eu.waziup.app.ui.login;
 
 import android.content.Intent;
 import android.support.test.filters.SmallTest;
@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.waziup.app.R;
 import eu.waziup.app.ui.login.LoginActivity;
 
 import static android.support.test.espresso.Espresso.onView;

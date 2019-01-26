@@ -1,4 +1,4 @@
-package eu.waziup.app;
+package eu.waziup.app.ui.register;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;

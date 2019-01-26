@@ -1,4 +1,4 @@
-package eu.waziup.app;
+package eu.waziup.app.ui.main;
 
 import android.content.Intent;
 import android.support.test.espresso.matcher.ViewMatchers;
