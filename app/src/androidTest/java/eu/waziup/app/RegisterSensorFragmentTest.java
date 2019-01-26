@@ -13,10 +13,12 @@ import eu.waziup.app.ui.register.RegisterSensorFragment;
 @RunWith(AndroidJUnit4.class)
 public class RegisterSensorFragmentTest {
 
+    // note: should not be inflating the a fragment in as a rule. should only be activity and through
+    // the activity its possible to inflate the fragment
     @Rule
-    public ActivityTestRule rule = new ActivityTestRule(RegisterSensorFragment.class, true, false);
+    public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, false);
 
-//    todo has to properly import ActivityTestRule from the espresso
+    // todo has to properly import ActivityTestRule from the espresso
     @Test
     public void onCalculateClicked() {
 //        rule.launchActivity(new Intent());
