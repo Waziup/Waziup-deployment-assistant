@@ -55,5 +55,8 @@ public class LoginActivityTest {
         onView(withId(R.id.et_username)).perform(typeText("cdupont"), closeSoftKeyboard());
         onView(withId(R.id.et_password)).perform(typeText("password"), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());
+        // todo - the id is not being found since the view is not being inflated. find a solution
+        // note: this linearLayout is on another activity - MainActivity.class
+//        onView(withId(R.id.main_parent_container)).check(matches(isDisplayed()));
     }
 }
