@@ -10,6 +10,7 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
+        android:id="@+id/simple_scanner_toolbar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="@dimen/app_bar_height"
@@ -35,7 +36,7 @@
             android:layout_weight="0.7"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Scan sensor"
+            android:text="@string/scan_sensor"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
