@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="45" />
+                                                <entry key="scalingPercent" value="72" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -35,7 +35,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="C:\Users\KidusMT\Desktop\ic_education.svg" />
+                                      <entry key="foregroundImage" value="C:\Users\KidusMT\Desktop\Waziup\waziup_logo.svg" />
                                     </map>
                                   </option>
                                 </PersistentState>
