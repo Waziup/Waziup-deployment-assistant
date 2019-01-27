@@ -53,6 +53,7 @@ public class LoginActivityTest {
         rule.launchActivity(new Intent());
 
         // performing action for user login - typing username and password and clicking login button
+        // used mock username: "cdupont" and password: "password"
         onView(withId(R.id.et_username)).perform(typeText("cdupont"), closeSoftKeyboard());
         onView(withId(R.id.et_password)).perform(typeText("password"), closeSoftKeyboard());
         onView(withId(R.id.btn_login)).perform(click());

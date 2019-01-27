@@ -37,7 +37,6 @@ public class SensorFragmentTest {
                 .beginTransaction()
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
-
     }
 
     @Test
