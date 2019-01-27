@@ -43,38 +43,62 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/notification_sensor_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
-                android:text="sensor name"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/notification_measurement"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
-                android:text="measurement"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/notification_sensor_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.7"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_regular"
+                    android:maxLines="1"
+                    android:text="sensor name"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/notification_expression"
+                <TextView
+                    android:id="@+id/sensor_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.3"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_light"
+                    android:maxLines="1"
+                    android:text="Jun 12, 2018"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/semi_gray"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
-                android:text="expression"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/icon_sensor_owner"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:srcCompat="@drawable/ic_account" />
+
+                <TextView
+                    android:id="@+id/notification_owner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/roboto_light"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/notification_message"
@@ -87,27 +111,39 @@
                 android:text="message"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/notification_owner"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
-                android:text="owner"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/notification_shared_at"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:fontFamily="@font/roboto_regular"
-                android:maxLines="1"
-                android:text="shared_at"
-                android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/ic_facebook" />
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/ic_sms" />
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/ic_twitter" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

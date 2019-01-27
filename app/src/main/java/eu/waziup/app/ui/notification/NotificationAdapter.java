@@ -62,11 +62,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.notification_sensor_name)
         TextView mNotificationSensorName;
 
-        @BindView(R.id.notification_measurement)
-        TextView mNotificationMeasurement;
+//        @BindView(R.id.notification_measurement)
+//        TextView mNotificationMeasurement;
 
-        @BindView(R.id.notification_expression)
-        TextView mNotificationExpression;
+//        @BindView(R.id.notification_expression)
+//        TextView mNotificationExpression;
 
         @BindView(R.id.notification_message)
         TextView mNotificationMessage;
@@ -74,8 +74,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.notification_owner)
         TextView mNotificationOwner;
 
-        @BindView(R.id.notification_shared_at)
-        TextView mNotificationSharedAt;
+//        @BindView(R.id.notification_shared_at)
+//        TextView mNotificationSharedAt;
 
         NotificationResponse notification;
 
@@ -105,23 +105,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
 
                 // measurement
-                if (notification.getCondition().getMeasurements().size() > 0) {
-                    for (int i = 0; i < notification.getCondition().getMeasurements().size(); i++) {
-                        mNotificationMeasurement.setText(String.valueOf(
-                                (notification.getCondition().getMeasurements().size() == 1) ? notification.getCondition().getMeasurements().get(i)
-                                        : (notification.getCondition().getMeasurements().size() == i) ? notification.getCondition().getMeasurements().get(i)
-                                        : notification.getCondition().getMeasurements().get(i) + ", "));
-                    }
-                } else {
-                    mNotificationMeasurement.setVisibility(View.GONE);
-                }
+//                if (notification.getCondition().getMeasurements().size() > 0) {
+//                    for (int i = 0; i < notification.getCondition().getMeasurements().size(); i++) {
+//                        mNotificationMeasurement.setText(String.valueOf(
+//                                (notification.getCondition().getMeasurements().size() == 1) ? notification.getCondition().getMeasurements().get(i)
+//                                        : (notification.getCondition().getMeasurements().size() == i) ? notification.getCondition().getMeasurements().get(i)
+//                                        : notification.getCondition().getMeasurements().get(i) + ", "));
+//                    }
+//                } else {
+//                    mNotificationMeasurement.setVisibility(View.GONE);
+//                }
 
                 // expression
-                if (!TextUtils.isEmpty(notification.getCondition().getExpression())) {
-                    mNotificationExpression.setText(String.valueOf(notification.getCondition().getExpression()));
-                } else {
-                    mNotificationExpression.setVisibility(View.GONE);
-                }
+//                if (!TextUtils.isEmpty(notification.getCondition().getExpression())) {
+//                    mNotificationExpression.setText(String.valueOf(notification.getCondition().getExpression()));
+//                } else {
+//                    mNotificationExpression.setVisibility(View.GONE);
+//                }
 
                 // message
                 if (!TextUtils.isEmpty(notification.getNotification().getMessage())) {
@@ -143,18 +143,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
 
                 // shared at
-                if (notification.getCondition().getSensors().size() > 0) {
-                    for (int i = 0; i < notification.getNotification().getChannels().size(); i++) {
-                        mNotificationSharedAt.setText(String.valueOf(
-                                (notification.getNotification().getChannels().size() == 1) ?
-                                        notification.getNotification().getChannels().get(i)
-                                        : (notification.getNotification().getChannels().size() == i) ?
-                                        notification.getNotification().getChannels().get(i)
-                                        : notification.getNotification().getChannels().get(i) + ", "));
-                    }
-                } else {
-                    mNotificationSharedAt.setVisibility(View.GONE);
-                }
+//                if (notification.getCondition().getSensors().size() > 0) {
+//                    for (int i = 0; i < notification.getNotification().getChannels().size(); i++) {
+//                        mNotificationSharedAt.setText(String.valueOf(
+//                                (notification.getNotification().getChannels().size() == 1) ?
+//                                        notification.getNotification().getChannels().get(i)
+//                                        : (notification.getNotification().getChannels().size() == i) ?
+//                                        notification.getNotification().getChannels().get(i)
+//                                        : notification.getNotification().getChannels().get(i) + ", "));
+//                    }
+//                } else {
+//                    mNotificationSharedAt.setVisibility(View.GONE);
+//                }
 
             } else {
                 // todo find a better way of handling this condition
@@ -167,11 +167,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         protected void clear() {
             mNotificationSensorName.setText("");
-            mNotificationMeasurement.setText("");
-            mNotificationExpression.setText("");
+//            mNotificationMeasurement.setText("");
+//            mNotificationExpression.setText("");
             mNotificationMessage.setText("");
             mNotificationOwner.setText("");
-            mNotificationSharedAt.setText("");
+//            mNotificationSharedAt.setText("");
         }
     }
 }

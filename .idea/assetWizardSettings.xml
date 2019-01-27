@@ -88,9 +88,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_notifications" />
-                            <entry key="sourceFile" value="C:\Users\KidusMT" />
+                            <entry key="outputName" value="ic_twitter" />
+                            <entry key="sourceFile" value="C:\Users\KidusMT\Desktop\waziup templates\ic_twitter.svg" />
                           </map>
                         </option>
                       </PersistentState>
