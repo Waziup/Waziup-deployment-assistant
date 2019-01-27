@@ -8,6 +8,7 @@
     tools:context=".ui.register.RegisterSensorFragment">
 
     <LinearLayout
+        android:id="@+id/register_toolbar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="@dimen/app_bar_height"
