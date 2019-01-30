@@ -1,22 +1,24 @@
 package eu.waziup.app.ui.main;
 
-import android.support.test.runner.AndroidJUnit4;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Random;
 
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.Mockito.verify;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest {
 
     @Mock
@@ -33,6 +35,7 @@ public class MainPresenterTest {
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         mTestScheduler = new TestScheduler();
         TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(mTestScheduler);
+
         // presenter
         mMainPresenter = new MainPresenter<>(
                 mMockDataManager,
@@ -43,7 +46,7 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void onLogOutClicked() {
+    public void onLogOutClicked() throws Exception {
         mMainPresenter.onLogOutClicked();
         // have to check if loginActivity has been opened
         // todo have to check if userInformation has been cleared or not
@@ -51,17 +54,20 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void onFabClicked() {
+    public void onFabClicked() throws Exception {
         mMainPresenter.onFabClicked();
         // have to prove that RegistrationSensorFragment have been opened
         verify(mMockMainMvpView).openRegistrationSensor();
     }
 
     @Test
-    public void onSensorItemClicked(Sensor sensor, String parent) {
-        mMainPresenter.onSensorItemClicked(sensor, parent);
+    public void onSensorItemClicked() {
+        // todo check if this is the right way of doing it.
+        Sensor sensor = new Sensor(new Random(4).toString(), "APTD-123-asd", "Hawasssa", "VISIBLE");
+        mMainPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
+
         //  has to open selected Sensor detail fragment
-        verify(mMockMainMvpView).openSensorDetailFragment(sensor, parent);
+        verify(mMockMainMvpView).openSensorDetailFragment(sensor, SensorFragment.TAG);
     }
 
     @After
