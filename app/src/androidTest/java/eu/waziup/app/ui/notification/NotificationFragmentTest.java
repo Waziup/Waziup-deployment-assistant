@@ -11,6 +11,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.ui.sensor.SensorFragment;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -40,6 +41,8 @@ public class NotificationFragmentTest {
 
     @Test
     public void recyclerViewItemsDisplayed() throws Exception {
+        getInstrumentation().waitForIdleSync();
+
         // check for existence of the recyclerView
         onView(withId(R.id.notification_recycler)).check(matches(isDisplayed()));
 
