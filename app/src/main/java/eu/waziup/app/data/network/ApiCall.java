@@ -15,6 +15,7 @@ import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.data.network.model.user.User;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -37,31 +38,31 @@ public interface ApiCall {
 
     @GET(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<List<Sensor>> getSensors();
+    Single<List<Sensor>> getSensors();
 
     @GET(ApiEndPoint.NOTIFICATION)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<List<NotificationResponse>> getNotifications();
+    Single<List<NotificationResponse>> getNotifications();
 
     @POST(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<RegisterSensorResponse> createSensor(@Body Sensor sensor);
+    Single<RegisterSensorResponse> createSensor(@Body Sensor sensor);
 
     @POST(ApiEndPoint.LOGIN)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
-    Observable<String> login(@Body LoginRequest.ServerLoginRequest request);
+    Single<String> login(@Body LoginRequest.ServerLoginRequest request);
 
     @DELETE(ApiEndPoint.MEASUREMENT_DELETE)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
+    Single<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
 
     @GET(ApiEndPoint.MEASUREMENT_LIST)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
+    Single<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
 
     @GET(ApiEndPoint.USERS)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Observable<List<User>> getUsers();
+    Single<List<User>> getUsers();
 
     class Factory {
 

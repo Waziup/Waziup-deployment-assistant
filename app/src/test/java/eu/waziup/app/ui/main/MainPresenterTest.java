@@ -63,10 +63,11 @@ public class MainPresenterTest {
     @Test
     public void onSensorItemClicked() throws Exception{
         // todo check if this is the right way of doing it.
-        Sensor sensor = new Sensor(new Random(4).toString(), "APTD-123-asd", "Hawasssa", "VISIBLE");
+        Sensor sensor = new Sensor(
+                new Random(4).toString(), "APTD-123-asd", "Hawassa", "VISIBLE");
         mMainPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
 
-        //  has to open selected Sensor detail fragment
+        // has to open selected Sensor detail fragment
         verify(mMockMainMvpView).openSensorDetailFragment(sensor, SensorFragment.TAG);
     }
 

@@ -14,6 +14,7 @@ import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.data.network.model.user.User;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import okhttp3.ResponseBody;
 
 /**
@@ -47,37 +48,37 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Observable<String> serverLogin(LoginRequest.ServerLoginRequest request) {
+    public Single<String> serverLogin(LoginRequest.ServerLoginRequest request) {
         return mApiCall.login(request);
     }
 
     @Override
-    public Observable<List<Sensor>> fetchSensors() {
+    public Single<List<Sensor>> fetchSensors() {
         return mApiCall.getSensors();
     }
 
     @Override
-    public Observable<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
+    public Single<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
         return mApiCall.deleteMeasurement(sensorId, measurementId);
     }
 
     @Override
-    public Observable<List<Measurement>> getMeasurements(String sensor_id) {
+    public Single<List<Measurement>> getMeasurements(String sensor_id) {
         return mApiCall.getMeasurement(sensor_id);
     }
 
     @Override
-    public Observable<RegisterSensorResponse> registerSensor(Sensor sensor) {
+    public Single<RegisterSensorResponse> registerSensor(Sensor sensor) {
         return mApiCall.createSensor(sensor);
     }
 
     @Override
-    public Observable<List<User>> getUsers() {
+    public Single<List<User>> getUsers() {
         return mApiCall.getUsers();
     }
 
     @Override
-    public Observable<List<NotificationResponse>> getNotifications() {
+    public Single<List<NotificationResponse>> getNotifications() {
         return mApiCall.getNotifications();
     }
 

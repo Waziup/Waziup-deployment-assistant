@@ -6,11 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.LoginRequest;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
 
@@ -50,7 +52,8 @@ public class LoginPresenterTest {
         String username = "cdupont";
         String password = "password";
 
-        doReturn(Observable.just(username))
+        // todo find out more about the doReturn method and what return type it is requiring
+        doReturn(Single.just(username))
                 .when(mMockDataManager)
                 .serverLogin(new LoginRequest
                         .ServerLoginRequest(username, password));
@@ -62,6 +65,7 @@ public class LoginPresenterTest {
         verify(mMockLoginMvpView).showLoading();
         verify(mMockLoginMvpView).hideLoading();
         verify(mMockLoginMvpView).openSensorActivity();
+
     }
 
 //    @Test
