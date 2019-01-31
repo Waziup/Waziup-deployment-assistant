@@ -61,7 +61,7 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void onSensorItemClicked() {
+    public void onSensorItemClicked() throws Exception{
         // todo check if this is the right way of doing it.
         Sensor sensor = new Sensor(new Random(4).toString(), "APTD-123-asd", "Hawasssa", "VISIBLE");
         mMainPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
