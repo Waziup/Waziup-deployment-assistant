@@ -125,6 +125,9 @@ dependencies {
     // for handling the time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
 
+    // paging library - arch component
+    implementation 'android.arch.paging:runtime:1.0.1'
+
 }
 
 configurations.all {
