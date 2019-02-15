@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensordetail;
+package eu.waziup.app.ui.notificationdetail;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,13 +32,16 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
+import eu.waziup.app.ui.sensordetail.EditMeasurementDialog;
+import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 
-public class DetailSensorFragment extends BaseFragment implements DetailSensorMvpView, MeasurementAdapter.Callback, MeasurementAdapter.EditCallback, MeasurementAdapter.DeleteCallback {
+public class NotificationDetailFragment extends BaseFragment implements NotificationDetailMvpView,
+        MeasurementAdapter.Callback, MeasurementAdapter.EditCallback, MeasurementAdapter.DeleteCallback {
 
     @Inject
-    DetailSensorMvpPresenter<DetailSensorMvpView> mPresenter;
+    NotificationDetailMvpPresenter<NotificationDetailMvpView> mPresenter;
 
     @Inject
     MeasurementAdapter mAdapter;
@@ -77,10 +80,10 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     public static String parentFragment;
 
     //    https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    public static DetailSensorFragment newInstance(Sensor sensor, String fragmentPassed) {
+    public static NotificationDetailFragment newInstance(Sensor sensor, String fragmentPassed) {
         Bundle args = new Bundle();
         args.putSerializable(DETAIL_SENSOR_KEY, sensor);
-        DetailSensorFragment fragment = new DetailSensorFragment();
+        NotificationDetailFragment fragment = new NotificationDetailFragment();
         fragment.setArguments(args);
         parentFragment = fragmentPassed;
         return fragment;

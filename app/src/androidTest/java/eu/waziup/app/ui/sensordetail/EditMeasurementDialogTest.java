@@ -63,7 +63,7 @@ public class EditMeasurementDialogTest {
         // for inflating the fragment - with mock data
         mDetailSensorFragment = DetailSensorFragment.newInstance(mSensor, SensorFragment.TAG);
 
-        // inflating DetailSensorFragment
+        // inflating NotificationDetailFragment
         rule.getActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
@@ -76,7 +76,7 @@ public class EditMeasurementDialogTest {
         // add measurement button
         onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
 
-        // -- below are views displayed on DetailSensorFragment fragment
+        // -- below are views displayed on NotificationDetailFragment fragment
         // unDeploy button
         onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));            //(1)
         // deploy button

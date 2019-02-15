@@ -3,6 +3,7 @@ package eu.waziup.app.di.component;
 import dagger.Component;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.di.module.ActivityModule;
+import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
 import eu.waziup.app.ui.login.LoginActivity;
@@ -37,5 +38,7 @@ public interface ActivityComponent {
     void inject(MapFragment fragment);
 
     void inject(NotificationFragment fragment);
+
+    void injet(NotificationDetailFragment fragment);
 
 }

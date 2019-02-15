@@ -10,10 +10,6 @@ import dagger.Module;
 import dagger.Provides;
 import eu.waziup.app.di.ActivityContext;
 import eu.waziup.app.di.PerActivity;
-import eu.waziup.app.ui.sensordetail.DetailSensorMvpPresenter;
-import eu.waziup.app.ui.sensordetail.DetailSensorMvpView;
-import eu.waziup.app.ui.sensordetail.DetailSensorPresenter;
-import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
 import eu.waziup.app.ui.login.LoginMvpPresenter;
 import eu.waziup.app.ui.login.LoginMvpView;
 import eu.waziup.app.ui.login.LoginPresenter;
@@ -27,6 +23,9 @@ import eu.waziup.app.ui.notification.NotificationAdapter;
 import eu.waziup.app.ui.notification.NotificationMvpPresenter;
 import eu.waziup.app.ui.notification.NotificationMvpView;
 import eu.waziup.app.ui.notification.NotificationPresenter;
+import eu.waziup.app.ui.notificationdetail.NotificationDetailMvpPresenter;
+import eu.waziup.app.ui.notificationdetail.NotificationDetailMvpView;
+import eu.waziup.app.ui.notificationdetail.NotificationDetailPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpView;
 import eu.waziup.app.ui.register.RegisterSensorPresenter;
@@ -34,6 +33,10 @@ import eu.waziup.app.ui.sensor.SensorAdapter;
 import eu.waziup.app.ui.sensor.SensorMvpPresenter;
 import eu.waziup.app.ui.sensor.SensorMvpView;
 import eu.waziup.app.ui.sensor.SensorPresenter;
+import eu.waziup.app.ui.sensordetail.DetailSensorMvpPresenter;
+import eu.waziup.app.ui.sensordetail.DetailSensorMvpView;
+import eu.waziup.app.ui.sensordetail.DetailSensorPresenter;
+import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
 import eu.waziup.app.utils.rx.AppSchedulerProvider;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -100,6 +103,13 @@ public class ActivityModule {
     @PerActivity
     DetailSensorMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
             DetailSensorPresenter<DetailSensorMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    NotificationDetailMvpPresenter<NotificationDetailMvpView> provideNotificationDetailPresenter(
+            NotificationDetailPresenter<NotificationDetailMvpView> presenter) {
         return presenter;
     }
 
