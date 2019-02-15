@@ -39,7 +39,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
-import eu.waziup.app.ui.detail.DetailSensorFragment;
+import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;

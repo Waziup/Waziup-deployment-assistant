@@ -30,7 +30,6 @@ import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.detail.EditMeasurementDialog;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback, SensorAdapter.MeasurementCallback {
 

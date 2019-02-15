@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.detail;
+package eu.waziup.app.ui.sensordetail;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,7 +32,6 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
-import eu.waziup.app.utils.CommonUtils;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 

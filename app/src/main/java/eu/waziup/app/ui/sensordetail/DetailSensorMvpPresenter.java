@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.detail;
+package eu.waziup.app.ui.sensordetail;
 
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.PerActivity;

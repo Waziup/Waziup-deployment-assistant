@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.detail;
+package eu.waziup.app.ui.sensordetail;
 
 import android.app.Activity;
 import android.app.Dialog;

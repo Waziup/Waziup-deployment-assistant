@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.ui.detail.DetailSensorMvpPresenter;
-import eu.waziup.app.ui.detail.DetailSensorMvpView;
 
 public class MeasurementDetailDialog extends Dialog {
 

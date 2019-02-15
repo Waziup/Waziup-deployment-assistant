@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.detail;
+package eu.waziup.app.ui.sensordetail;
 
 import javax.inject.Inject;
 
