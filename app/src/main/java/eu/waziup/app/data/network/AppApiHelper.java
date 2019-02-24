@@ -58,6 +58,11 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
+    public Single<List<Sensor>> fetchSensors(int limit, int offset) {
+        return mApiCall.getSensors(limit, offset);
+    }
+
+    @Override
     public Single<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
         return mApiCall.deleteMeasurement(sensorId, measurementId);
     }

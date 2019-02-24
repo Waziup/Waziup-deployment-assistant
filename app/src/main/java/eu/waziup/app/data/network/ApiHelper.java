@@ -27,6 +27,8 @@ public interface ApiHelper {
 
     Single<List<Sensor>> fetchSensors();
 
+    Single<List<Sensor>> fetchSensors(int limit, int offset);
+
     Single<ResponseBody> deleteMeasurement(String sensor_id, String measurement_id);
 
     Single<List<Measurement>> getMeasurements(String sensor_id);

@@ -1,7 +1,5 @@
 package eu.waziup.app.ui.notificationdetail;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,7 +30,6 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
-import eu.waziup.app.ui.sensordetail.EditMeasurementDialog;
 import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
@@ -227,11 +224,11 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     public void showCreateMeasurementsDialog() {
-        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), new Measurement(), mPresenter);
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        dialog.show();
+//        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), new Measurement(), mPresenter);
+//        if (dialog.getWindow() != null) {
+//            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
+//        dialog.show();
     }
 
     @Override
@@ -256,11 +253,11 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     public void onItemEditClicked(Measurement measurement) {
-        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), measurement, mPresenter);
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        dialog.show();
+//        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), measurement, mPresenter);
+//        if (dialog.getWindow() != null) {
+//            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
+//        dialog.show();
     }
 
     @Override

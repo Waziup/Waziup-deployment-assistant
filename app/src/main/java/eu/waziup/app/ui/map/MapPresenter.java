@@ -27,7 +27,7 @@ public class MapPresenter<V extends MapMvpView> extends BasePresenter<V>
     @Override
     public void loadSensors() {
         getMvpView().showLoading();
-        getCompositeDisposable().add(getDataManager().fetchSensors()
+        getCompositeDisposable().add(getDataManager().fetchSensors(1000, 0)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(sensors -> {

@@ -54,6 +54,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Single<List<Sensor>> fetchSensors(int limit, int offset) {
+        return mApiHelper.fetchSensors(limit, offset);
+    }
+
+    @Override
     public Single<ResponseBody> deleteMeasurement(String sensorId, String measurementId) {
         return mApiHelper.deleteMeasurement(sensorId, measurementId);
     }

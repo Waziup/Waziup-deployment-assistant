@@ -18,8 +18,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
@@ -93,6 +91,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         setUnBinder(ButterKnife.bind(this));
         setUp();
 
+        // todo change with the custom implementation later with the commented code below
         enablePostAuthorizationFlows();
 
         // Retrieve app restrictions and take appropriate action
@@ -198,6 +197,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Intent postAuthorizationIntent = new Intent(APP_ID + ".HANDLE_AUTHORIZATION_RESPONSE");
         PendingIntent pendingIntent = PendingIntent.getActivity(this, request.hashCode(), postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
+
     }
 
     private void persistAuthState(@NonNull AuthState authState) {

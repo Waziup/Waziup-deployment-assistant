@@ -39,6 +39,6 @@ public interface ActivityComponent {
 
     void inject(NotificationFragment fragment);
 
-    void injet(NotificationDetailFragment fragment);
+    void inject(NotificationDetailFragment fragment);
 
 }

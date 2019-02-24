@@ -27,6 +27,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by KidusMT.
@@ -39,6 +40,10 @@ public interface ApiCall {
     @GET(ApiEndPoint.SENSOR)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<Sensor>> getSensors();
+
+    @GET(ApiEndPoint.SENSOR)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    Single<List<Sensor>> getSensors(@Query("limit") int limit, @Query("offset") int skip);
 
     @GET(ApiEndPoint.NOTIFICATION)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)

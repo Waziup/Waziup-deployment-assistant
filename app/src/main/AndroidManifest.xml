@@ -37,13 +37,6 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <!--
-            for the authorization and authentication from google
-        -->
-        <meta-data
-            android:name="android.content.APP_RESTRICTIONS"
-            android:resource="@xml/app_restrictions" />
-
         <service android:name="eu.waziup.app.service.SyncService" />
 
         <!-- FIREBASE CLOUD MESSAGING - FCM - SERVICE-->
@@ -56,16 +49,16 @@
         </service>
 
         <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
-        <!--<activity android:name="net.openid.appauth.RedirectUriReceiverActivity">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.VIEW" />-->
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <!--<category android:name="android.intent.category.DEFAULT" />-->
-        <!--<category android:name="android.intent.category.BROWSABLE" />-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <!--<data android:scheme="eu.waziup.app" />-->
-        <!--</intent-filter>-->
-        <!--</activity>-->
+                <data android:scheme="eu.waziup.app" />
+            </intent-filter>
+        </activity>
 
         <!--LOGIN ACTIVITY-->
         <activity
@@ -79,10 +72,8 @@
             </intent-filter>
             <!-- this is for OAuth 2.0 authentication schema-->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE"/>
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="eu.waziup.app" />
             </intent-filter>
         </activity>
 
@@ -100,6 +91,12 @@
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
 
+        <!--
+           for the authorization and authentication from google
+       -->
+        <meta-data
+            android:name="android.content.APP_RESTRICTIONS"
+            android:resource="@xml/app_restrictions" />
     </application>
 
 </manifest>
