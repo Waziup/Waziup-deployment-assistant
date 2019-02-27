@@ -24,6 +24,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
@@ -39,7 +45,6 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
-import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
@@ -47,6 +52,7 @@ import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
@@ -79,6 +85,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     private static final String AUTH_STATE = "AUTH_STATE";
     AuthState mAuthState;
 
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListner;
+    private GoogleSignInClient mGoogleSignInClient;
+
     // broadcast receiver for app restrictions changed broadcast
 //    BroadcastReceiver mRestrictionsReceiver;
 
@@ -107,6 +117,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListner);
     }
 
     // TODO all those things should be done when the user clicks logout button
@@ -171,6 +187,24 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         setupDrawerContent(nvDrawer);
 
         mPresenter.onNavMenuCreated();
+
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signin]
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListner = firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() == null && !mPresenter.onUserLoggedIn())
+                openLoginActivity();
+        };
+
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -216,7 +250,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.are_you_sure_you_want_to_logout)
                         .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
+                            mAuth.signOut();
                             mPresenter.onLogOutClicked();
+
+                            // Google revoke access && singOut -> This is best practice. Though not required
+                            mGoogleSignInClient.revokeAccess();
+                            mGoogleSignInClient.signOut();
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
                             dialog.dismiss();

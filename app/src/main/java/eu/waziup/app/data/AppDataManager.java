@@ -15,7 +15,6 @@ import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.data.network.model.user.User;
 import eu.waziup.app.data.prefs.PreferencesHelper;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.ResponseBody;
 
@@ -174,5 +173,7 @@ public class AppDataManager implements DataManager {
     @Override
     public void setUserAsLoggedOut() {
         updateUserInfo(null, DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT);
+        updateUserInfo(null, null, null, null);
+        setCurrentUserEmail(null);
     }
 }

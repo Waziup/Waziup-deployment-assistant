@@ -64,6 +64,13 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void onSaveUserInfo(String username, String email, String profilePic) {
+        getDataManager().setCurrentUserName(username);
+        getDataManager().setCurrentUserEmail(email);
+        getDataManager().setCurrentUserProfilePicUrl(profilePic);
+    }
+
+    @Override
     public void onSaveName(String username) {
         getDataManager().setCurrentUserName(username);
     }
