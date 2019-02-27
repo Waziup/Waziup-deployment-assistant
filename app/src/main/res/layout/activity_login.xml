@@ -28,8 +28,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/progressBar_cyclic"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
+                android:layout_marginBottom="-439dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -117,22 +119,21 @@
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/login_with_google"
-                    android:layout_width="match_parent"
+                    android:layout_width="1073741779dp"
+                    android:layout_height="1073742282dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="30dp"
-                    android:layout_height="wrap_content"/>
-
+                    android:layout_marginBottom="30dp" />
 
                 <!--<Button-->
-                    <!--android:id="@+id/btn_google_login"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@drawable/bg_curved_primary_color"-->
-                    <!--android:text="google"-->
-                    <!--android:textColor="@color/white" />-->
+                <!--android:id="@+id/btn_google_login"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/bg_curved_primary_color"-->
+                <!--android:text="google"-->
+                <!--android:textColor="@color/white" />-->
 
             </LinearLayout>
 

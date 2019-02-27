@@ -125,10 +125,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         super.onStop();
     }
 
-    @OnClick(R.id.btn_google_login)
-    void onGoogleClicked() {
-
-    }
+//    @OnClick(R.id.btn_google_login)
+//    void onGoogleClicked() {
+//
+//    }
 
     @Override
     public void setUp() {
