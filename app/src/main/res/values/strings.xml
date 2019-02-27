@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">WAZIUP</string>
+    <string name="app_market_link">"market://details?id="</string>
+    <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
+
+    <!--App Message-->
+    <string name="api_retry_error">Please retry!</string>
+    <string name="api_default_error">Something wrong happened!</string>
+    <string name="some_error">Some Error Occurred!</string>
+    <string name="connection_error">Internet connection lost!</string>
+
+    <string name="error_invalid_credential">Invalid credential! try again.</string>
+    <string name="error_file_does_not_exist">File does not exist.</string>
+    <string name="error_server_error">Internal Server Error.</string>
+    <string name="error_server_unreachable">Service Unavailable.</string>
+    <string name="error_something_wrong_happend">Something wrong happened. Please try again later.</string>
+
+    <!--Login Validation-->
+    <string name="empty_email">Please provide a non empty email.</string>
+    <string name="empty_username">Please provide a non empty deviceToken.</string>
+    <string name="invalid_email">Please provide a valid deviceToken.</string>
+    <string name="empty_password">Please provide a non empty password.</string>
+    <string name="no_sensors_list_found">No sensors list found.</string>
+    <string name="username">username</string>
+    <string name="email">email</string>
+
+    <string name="request_complete">API Call Successful.</string>
+    <string name="request_failed">API Call Failed.</string>
+    <string name="login_hint_title">Login Hint</string>
+    <string name="login_hint_description">This key will allow you to send a
+        login hint to the identity provider such as email or username</string>
+    <string name="restrictions_pending_block_user">This application is
+        waiting for further configuration details and cannot continue
+        to run. Please contact your IT admin for further details</string>
+
+    <!--Drawer-->
+    <string name="open_drawer">Drawer Open</string>
+    <string name="close_drawer">Drawer Close</string>
+    <string name="sensor_registration">Sensor Registration</string>
+    <string name="no_measurements_list_found">No measurements list found.</string>
+    <string name="cancel">CANCEL</string>
+    <string name="submit">SUBMIT</string>
+    <string name="edit_measurement">Edit Measurement</string>
+    <string name="dialog_add_measurement">Add Measurement</string>
+    <string name="add_sensor_node">Add Sensor Node</string>
+
+    <string-array name="visibility_options">
+        <item>Public</item>
+        <item>Private</item>
+    </string-array>
+
+    <string name="permission_denied">Permission Denied</string>
+    <string name="require_permission">To support barcode scan, you need to grant camera permission.</string>
+    <string name="go_to_settings">Go to settings</string>
+
+    <string name="scan_code">Scan code</string>
+    <string name="activity_scan_code">Scan code</string>
+    <string name="shortcut_label_scan_code">Scan code</string>
+    <string name="unable_to_open_camera">Unable to open camera, please check it and try again later.</string>
+    <string name="error">Error</string>
+
+    <!--Permission-->
+    <string name="location_access_required">GPS access is required to display the camera preview.</string>
+    <string name="ok">OK</string>
+    <string name="location_permission_not_available">Permission is not available. Requesting GPS permission.</string>
+    <string name="location_permission_available">GPS permission is available. Starting preview.</string>
+    <string name="location_permission_granted">GPS permission was granted. Starting preview.</string>
+    <string name="location_permission_denied">GPS permission request was denied.</string>
+
+    <!--Drawer Items-->
+    <string name="nav_notification">Notification</string>
+    <string name="nav_sensors">Sensors</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_logout">Logout</string>
+
+    <string name="make_api_call">Make API Call</string>
+    <string name="make_authorization_request">Make Authorization Request</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="no_notification_list_found">No notification list found.</string>
+    <string name="notification">Notifications</string>
+    <string name="sensors">Sensors</string>
+    <string name="map">Sensor\'s location</string>
+    <string name="yes">Yes</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="logout">Logout</string>
+    <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
+    <string name="scan_sensor">Scan sensor</string>
+</resources>
