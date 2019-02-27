@@ -172,8 +172,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setUserAsLoggedOut() {
-        updateUserInfo(null, DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT);
-        updateUserInfo(null, null, null, null);
+        updateUserInfo(null, null, null, DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT);
         setCurrentUserEmail(null);
     }
 }

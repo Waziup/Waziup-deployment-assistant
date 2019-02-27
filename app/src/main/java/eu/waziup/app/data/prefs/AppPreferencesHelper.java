@@ -3,7 +3,6 @@ package eu.waziup.app.data.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -81,7 +80,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setCurrentUserLoggedInMode(DataManager.LoggedInMode mode) {
-        mPrefs.edit().putInt(PREF_KEY_USER_LOGGED_IN_MODE, mode.getType()).apply();
+        if (mode != null)
+            mPrefs.edit().putInt(PREF_KEY_USER_LOGGED_IN_MODE, mode.getType()).apply();
     }
 
     @Override
