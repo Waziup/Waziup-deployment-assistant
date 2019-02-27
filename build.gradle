@@ -1,0 +1,68 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.objectboxVersion = '2.2.0'
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:4.2.0' // google-services plugin
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// Define versions in a single place
+ext {
+    // Sdk and tools
+    minSdkVersion = 16
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.3'
+
+    // App dependencies
+    supportLibraryVersion = '28.0.0'
+    gsonVersion = '2.8.0'
+    calligraphyVersion = '2.2.0'
+    glideVersion = '3.7.0'
+
+    // Butter Knife
+    butterKnifeVersion = '9.0.0-rc1'
+    retrofitVersion = '2.4.0'
+    retrofitInterceptorVersion = '3.8.0'
+    picassoVersion = '2.71828'
+
+    //DateUtil
+    dateVersion = '1.0'
+
+    dagger2Version = '2.8'
+    rxjava2Version = '2.0.6'
+    rxandroidVersion = '2.0.2'
+    rxJakeVersion = '1.0.0'
+    butterKnifeVersion = '8.8.1'
+    timberVersion = '4.7.0'
+
+    mapboxVersion = '6.7.0'
+    mapboxLocationLayerVersion = '0.11.0'
+    qrsScannerVersion = '1.9.8'
+    gpsVersion = '16.0.0'
+
+    oboxVersion = '2.2.0'
+}
