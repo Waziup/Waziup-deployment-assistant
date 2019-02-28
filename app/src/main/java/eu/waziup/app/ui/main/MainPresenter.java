@@ -64,6 +64,11 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public boolean onUserLoggedIn() {
+        return getDataManager().getCurrentUserLoggedInMode() != DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType();
+    }
+
+    @Override
     public void initializedView() {
         getMvpView().updateUserName(getDataManager().getCurrentUserName());
         getMvpView().updateUserProfilePic(getDataManager().getCurrentUserProfilePicUrl());

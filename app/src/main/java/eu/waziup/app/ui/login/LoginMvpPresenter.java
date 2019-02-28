@@ -13,6 +13,8 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<
 
     void onServerLoginClick(String username, String password);
 
+    void onSaveUserInfo(String username, String email, String profilePic);
+
     void onSaveName(String username);
 
     void onSavePicture(String pic);

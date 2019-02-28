@@ -114,7 +114,11 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$rootProject.gpsVersion"
 
     // FCM - firebase Notification management
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+
+    // Firebase - Auth
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'
@@ -127,7 +131,6 @@ dependencies {
 
     // paging library - arch component
     implementation 'android.arch.paging:runtime:1.0.1'
-
 }
 
 configurations.all {

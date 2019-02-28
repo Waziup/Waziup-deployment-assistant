@@ -19,5 +19,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void onSensorItemClicked(Sensor sensor, String parent);
 
+    boolean onUserLoggedIn();
+
     void initializedView();
 }
