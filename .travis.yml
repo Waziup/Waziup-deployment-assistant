@@ -9,45 +9,41 @@ cache:
  directories:
  - $HOME/.gradle/caches/
  - $HOME/.gradle/wrapper/
-env:
-  global:
-   - ANDROID_API_LEVEL=25
-   - EMULATOR_API_LEVEL=21
-   - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-   - ANDROID_ABI=google_apis/armeabi-v7a
-   - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
-
 android:
   components:
       - tools
-          - build-tools-24.0.2
-          - android-22
-          - extra-android-m2repository
-          - extra-google-m2repository
-          - extra-android-support
-          - sys-img-armeabi-v7a-android-22 # <---- This should add the system image
+      - build-tools-28.0.3
+      - android-28
+      - extra-android-m2repository
+      - extra-google-m2repository
+      - extra-android-support
+      - sys-img-armeabi-v7a-android-22 # <---- This should add the system image
 
 before_script:
-#  - echo no | android create avd --force -n test -t android-22 --abi google_apis/armeabi-v7a
-#  - emulator -avd test -no-skin -no-audio -no-window &
-#  - android-wait-for-emulator
-#  - adb shell input keyevent 82 &
   - android list targets # list pre-installed targets # <---- list all installed targets
   - android list sdk --no-ui --all --extended | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # <---- list all available components
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a # <---- this is failing, "Target id is not valid"
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-
+install:
+  - bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-vendor/bundle}
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - ./vendor/bundle
+before_script:
+  - android list targets # list pre-installed targets # <---- list all installed targets
+  - android list sdk --no-ui --all --extended | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # <---- list all available components
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a # <---- this is failing, "Target id is not valid"
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 script:
-        - ./gradlew clean
-        - ./gradlew assembleDebug
-        - ./gradlew assembleDebugAndroidTest
-before_install:
-          - mkdir "$ANDROID_HOME/licenses" || true
-          - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-          - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-          - chmod +x gradlew
+  - bundle exec ruby ./build-script/build-android.rb
 
 branches:
         only:
