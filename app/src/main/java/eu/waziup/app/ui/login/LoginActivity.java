@@ -94,7 +94,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //                // If sign in fails, display a message to the user.
 //                Log.w(TAG, "createUserWithEmail:failure", task.getException());
 //                Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                        Toast.LENGTH_SHORT).show();
+//                        Toast.LENGTH_SHORT).show(
 //                updateUI(null);
 //            }
 //
