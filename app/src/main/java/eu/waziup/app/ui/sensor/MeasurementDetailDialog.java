@@ -11,11 +11,8 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.logging.Logger;
-
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.utils.CommonUtils;
 
 public class MeasurementDetailDialog extends Dialog {
 
@@ -47,20 +44,16 @@ public class MeasurementDetailDialog extends Dialog {
         mMeasurementKind = findViewById(R.id.card_measurement_kind);
         btnCancel = findViewById(R.id.btn_dialog_cancel);
 
-        Log.e("---:>", String.valueOf(measurement.getId()));
         if (measurement != null) {
-
             // for setting the image
             if (measurement.getSensingDevice() != null)
                 if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
                     mIcon.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_mesurement_temp));
 
-
-            if (!TextUtils.isEmpty(measurement.getId()) && mMeasurementName.getVisibility() != View.VISIBLE) {
-
+            if (!TextUtils.isEmpty(measurement.getId())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
                 mMeasurementName.setVisibility(View.VISIBLE);
                 mMeasurementName.setText(measurement.getId());
-            } else if (!TextUtils.isEmpty(measurement.getName()) && mMeasurementName.getVisibility() != View.VISIBLE) {
+            } else if (!TextUtils.isEmpty(measurement.getName())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
                 mMeasurementName.setVisibility(View.VISIBLE);
                 mMeasurementName.setText(measurement.getName());
             } else {
@@ -69,25 +62,20 @@ public class MeasurementDetailDialog extends Dialog {
 
 //            mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
 
-            if (!TextUtils.isEmpty(measurement.getQuantityKind())) {
-                if (mMeasurementKind.getVisibility() != View.VISIBLE) {
-                    mMeasurementKind.setVisibility(View.VISIBLE);
-                    mMeasurementKind.setText(measurement.getQuantityKind());
-                }
+            if (!TextUtils.isEmpty(measurement.getQuantityKind())) {//mMeasurementKind.getVisibility() != View.VISIBLE
+                mMeasurementKind.setVisibility(View.VISIBLE);
+                mMeasurementKind.setText(measurement.getQuantityKind());
             } else {
                 mMeasurementKind.setVisibility(View.GONE);
             }
 
             // for the value
-            if (measurement.getLastValue() != null)
-                if (!TextUtils.isEmpty(measurement.getLastValue().getValue())) {
-                    if (mMeasurementValue.getVisibility() != View.VISIBLE) {
-                        mMeasurementValue.setVisibility(View.VISIBLE);
-                        mMeasurementValue.setText(measurement.getLastValue().getValue());
-                    }
-                } else {
-                    mMeasurementValue.setVisibility(View.GONE);
-                }
+            if (measurement.getLastValue() != null && !TextUtils.isEmpty(measurement.getLastValue().getValue())){
+                mMeasurementValue.setVisibility(View.VISIBLE);
+                mMeasurementValue.setText(measurement.getLastValue().getValue());
+            }else{
+                mMeasurementValue.setText(R.string.dialog_no_record);
+            }
         }
 
         btnCancel.setOnClickListener(v -> dismiss());

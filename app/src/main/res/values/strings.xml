@@ -87,4 +87,5 @@
     <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
     <string name="scan_sensor">Scan sensor</string>
     <string name="login">login</string>
+    <string name="dialog_no_record">no record</string>
 </resources>
