@@ -47,6 +47,7 @@ public class MeasurementDetailDialog extends Dialog {
         mMeasurementKind = findViewById(R.id.card_measurement_kind);
         btnCancel = findViewById(R.id.btn_dialog_cancel);
 
+        Log.e("---:>", String.valueOf(measurement.getId()));
         if (measurement != null) {
 
             // for setting the image
@@ -54,8 +55,9 @@ public class MeasurementDetailDialog extends Dialog {
                 if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
                     mIcon.setImageDrawable(c.getResources().getDrawable(R.drawable.ic_mesurement_temp));
 
+
             if (!TextUtils.isEmpty(measurement.getId()) && mMeasurementName.getVisibility() != View.VISIBLE) {
-                Log.e("---:>", String.valueOf(measurement.getId()));
+
                 mMeasurementName.setVisibility(View.VISIBLE);
                 mMeasurementName.setText(measurement.getId());
             } else if (!TextUtils.isEmpty(measurement.getName()) && mMeasurementName.getVisibility() != View.VISIBLE) {

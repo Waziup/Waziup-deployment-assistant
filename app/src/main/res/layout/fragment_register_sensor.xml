@@ -52,11 +52,9 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:orientation="vertical"
             android:padding="16dp">
 
             <LinearLayout
@@ -99,8 +97,8 @@
                             android:id="@+id/register_sensor_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
                             android:background="@color/transparent"
                             android:hint="sensor name"
@@ -118,8 +116,8 @@
                             android:id="@+id/register_sensor_domain"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
                             android:background="@color/transparent"
                             android:hint="domain"
@@ -146,8 +144,8 @@
                             android:id="@+id/register_sensor_visibility"
                             android:layout_width="match_parent"
                             android:layout_height="46dp"
-                            android:layout_marginStart="@dimen/vertical_margin_12"
-                            android:layout_marginEnd="@dimen/vertical_margin_8"
+                            android:layout_marginStart="@dimen/vertical_margin_4"
+                            android:layout_marginEnd="@dimen/vertical_margin_4"
                             android:entries="@array/visibility_options" />
 
                     </LinearLayout>
@@ -214,7 +212,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 
