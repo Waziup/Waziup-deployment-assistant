@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -42,10 +43,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     LoginMvpPresenter<LoginMvpView> mPresenter;
 
     @BindView(R.id.et_username)
-    TextInputEditText etUsername;
+    EditText etUsername;
 
     @BindView(R.id.et_password)
-    TextInputEditText etPassword;
+    EditText etPassword;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LoginActivity.class);
