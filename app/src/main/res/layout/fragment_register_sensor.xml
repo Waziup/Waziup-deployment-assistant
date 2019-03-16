@@ -71,72 +71,120 @@
                     android:layout_margin="5dp"
                     android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/register_sensor_id"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="sensor id"
-                        android:textSize="16sp" />
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
 
-                    <EditText
-                        android:id="@+id/register_sensor_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="sensor name"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/register_sensor_domain"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="domain"
-                        android:textSize="16sp" />
-
-                    <!--<EditText-->
-                        <!--android:id="@+id/register_sensor_gateway"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginTop="5dp"-->
-                        <!--android:layout_marginBottom="5dp"-->
-                        <!--android:hint="gateway"-->
-                        <!--android:textSize="16sp" />-->
-
-                    <Spinner
-                        android:id="@+id/register_sensor_visibility"
-                        android:layout_width="match_parent"
-                        android:layout_height="46dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:entries="@array/visibility_options" />
+                        <EditText
+                            android:id="@+id/register_sensor_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="sensor id"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
 
                         <EditText
-                            android:hint="location"
-                            android:id="@+id/register_current_location_value"
-                            android:layout_width="0dp"
+                            android:id="@+id/register_sensor_name"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.8" />
+                            android:layout_marginTop="5dp"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="sensor name"
+                            android:textSize="16sp" />
 
-                        <ImageView
-                            android:id="@+id/btn_register_get_current_location"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:layout_weight="0.1"
-                            app:srcCompat="@drawable/ic_my_location" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <EditText
+                            android:id="@+id/register_sensor_domain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="domain"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <!--<EditText-->
+                    <!--android:id="@+id/register_sensor_gateway"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:layout_marginBottom="5dp"-->
+                    <!--android:hint="gateway"-->
+                    <!--android:textSize="16sp" />-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <Spinner
+                            android:id="@+id/register_sensor_visibility"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginStart="@dimen/vertical_margin_12"
+                            android:layout_marginEnd="@dimen/vertical_margin_8"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:entries="@array/visibility_options" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/register_current_location_value"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/vertical_margin_12"
+                                android:layout_weight="0.8"
+                                android:background="@color/transparent"
+                                android:hint="location" />
+
+                            <ImageView
+                                android:id="@+id/btn_register_get_current_location"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/vertical_margin_12"
+                                android:layout_weight="0.1"
+                                app:srcCompat="@drawable/ic_my_location" />
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
 
 
@@ -144,8 +192,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:paddingTop="30dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="30dp">
 
                     <Button
                         android:id="@+id/btn_register_submit"

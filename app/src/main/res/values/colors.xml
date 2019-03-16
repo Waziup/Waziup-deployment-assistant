@@ -5,6 +5,7 @@
     <color name="colorAccent">#E4794D</color>
 
     <color name="background_color">#FA3E3E</color>
+    <color name="email_password_field_background_color">#f1f1f1</color>
 
     <color name="light_gray">#dbdbdb</color>
     <color name="gray">#7e7e7e</color>

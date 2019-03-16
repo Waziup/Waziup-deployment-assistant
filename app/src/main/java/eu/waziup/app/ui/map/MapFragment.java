@@ -232,7 +232,8 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
                     if (sensorList.get(i).getLocation().getLatitude() != null &&
                             sensorList.get(i).getLocation().getLongitude() != null)
                         map.addMarker(new MarkerOptions()
-                                .position(new LatLng(sensorList.get(i).getLocation().getLatitude(), sensorList.get(i).getLocation().getLongitude()))
+                                .position(new LatLng(sensorList.get(i).getLocation().getLatitude(),
+                                        sensorList.get(i).getLocation().getLongitude()))
                                 .title(String.valueOf(sensorList.get(i).getId())))
                                 .setSnippet(String.valueOf(sensorList.get(i).getDomain()));
                 }

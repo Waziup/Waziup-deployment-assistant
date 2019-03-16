@@ -13,7 +13,7 @@
         android:padding="@dimen/activity_horizontal_margin">
 
         <TextView
-            android:id="@+id/dialog_measurement_detail_name"
+            android:id="@+id/card_measurement_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
