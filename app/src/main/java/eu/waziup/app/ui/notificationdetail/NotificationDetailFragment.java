@@ -8,9 +8,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
@@ -130,21 +132,17 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
         mPresenter.onAddMeasurementClicked();
     }
 
-    @OnClick(R.id.btn_deploy)
-    void onDeployClicked() {
-        mPresenter.onDeploySensorClicked();
-    }
+    // todo held this feature for v.2.0 of the application
+//    @OnClick(R.id.btn_deploy)
+//    void onDeployClicked() {
+//        mPresenter.onDeploySensorClicked();
+//    }
+//
+//    @OnClick(R.id.btn_undeploy)
+//    void onUndeployClicked() {
+//        mPresenter.onUnDeploySensorClicked();
+//    }
 
-    @OnClick(R.id.btn_undeploy)
-    void onUndeployClicked() {
-        mPresenter.onUnDeploySensorClicked();
-    }
-
-    @OnClick(R.id.btn_locate_on_map)
-    void onLocateOnMapClicked() {
-        if (mSensor != null && mSensor.getLocation() != null)
-            openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
-    }
 
     private void setUpRecyclerView() {
         mRecyclerView.setLayoutManager(mLayoutManager);

@@ -15,9 +15,9 @@ public interface NotificationDetailMvpPresenter<V extends NotificationDetailMvpV
 
     void onDeleteMeasurementClicked(String sensorId, String measurementId);
 
-    void onDeploySensorClicked();
-
-    void onUnDeploySensorClicked();
+//    void onDeploySensorClicked();
+//
+//    void onUnDeploySensorClicked();
 
     void onAddMeasurementClicked();
 

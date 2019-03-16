@@ -23,7 +23,8 @@
             <ImageButton
                 android:id="@+id/nav_back_btn"
                 style="@style/Button.ImageButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -34,14 +35,29 @@
             <TextView
                 android:id="@+id/toolbar_title"
                 style="@style/TextStyle.Heading"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="8"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/sensor_registration"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/btn_locate_on_map"
+                style="@style/Button.ImageButton"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:background="@color/transparent"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/maps_map_marker_icon" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,27 +77,12 @@
                 android:paddingBottom="20dp">
 
                 <LinearLayout
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="end|center_vertical"
                     android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.4">
-
-                        <ImageView
-                            android:id="@+id/btn_locate_on_map"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_margin="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingEnd="10dp"
-                            android:paddingBottom="5dp"
-                            app:srcCompat="@drawable/maps_map_marker_icon" />
-                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/detail_sensor_date"
@@ -147,32 +148,32 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:orientation="horizontal">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/activity_horizontal_margin"-->
+                    <!--android:orientation="horizontal">-->
 
-                    <Button
-                        android:id="@+id/btn_undeploy"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="3dp"
-                        android:layout_weight="0.30"
-                        android:background="@drawable/bg_curved_primary_color"
-                        android:text="undeploy"
-                        android:textColor="@color/white" />
+                    <!--<Button-->
+                        <!--android:id="@+id/btn_undeploy"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_margin="3dp"-->
+                        <!--android:layout_weight="0.30"-->
+                        <!--android:background="@drawable/bg_curved_primary_color"-->
+                        <!--android:text="undeploy"-->
+                        <!--android:textColor="@color/white" />-->
 
-                    <Button
-                        android:id="@+id/btn_deploy"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="3dp"
-                        android:layout_weight="0.30"
-                        android:background="@drawable/bg_curved_primary_color"
-                        android:text="deploy"
-                        android:textColor="@color/white" />
-                </LinearLayout>
+                    <!--<Button-->
+                        <!--android:id="@+id/btn_deploy"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_margin="3dp"-->
+                        <!--android:layout_weight="0.30"-->
+                        <!--android:background="@drawable/bg_curved_primary_color"-->
+                        <!--android:text="deploy"-->
+                        <!--android:textColor="@color/white" />-->
+                <!--</LinearLayout>-->
 
             </LinearLayout>
 

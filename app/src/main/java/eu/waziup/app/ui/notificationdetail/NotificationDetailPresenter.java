@@ -50,15 +50,15 @@ public class NotificationDetailPresenter<V extends NotificationDetailMvpView> ex
                 ));
     }
 
-    @Override
-    public void onDeploySensorClicked() {
+//    @Override
+//    public void onDeploySensorClicked() {
+//
+//    }
 
-    }
-
-    @Override
-    public void onUnDeploySensorClicked() {
-
-    }
+//    @Override
+//    public void onUnDeploySensorClicked() {
+//
+//    }
 
     @Override
     public void onAddMeasurementClicked() {

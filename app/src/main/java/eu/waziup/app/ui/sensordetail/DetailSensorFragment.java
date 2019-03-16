@@ -10,9 +10,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
@@ -70,6 +72,9 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
 
+    @BindView(R.id.btn_locate_on_map)
+    ImageView btnSensorLocation;
+
     public static final String TAG = "NotificationDetailFragment";
 
     Sensor mSensor;
@@ -116,6 +121,12 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
         setUp(view);
 
+        // map button on clickListener
+        btnSensorLocation.setOnClickListener(view1 -> {
+            if (mSensor != null && mSensor.getLocation() != null)
+                openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
+        });
+
         return view;
     }
 
@@ -130,15 +141,15 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         mPresenter.onAddMeasurementClicked();
     }
 
-    @OnClick(R.id.btn_deploy)
-    void onDeployClicked() {
-        mPresenter.onDeploySensorClicked();
-    }
-
-    @OnClick(R.id.btn_undeploy)
-    void onUndeployClicked() {
-        mPresenter.onUnDeploySensorClicked();
-    }
+//    @OnClick(R.id.btn_deploy)
+//    void onDeployClicked() {
+//        mPresenter.onDeploySensorClicked();
+//    }
+//
+//    @OnClick(R.id.btn_undeploy)
+//    void onUndeployClicked() {
+//        mPresenter.onUnDeploySensorClicked();
+//    }
 
     @OnClick(R.id.btn_locate_on_map)
     void onLocateOnMapClicked() {
@@ -194,6 +205,10 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
             // todo tvNoMeasurements for the measurements and the whole sensor is different should be implemented
             tvNoMeasurement.setVisibility(View.GONE);
             showMeasurements(mSensor.getId(), mSensor.getMeasurements());
+
+            if (mSensor.getLocation() != null) {
+                btnSensorLocation.setVisibility(View.VISIBLE);
+            }
 
             if (!TextUtils.isEmpty(mSensor.getDateCreated()))
                 sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mSensor.getDateCreated(),
