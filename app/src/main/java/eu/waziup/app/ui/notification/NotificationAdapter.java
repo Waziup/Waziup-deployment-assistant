@@ -176,6 +176,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
 
                 if (notification.getExpires() != null) {
+                    mNotificationDate.setVisibility(View.VISIBLE);
                     mNotificationDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(notification.getExpires(),
                             DateTimeStyle.MEDIUM)));
                 }else{
