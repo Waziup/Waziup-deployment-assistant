@@ -117,30 +117,36 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/ic_notification_fb"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:padding="4dp"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_facebook" />
 
                 <ImageView
+                    android:id="@+id/ic_notification_sms"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:padding="4dp"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_sms" />
 
                 <ImageView
+                    android:id="@+id/ic_notification_twitter"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:padding="4dp"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_twitter" />
             </LinearLayout>
 

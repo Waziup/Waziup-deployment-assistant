@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -62,20 +63,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.notification_sensor_name)
         TextView mNotificationSensorName;
 
-//        @BindView(R.id.notification_measurement)
-//        TextView mNotificationMeasurement;
+        @BindView(R.id.ic_notification_fb)
+        ImageView icFb;
 
-//        @BindView(R.id.notification_expression)
-//        TextView mNotificationExpression;
+        @BindView(R.id.ic_notification_sms)
+        ImageView icSms;
+
+        @BindView(R.id.ic_notification_twitter)
+        ImageView icTwitter;
 
         @BindView(R.id.notification_message)
         TextView mNotificationMessage;
 
         @BindView(R.id.notification_owner)
         TextView mNotificationOwner;
-
-//        @BindView(R.id.notification_shared_at)
-//        TextView mNotificationSharedAt;
 
         NotificationResponse notification;
 
@@ -140,6 +141,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     }
                 } else {
                     mNotificationOwner.setVisibility(View.GONE);
+                }
+
+                if (notification.getNotification() != null && notification.getNotification().getChannels() != null) {
+                    for (String social : notification.getNotification().getChannels()) {
+                        switch (social) {
+                            case "twitter":
+                                icTwitter.setVisibility(View.VISIBLE);
+                                break;
+                            case "facebook":
+                                icFb.setVisibility(View.VISIBLE);
+                                break;
+                            case "sms":
+                                icSms.setVisibility(View.VISIBLE);
+                                break;
+                            default:
+                                icFb.setVisibility(View.GONE);
+                                icTwitter.setVisibility(View.GONE);
+                                icSms.setVisibility(View.GONE);
+                                break;
+                        }
+                    }
                 }
 
                 // shared at
