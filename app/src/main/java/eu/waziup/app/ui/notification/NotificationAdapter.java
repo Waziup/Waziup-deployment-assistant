@@ -81,6 +81,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.notification_owner)
         TextView mNotificationOwner;
 
+        @BindView(R.id.icon_sensor_owner)
+        ImageView mNotificationOwnerIcon;
+
         NotificationResponse notification;
 
         public SensorViewHolder(View view) {
@@ -144,6 +147,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     }
                 } else {
                     mNotificationOwner.setVisibility(View.GONE);
+                    mNotificationOwnerIcon.setVisibility(View.GONE);
                 }
 
                 if (notification.getNotification() != null && notification.getNotification().getChannels() != null) {
