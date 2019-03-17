@@ -72,6 +72,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.ic_notification_twitter)
         ImageView icTwitter;
 
+        @BindView(R.id.ic_notification_voice_call)
+        ImageView icVoice;
+
         @BindView(R.id.notification_message)
         TextView mNotificationMessage;
 
@@ -145,21 +148,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 if (notification.getNotification() != null && notification.getNotification().getChannels() != null) {
                     for (String social : notification.getNotification().getChannels()) {
-                        switch (social) {
-                            case "twitter":
-                                icTwitter.setVisibility(View.VISIBLE);
-                                break;
-                            case "facebook":
-                                icFb.setVisibility(View.VISIBLE);
-                                break;
-                            case "sms":
-                                icSms.setVisibility(View.VISIBLE);
-                                break;
-                            default:
-                                icFb.setVisibility(View.GONE);
-                                icTwitter.setVisibility(View.GONE);
-                                icSms.setVisibility(View.GONE);
-                                break;
+                        if (social.equals("twitter"))
+                            icTwitter.setVisibility(View.VISIBLE);
+                        else if (social.equals("facebook"))
+                            icFb.setVisibility(View.VISIBLE);
+                        else if (social.equals("sms"))
+                            icSms.setVisibility(View.VISIBLE);
+                        else if (social.equals("voice"))
+                            icVoice.setVisibility(View.VISIBLE);
+                        else {
+                            icFb.setVisibility(View.GONE);
+                            icTwitter.setVisibility(View.GONE);
+                            icSms.setVisibility(View.GONE);
+                            icVoice.setVisibility(View.GONE);
                         }
                     }
                 }

@@ -148,6 +148,17 @@
                     android:padding="4dp"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_twitter" />
+                <ImageView
+                    android:id="@+id/ic_notification_voice_call"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:padding="4dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_voice" />
+
             </LinearLayout>
 
         </LinearLayout>
