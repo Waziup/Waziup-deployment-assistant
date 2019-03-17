@@ -61,7 +61,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/sensor_date"
+                    android:id="@+id/notification_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -72,7 +72,8 @@
                     android:text="Jun 12, 2018"
                     android:textAlignment="textEnd"
                     android:textColor="@color/semi_gray"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -148,6 +149,7 @@
                     android:padding="4dp"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_twitter" />
+
                 <ImageView
                     android:id="@+id/ic_notification_voice_call"
                     android:layout_width="35dp"

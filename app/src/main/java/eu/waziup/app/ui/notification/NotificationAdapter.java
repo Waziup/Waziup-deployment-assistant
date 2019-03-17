@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.thunder413.datetimeutils.DateTimeStyle;
+import com.github.thunder413.datetimeutils.DateTimeUtils;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -80,6 +83,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @BindView(R.id.notification_owner)
         TextView mNotificationOwner;
+
+        @BindView(R.id.notification_date)
+        TextView mNotificationDate;
 
         @BindView(R.id.icon_sensor_owner)
         ImageView mNotificationOwnerIcon;
@@ -167,6 +173,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                             icVoice.setVisibility(View.GONE);
                         }
                     }
+                }
+
+                if (notification.getExpires() != null) {
+                    mNotificationDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(notification.getExpires(),
+                            DateTimeStyle.MEDIUM)));
+                }else{
+                    mNotificationDate.setVisibility(View.GONE);
                 }
 
                 // shared at
