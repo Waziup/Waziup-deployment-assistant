@@ -94,11 +94,6 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         communicator = (SensorCommunicator) context;
     }
 
-    @OnClick(R.id.fab_sensor)
-    void onFabClicked() {
-        communicator.fabClicked();
-    }
-
     @Override
     protected void setUp(View view) {
         setUpRecyclerView();

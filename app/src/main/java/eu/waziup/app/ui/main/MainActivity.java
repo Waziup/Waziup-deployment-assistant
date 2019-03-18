@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +30,6 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -72,6 +73,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @BindView(R.id.navigation_view)
     NavigationView nvDrawer;
 
+    @BindView(R.id.fab_sensor)
+    FloatingActionButton fabSensor;
+
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
     private TextView mEmailTextView;
@@ -110,6 +114,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mPresenter.onAttach(MainActivity.this);
 
         setUp();
+
+        fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
 
         // todo check the saved instance state before opening the sensorFragment
         getSupportFragmentManager()
@@ -205,6 +211,30 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 openLoginActivity();
         };
 
+        checkFragmentVisibility();
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void checkFragmentVisibility() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.flContent);
+//        SensorFragment currentFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+//        if (currentFragment != null && currentFragment.isVisible()) {
+//            fabSensor.setVisibility(View.VISIBLE);
+//            Log.e("--->Fab","VISIBLE");
+//        }
+//        else {
+//            fabSensor.setVisibility(View.GONE);
+//            Log.e("--->Fab","GONE");
+//        }
+        if (currentFragment != null && currentFragment.getTag() != null && currentFragment.getTag().equals(SensorFragment.TAG)) {
+//        if (currentFragment instanceof SensorFragment) {
+            fabSensor.setVisibility(View.VISIBLE);
+            Log.e("--->Fab", "VISIBLE");
+        } else {
+            fabSensor.setVisibility(View.GONE);
+            Log.e("--->Fab", "GONE");
+        }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -482,11 +512,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void fabClicked() {
-        mPresenter.onFabClicked();
     }
 
     @Override
