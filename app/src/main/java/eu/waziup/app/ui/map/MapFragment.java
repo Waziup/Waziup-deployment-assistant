@@ -34,6 +34,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.utils.CommonUtils;
 
 public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener, PermissionsListener {
@@ -46,6 +47,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     List<Sensor> sensorList = new ArrayList<>();
 
     MapCommunicator communicator;
+    SensorCommunicator SensorCommunicator;
     //    private static final int PERMISSIONS_LOCATION = 9910;
     public static final String TAG = "MapFragment";
 
@@ -131,7 +133,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     protected void setUp(View view) {
-
+        SensorCommunicator.hideFab();
     }
 
     @OnClick(R.id.gps_fab)
@@ -181,6 +183,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     public void onAttach(Context context) {
         super.onAttach(context);
         communicator = (MapCommunicator) context;
+        SensorCommunicator = (SensorCommunicator) context;
     }
 
     @Override

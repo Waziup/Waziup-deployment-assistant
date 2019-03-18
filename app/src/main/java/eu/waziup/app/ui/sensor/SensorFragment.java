@@ -78,7 +78,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
         setUp(view);
 
-        mPresenter.loadSensors();
+//        mPresenter.loadSensors();
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mPresenter.loadSensors();
@@ -100,6 +100,9 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         mPresenter.loadSensors();
         if (getBaseActivity().getSupportActionBar() != null)
             getBaseActivity().getSupportActionBar().setTitle(R.string.sensors);
+
+        // Telling the MainActivity to make the Fab visible
+        communicator.showFab();
     }
 
     private void setUpRecyclerView() {

@@ -32,6 +32,12 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
     }
 
     @Override
+    public void onAttach(V mvpView) {
+        super.onAttach(mvpView);
+        mvpView.loadPage();
+    }
+
+    @Override
     public void loadSensors() {
         getMvpView().showLoading();
         getCompositeDisposable().add(getDataManager().fetchSensors()//fetchSensors(1000, 0)

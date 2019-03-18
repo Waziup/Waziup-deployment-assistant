@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.notification;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 
 public class NotificationFragment extends BaseFragment implements NotificationMvpView, NotificationAdapter.Callback {
@@ -47,6 +49,8 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
 
     @BindView(R.id.tv_no_notification)
     TextView tvNoNotification;
+
+    SensorCommunicator communicator;
 
     public static final String TAG = "NotificationFragment";
 
@@ -83,10 +87,20 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (SensorCommunicator) context;
+    }
+
+
+    @Override
     protected void setUp(View view) {
         if (getBaseActivity().getSupportActionBar() != null)
             getBaseActivity().getSupportActionBar().setTitle(getString(R.string.notification));
         setUpRecyclerView();
+
+        // hiding the Fab from the MainActivity
+        communicator.hideFab();
     }
 
     private void setUpRecyclerView() {

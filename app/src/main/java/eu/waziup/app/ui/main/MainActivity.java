@@ -211,30 +211,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 openLoginActivity();
         };
 
-        checkFragmentVisibility();
-
-    }
-
-    @SuppressLint("RestrictedApi")
-    public void checkFragmentVisibility() {
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.flContent);
-//        SensorFragment currentFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-//        if (currentFragment != null && currentFragment.isVisible()) {
-//            fabSensor.setVisibility(View.VISIBLE);
-//            Log.e("--->Fab","VISIBLE");
-//        }
-//        else {
-//            fabSensor.setVisibility(View.GONE);
-//            Log.e("--->Fab","GONE");
-//        }
-        if (currentFragment != null && currentFragment.getTag() != null && currentFragment.getTag().equals(SensorFragment.TAG)) {
-//        if (currentFragment instanceof SensorFragment) {
-            fabSensor.setVisibility(View.VISIBLE);
-            Log.e("--->Fab", "VISIBLE");
-        } else {
-            fabSensor.setVisibility(View.GONE);
-            Log.e("--->Fab", "GONE");
-        }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -517,6 +493,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void onItemClicked(Sensor sensor) {
         mPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
+    }
+
+    @Override
+    public void showFab() {
+        fabSensor.setVisibility(View.VISIBLE);
+        Log.e("--->Fab", "VISIBLE");
+    }
+
+    @Override
+    public void hideFab() {
+        fabSensor.setVisibility(View.GONE);
+        Log.e("--->Fab", "GONE");
     }
 
     @Override
