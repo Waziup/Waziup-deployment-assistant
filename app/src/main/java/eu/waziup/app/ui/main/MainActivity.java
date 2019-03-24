@@ -1,6 +1,5 @@
 package eu.waziup.app.ui.main;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -93,9 +92,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListner;
     private GoogleSignInClient mGoogleSignInClient;
-
-    // broadcast receiver for app restrictions changed broadcast
-//    BroadcastReceiver mRestrictionsReceiver;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -224,6 +220,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
+//                    menuItem.setChecked(true);
                     selectDrawerItem(menuItem);
                     return true;
                 });
@@ -233,6 +230,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass = null;
+
         switch (menuItem.getItemId()) {
             case R.id.nav_sensor:
                 fragmentClass = SensorFragment.class;
@@ -499,15 +497,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void showFab() {
         fabSensor.show();
-//        fabSensor.setVisibility(View.VISIBLE);
-        Log.e("--->Fab", "show");
     }
 
     @Override
     public void hideFab() {
         fabSensor.hide();
-//        fabSensor.setVisibility(View.GONE);
-        Log.e("--->Fab", "hide");
     }
 
     @Override
