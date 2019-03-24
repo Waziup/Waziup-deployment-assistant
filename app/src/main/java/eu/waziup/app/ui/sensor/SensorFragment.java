@@ -146,11 +146,6 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     }
 
     @Override
-    public void openDetailSensorActivity(Sensor sensor) {
-
-    }
-
-    @Override
     public void loadPage() {
 //        mPresenter.loadSensors();
     }

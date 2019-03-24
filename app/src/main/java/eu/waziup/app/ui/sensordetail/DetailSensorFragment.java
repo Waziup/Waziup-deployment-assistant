@@ -119,6 +119,8 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         if (getArguments() != null)
             mSensor = (Sensor) getArguments().getSerializable(DETAIL_SENSOR_KEY);
 
+        if (mSensor!=null)
+            Log.e("===>sensorLoc", String.valueOf(mSensor.getLocation().getLatitude()));
         setUp(view);
 
         // map button on clickListener
