@@ -158,20 +158,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 if (notification.getNotification() != null && notification.getNotification().getChannels() != null) {
                     for (String social : notification.getNotification().getChannels()) {
-                        if (social.equals("twitter"))
+                        if (social.equals("twitter")) {
                             icTwitter.setVisibility(View.VISIBLE);
-                        else if (social.equals("facebook"))
-                            icFb.setVisibility(View.VISIBLE);
-                        else if (social.equals("sms"))
-                            icSms.setVisibility(View.VISIBLE);
-                        else if (social.equals("voice"))
-                            icVoice.setVisibility(View.VISIBLE);
-                        else {
-                            icFb.setVisibility(View.GONE);
-                            icTwitter.setVisibility(View.GONE);
-                            icSms.setVisibility(View.GONE);
-                            icVoice.setVisibility(View.GONE);
                         }
+                        if (social.equals("facebook")) {
+                            icFb.setVisibility(View.VISIBLE);
+                        }
+                        if (social.equals("sms")) {
+                            icSms.setVisibility(View.VISIBLE);
+                        }
+                        if (social.equals("voice")) {
+                            icVoice.setVisibility(View.VISIBLE);
+                        }
+//                        if (!social.equals("twitter") &&){
+//                            icFb.setVisibility(View.GONE);
+//                            icTwitter.setVisibility(View.GONE);
+//                            icSms.setVisibility(View.GONE);
+//                            icVoice.setVisibility(View.GONE);
+//                        }
                     }
                 }
 
@@ -179,7 +183,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     mNotificationDate.setVisibility(View.VISIBLE);
                     mNotificationDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(notification.getExpires(),
                             DateTimeStyle.MEDIUM)));
-                }else{
+                } else {
                     mNotificationDate.setVisibility(View.GONE);
                 }
 

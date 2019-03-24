@@ -100,7 +100,7 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
         setUpRecyclerView();
 
         // hiding the Fab from the MainActivity
-        communicator.hideFab();
+        communicator.invisibleFab();
     }
 
     private void setUpRecyclerView() {

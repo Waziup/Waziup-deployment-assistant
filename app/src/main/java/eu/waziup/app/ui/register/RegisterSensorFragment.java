@@ -2,6 +2,7 @@ package eu.waziup.app.ui.register;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -37,6 +38,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.utils.CommonUtils;
 
@@ -91,6 +93,8 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     public static final String TAG = "RegisterSensorFragment";
 
+    SensorCommunicator communicator;
+
     public static RegisterSensorFragment newInstance() {
         Bundle args = new Bundle();
         RegisterSensorFragment fragment = new RegisterSensorFragment();
@@ -116,6 +120,12 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (SensorCommunicator) context;
+    }
+
     @OnClick(R.id.btn_register_get_current_location)
     void onGetLocationClicked() {
         if (getView() != null)
@@ -125,7 +135,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
             longitude = getLongitude();
             //                // \n is for new line
 //                Toast.makeText(getBaseActivity(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-            sensorLocation.setText(format("Lat %.4f", latitude) + ",  " + format("Lang %.4f", longitude));
+            sensorLocation.setText(format("Lat %.4f", latitude) + ",  " + format("Long %.4f", longitude));
         } else {
             // can't get location
             // GPS or Network is not enabled
@@ -333,7 +343,8 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     @Override
     protected void setUp(View view) {
-
+        // hiding the Fab from the MainActivity
+        communicator.invisibleFab();
     }
 
     @Override

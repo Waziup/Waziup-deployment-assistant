@@ -6,4 +6,7 @@ public interface SensorCommunicator {
     void onItemClicked(Sensor sensor);
     void showFab();
     void hideFab();
+    boolean isFabShown();
+    void visibleFab();
+    void invisibleFab();
 }

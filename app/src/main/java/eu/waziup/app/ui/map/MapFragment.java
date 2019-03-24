@@ -133,7 +133,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     protected void setUp(View view) {
-        SensorCommunicator.hideFab();
+        SensorCommunicator.invisibleFab();
     }
 
     @OnClick(R.id.gps_fab)

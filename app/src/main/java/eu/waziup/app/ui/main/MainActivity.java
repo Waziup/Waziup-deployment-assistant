@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -497,14 +498,40 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void showFab() {
-        fabSensor.setVisibility(View.VISIBLE);
-        Log.e("--->Fab", "VISIBLE");
+        fabSensor.show();
+//        fabSensor.setVisibility(View.VISIBLE);
+        Log.e("--->Fab", "show");
     }
 
     @Override
     public void hideFab() {
+        fabSensor.hide();
+//        fabSensor.setVisibility(View.GONE);
+        Log.e("--->Fab", "hide");
+    }
+
+    @Override
+    public boolean isFabShown() {
+        return fabSensor.isShown();
+    }
+
+    @Override
+    public void visibleFab() {
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fabSensor.getLayoutParams();
+        p.setBehavior(new FloatingActionButton.Behavior());
+        p.setAnchorId(R.id.flContent);
+        fabSensor.setLayoutParams(p);
+        fabSensor.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void invisibleFab() {
+
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fabSensor.getLayoutParams();
+        p.setBehavior(null); //should disable default animations
+        p.setAnchorId(View.NO_ID); //should let you set visibility
+        fabSensor.setLayoutParams(p);
         fabSensor.setVisibility(View.GONE);
-        Log.e("--->Fab", "GONE");
     }
 
     @Override

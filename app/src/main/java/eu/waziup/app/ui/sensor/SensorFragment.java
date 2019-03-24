@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -78,7 +77,21 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
 
         setUp(view);
 
-//        mPresenter.loadSensors();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && communicator.isFabShown())
+                    communicator.hideFab();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    communicator.showFab();
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mPresenter.loadSensors();
@@ -102,7 +115,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             getBaseActivity().getSupportActionBar().setTitle(R.string.sensors);
 
         // Telling the MainActivity to make the Fab visible
-        communicator.showFab();
+        communicator.visibleFab();
     }
 
     private void setUpRecyclerView() {
