@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.sensordetail;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
+import eu.waziup.app.ui.sensor.SensorCommunicator;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 
@@ -100,6 +102,8 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 //        return fragment;
 //    }
 
+    private SensorCommunicator communicator;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -119,8 +123,6 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         if (getArguments() != null)
             mSensor = (Sensor) getArguments().getSerializable(DETAIL_SENSOR_KEY);
 
-        if (mSensor!=null)
-            Log.e("===>sensorLoc", String.valueOf(mSensor.getLocation().getLatitude()));
         setUp(view);
 
         // map button on clickListener
@@ -133,7 +135,14 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (SensorCommunicator) context;
+    }
+
+    @Override
     protected void setUp(View view) {
+        communicator.invisibleFab();
         loadPage(mSensor);
         setUpRecyclerView();
     }
