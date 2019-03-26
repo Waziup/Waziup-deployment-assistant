@@ -51,11 +51,6 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     //    private static final int PERMISSIONS_LOCATION = 9910;
     public static final String TAG = "MapFragment";
 
-//    private LocationRequest mLocationRequest;
-
-//    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-//    private long FASTEST_INTERVAL = 2000; /* 2 sec */
-
     // variables for adding location layer
     private MapboxMap map;
     private PermissionsManager permissionsManager;
@@ -134,6 +129,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     @Override
     protected void setUp(View view) {
         SensorCommunicator.invisibleFab();
+
     }
 
     @OnClick(R.id.gps_fab)
@@ -142,8 +138,6 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         if (map != null)
             if (originLocation != null && originLocation.getLatitude() != 0 && originLocation.getLongitude() != 0)
                 updateMap(originLocation.getLatitude(), originLocation.getLongitude(), map);
-
-//            enableLocationComponent(map);
 
     }
 
@@ -171,7 +165,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude)) // Sets the new camera position
-                .zoom(17) // Sets the zoom
+                .zoom(19) // Sets the zoom
                 .bearing(180) // Rotate the camera
                 .tilt(30) // Set the camera tilt
                 .build(); // Creates a CameraPosition from the builder
@@ -286,7 +280,6 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 //            enableLocation(false);
         }
     }
-
 
     @Override
     public void onPermissionResult(boolean granted) {

@@ -32,10 +32,10 @@
                 app:titleTextAppearance="@style/Toolbar.TitleText"
                 app:titleTextColor="@color/white" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_gray" />
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/light_gray" />-->
 
         </android.support.design.widget.AppBarLayout>
 

@@ -259,17 +259,14 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @Override
     public void openMapFragment(LatLng latLng) {
-        if (getBaseActivity() != null)
+        if (getBaseActivity() != null){
             getBaseActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     .replace(R.id.flContent, MapFragment.newInstance(latLng), MapFragment.TAG)
                     .commit();
+//            Log.e("---->map", "clicked");
+        }
 
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
-//                .replace(R.id.cl_root_view, NotificationDetailFragment.newInstance(sensor, parentFragment), NotificationDetailFragment.TAG)
-//                .commit();
     }
 
     @Override
