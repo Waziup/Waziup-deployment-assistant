@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.objectbox'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -119,6 +120,9 @@ dependencies {
     // Firebase - Auth
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
+    // Firebase - Crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'

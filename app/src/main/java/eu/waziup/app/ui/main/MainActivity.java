@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -55,6 +56,7 @@ import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -102,6 +104,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         mHandler = new Handler();

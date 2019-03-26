@@ -37,6 +37,11 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9b276caa74600f8e02f4dcddd3e832587dbc979e"
+            />
+
         <service android:name="eu.waziup.app.service.SyncService" />
 
         <!-- FIREBASE CLOUD MESSAGING - FCM - SERVICE-->
