@@ -250,7 +250,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.cl_root_view, MapFragment.newInstance(), RegisterSensorFragment.TAG)
+                        .replace(R.id.cl_root_view, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
 
 
@@ -384,14 +384,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             unlockDrawer();
 
             if (TextUtils.equals(parent, MapFragment.TAG)) {
-                Log.e("--->Fragment", MapFragment.TAG);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
             } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
-                Log.e("--->Fragment", SensorFragment.TAG);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
