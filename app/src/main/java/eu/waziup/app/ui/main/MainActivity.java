@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -131,7 +132,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mAuth.addAuthStateListener(mAuthListner);
     }
 
-    // TODO all those things should be done when the user clicks logout button
+    // TODO all those things should be done when the user _icks logout button
 //    mMainActivity.mAuthState =null;
 //    mMainActivity.clearAuthState();
 //    mMainActivity.enablePostAuthorizationFlows();
@@ -246,9 +247,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 changeToolbarTitle(getString(R.string.notification));
                 break;
             case R.id.nav_map:
-                fragmentClass = MapFragment.class;
-                CURRENT_TAG = MapFragment.TAG;
-                changeToolbarTitle(getString(R.string.map));
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                        .replace(R.id.cl_root_view, MapFragment.newInstance(), RegisterSensorFragment.TAG)
+                        .commit();
+
+
+//                fragmentClass = MapFragment.class;
+//                CURRENT_TAG = MapFragment.TAG;
+//                changeToolbarTitle(getString(R.string.map));
                 break;
             case R.id.nav_setting:
                 CommonUtils.toast("settings clicked");
@@ -376,12 +384,14 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             unlockDrawer();
 
             if (TextUtils.equals(parent, MapFragment.TAG)) {
+                Log.e("--->Fragment", MapFragment.TAG);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
             } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
+                Log.e("--->Fragment", SensorFragment.TAG);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -427,7 +437,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     public void openRegistrationSensor() {
         lockDrawer();
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -512,6 +521,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         return fabSensor.isShown();
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void visibleFab() {
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fabSensor.getLayoutParams();
@@ -521,6 +531,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         fabSensor.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void invisibleFab() {
 

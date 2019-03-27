@@ -35,6 +35,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
+import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.utils.CommonUtils;
 
 public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener, PermissionsListener {
@@ -113,7 +114,6 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
                 sensorDomain.setText(marker.getSnippet());
 
                 return v;
-
             });
 
             // setting the UI for the mapView
@@ -126,15 +126,18 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         return view;
     }
 
+    @OnClick(R.id.nav_back_btn)
+    void onNavBackClick() {
+        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
+    }
+
     @Override
     protected void setUp(View view) {
         SensorCommunicator.invisibleFab();
-
     }
 
     @OnClick(R.id.gps_fab)
     void onFabClicked() {
-
         if (map != null)
             if (originLocation != null && originLocation.getLatitude() != 0 && originLocation.getLongitude() != 0)
                 updateMap(originLocation.getLatitude(), originLocation.getLongitude(), map);
