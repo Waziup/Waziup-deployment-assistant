@@ -243,7 +243,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
                 sensorDomain.setVisibility(View.GONE);
             }
 
-        } else {// todo there has to be a way of expression the tvNoMeasurement in here in the else clause
+//        } else {// todo there has to be a way of expression the tvNoMeasurement in here in the else clause
 
         }
     }
@@ -262,11 +262,9 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         if (getBaseActivity() != null){
             getBaseActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.flContent, MapFragment.newInstance(latLng), MapFragment.TAG)
+                    .replace(R.id.cl_root_view, MapFragment.newInstance(latLng), MapFragment.TAG)
                     .commit();
-//            Log.e("---->map", "clicked");
         }
-
     }
 
     @Override

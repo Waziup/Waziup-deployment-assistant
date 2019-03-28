@@ -18,6 +18,7 @@ import io.fabric.sdk.android.Fabric;
 public class DaApp extends Application {
 
     public static Context context;
+    public static Application application;
 
     public static final String LOG_TAG = "AppAuthSample";
 
@@ -39,6 +40,7 @@ public class DaApp extends Application {
         AppLogger.init();
 
         context = this;
+        application = this;
 
     }
 
@@ -53,6 +55,10 @@ public class DaApp extends Application {
 
     public static Context getContext() {
         return context;
+    }
+
+    public static Application getApplication(){
+        return application;
     }
 
     @Override

@@ -39,6 +39,8 @@ import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -335,33 +337,56 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onBackPressed() {
+        Log.e("--->", "onBackPressed");
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers();
             return;
         }
 
         if (getSupportFragmentManager().getFragments().size() > 1) {
+            Log.e("---->backPressed", "> 1");
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
                     .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
 
             // this is like popping out the top fragment on the fragment stack list
-            if (fragment != null)
+            if (fragment != null) {
+                Log.e("---->backPressed", "fragment != null");
+                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
                 getSupportFragmentManager()
                         .beginTransaction()
                         .remove(fragment)
                         .commitNow();
+            }
+
             unlockDrawer();
         } else {
-            SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-            if (sensorFragment != null && sensorFragment.isVisible()) {
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
-                        .setCancelable(false)
-                        .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
-                        .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
-                        .show();
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
+                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
+            if (fragment != null) {
+                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
+            }
+
+//            Log.e("---->backPressed", "<= 1");
+//            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
+//            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
+//            if(f instanceof SensorFragment){
+
+            if (getSupportFragmentManager().getFragments().size() <= 1) {
+//                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
+                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
+                    new AlertDialog.Builder(this)
+                            .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
+                            .setCancelable(false)
+                            .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                            .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
+                            .show();
+                }
             } else {
+                Log.e("---->backPressed", "else");
                 // if the opened fragment is beside the sensorFragment which is the home fragment
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -374,6 +399,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onFragmentDetached(String tag, String parent) {
+        Log.e("--->", "onFragmentDetached");
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
