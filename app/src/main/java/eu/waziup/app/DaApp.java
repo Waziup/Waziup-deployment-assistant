@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
@@ -30,7 +31,7 @@ public class DaApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this)).build();

@@ -98,7 +98,13 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             mSwipeRefreshLayout.setRefreshing(false);
         });
 
+        forceCrash(view);
+
         return view;
+    }
+
+    public void forceCrash(View view) {
+        throw new RuntimeException("This is a crash");
     }
 
     @Override
@@ -171,5 +177,10 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
         dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

@@ -39,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -49,6 +50,7 @@ import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
+import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.custom.RoundedImageView;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
@@ -342,14 +344,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mDrawer.closeDrawers();
             return;
         }
-
-        if (getSupportFragmentManager().getFragments().size() > 1) {
-            Log.e("---->backPressed", "> 1");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-
-            // this is like popping out the top fragment on the fragment stack list
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(SensorFragment.TAG);
+        if (fragment == null) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
+                    .setNegativeButton(getString(R.string.yes), (dialog, which) -> super.onBackPressed())
+                    .show();
+        } else {
             if (fragment != null) {
                 Log.e("---->backPressed", "fragment != null");
                 Log.e("==>backPressed", String.valueOf(fragment.getTag()));
@@ -357,44 +361,67 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .beginTransaction()
                         .remove(fragment)
                         .commitNow();
-            }
 
-            unlockDrawer();
-        } else {
+                    unlockDrawer();
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-            if (fragment != null) {
-                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
-            }
-
-//            Log.e("---->backPressed", "<= 1");
-//            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
-//            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
-//            if(f instanceof SensorFragment){
-
-            if (getSupportFragmentManager().getFragments().size() <= 1) {
-//                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
-                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
-                    new AlertDialog.Builder(this)
-                            .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
-                            .setCancelable(false)
-                            .setPositiveButton(getString(R.string.cancel), (dialog, which) -> dialog.dismiss())
-                            .setNegativeButton(getString(R.string.yes), (dialog, which) -> finish())
-                            .show();
+//                    if (TextUtils.equals(parent, MapFragment.TAG)) {
+//                        getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                                .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
+//                                .commit();
+//                    } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
+//                        getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+//                                .commit();
+//                    }
                 }
-            } else {
-                Log.e("---->backPressed", "else");
-                // if the opened fragment is beside the sensorFragment which is the home fragment
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-                        .commit();
-            }
         }
+
+//        if (getSupportFragmentManager().getFragments().size() > 1) {
+//            Log.e("---->backPressed", "> 1");
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
+//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
+//
+//            // this is like popping out the top fragment on the fragment stack list
+//
+//            }
+//
+//            unlockDrawer();
+//        } else {
+//
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
+//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
+//            if (fragment != null) {
+//                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
+//            }
+//
+////            Log.e("---->backPressed", "<= 1");
+////            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
+////            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
+////            if(f instanceof SensorFragment){
+//
+//            if (getSupportFragmentManager().getFragments().size() <= 1) {
+////                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
+//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
+//                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
+//
+//                }
+//            } else {
+//                Log.e("---->backPressed", "else");
+//                // if the opened fragment is beside the sensorFragment which is the home fragment
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+//                        .commit();
+//            }
+//        }
+        // todo check for the significance of this statement
     }
 
     @Override

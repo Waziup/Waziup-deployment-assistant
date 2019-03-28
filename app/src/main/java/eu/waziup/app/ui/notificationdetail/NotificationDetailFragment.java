@@ -272,4 +272,9 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

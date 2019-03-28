@@ -134,4 +134,9 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     public void onItemClicked(NotificationResponse notification) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

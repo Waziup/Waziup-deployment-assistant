@@ -529,4 +529,9 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
         hideLoading();
         getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

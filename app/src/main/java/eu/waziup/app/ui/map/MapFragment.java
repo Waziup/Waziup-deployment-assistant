@@ -435,4 +435,8 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
         mapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
 }

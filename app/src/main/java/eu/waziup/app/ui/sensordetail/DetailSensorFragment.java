@@ -295,4 +295,9 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

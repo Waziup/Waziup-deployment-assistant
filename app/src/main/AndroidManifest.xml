@@ -39,7 +39,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="9b276caa74600f8e02f4dcddd3e832587dbc979e"
+            android:value="a3ae059b872eb46697b82725339fe0dd9527495c"
             />
 
         <service android:name="eu.waziup.app.service.SyncService" />

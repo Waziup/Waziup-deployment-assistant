@@ -13,7 +13,7 @@ import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.utils.CommonUtils;
 
 
-public abstract class BaseFragment extends Fragment implements MvpView {
+public abstract class BaseFragment extends Fragment implements MvpView, OnBackPressed{
 
     private BaseActivity mActivity;
     private Unbinder mUnBinder;
