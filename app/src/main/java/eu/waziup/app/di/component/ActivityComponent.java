@@ -3,6 +3,7 @@ package eu.waziup.app.di.component;
 import dagger.Component;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.di.module.ActivityModule;
+import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
@@ -14,7 +15,6 @@ import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorAdapter;
 import eu.waziup.app.ui.sensor.SensorFragment;
-import eu.waziup.app.utils.ErrorNetworkFragment;
 
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)
@@ -41,5 +41,7 @@ public interface ActivityComponent {
     void inject(NotificationFragment fragment);
 
     void inject(NotificationDetailFragment fragment);
+
+    void inject(ErrorNetworkFragment fragment);
 
 }

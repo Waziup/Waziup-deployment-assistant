@@ -77,7 +77,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     @BindView(R.id.btn_locate_on_map)
     ImageView btnSensorLocation;
 
-    public static final String TAG = "NotificationDetailFragment";
+    public static final String TAG = "DetailSensorFragment";
 
     Sensor mSensor;
 

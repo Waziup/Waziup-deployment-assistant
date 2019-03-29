@@ -19,6 +19,9 @@ import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.ui.map.MapMvpPresenter;
 import eu.waziup.app.ui.map.MapMvpView;
 import eu.waziup.app.ui.map.MapPresenter;
+import eu.waziup.app.ui.neterror.ErrorNetworkMvpPresenter;
+import eu.waziup.app.ui.neterror.ErrorNetworkMvpView;
+import eu.waziup.app.ui.neterror.ErrorNetworkPresenter;
 import eu.waziup.app.ui.notification.NotificationAdapter;
 import eu.waziup.app.ui.notification.NotificationMvpPresenter;
 import eu.waziup.app.ui.notification.NotificationMvpView;
@@ -124,6 +127,13 @@ public class ActivityModule {
     @PerActivity
     NotificationMvpPresenter<NotificationMvpView> provideNotificationPresenter(
             NotificationPresenter<NotificationMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    ErrorNetworkMvpPresenter<ErrorNetworkMvpView> provideErrorNetworkPresenter(
+            ErrorNetworkPresenter<ErrorNetworkMvpView> presenter) {
         return presenter;
     }
 
