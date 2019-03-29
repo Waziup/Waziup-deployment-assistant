@@ -14,6 +14,7 @@ import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorAdapter;
 import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.utils.ErrorNetworkFragment;
 
 @PerActivity
 @Component(dependencies = ApplicationComponent.class, modules = ActivityModule.class)

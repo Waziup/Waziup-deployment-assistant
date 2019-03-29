@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">WAZIUP</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="please_try_again">Please check your internet connection</string>
     <string name="app_market_link">"market://details?id="</string>
     <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
 
@@ -88,4 +90,5 @@
     <string name="scan_sensor">Scan sensor</string>
     <string name="login">login</string>
     <string name="dialog_no_record">no record</string>
+    <string name="retry">Retry</string>
 </resources>
