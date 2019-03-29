@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_margin="5dp"
+                    android:textColor="@color/white"
                     android:fontFamily="@font/roboto_light"
                     android:text="@string/no_sensors_list_found"
                     android:textAlignment="center"

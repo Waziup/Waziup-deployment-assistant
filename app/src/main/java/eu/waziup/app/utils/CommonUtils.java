@@ -160,9 +160,9 @@ public final class CommonUtils {
             return "Please connect to the internet.";
         } else if (throwable instanceof com.jakewharton.retrofit2.adapter.rxjava2.HttpException) {
             int code = ((com.jakewharton.retrofit2.adapter.rxjava2.HttpException) throwable).response().code();
-            if (code >= 400 && code < 404) {
+            if (code >= 400 && code < 404) { //4xx Client Errors
                 return DaApp.getContext().getString(R.string.error_invalid_credential);
-            } else if (code == 404) {
+            } else if (code == 404) { //4xx Client Errors
                 return DaApp.getContext().getString(R.string.error_file_does_not_exist);
             } else if (code == 500) {
                 return DaApp.getContext().getString(R.string.error_server_error);
