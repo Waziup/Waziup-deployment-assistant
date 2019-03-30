@@ -8,5 +8,5 @@ import eu.waziup.app.ui.base.MvpView;
 
 public interface EditMeasurementMvpView extends MvpView {
 
-
+    void closeDialog();
 }

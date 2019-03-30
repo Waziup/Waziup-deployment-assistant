@@ -1,6 +1,5 @@
 package eu.waziup.app.ui.measurementedit;
 
-import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
 
@@ -11,7 +10,7 @@ import eu.waziup.app.ui.base.MvpPresenter;
 @PerActivity
 public interface EditMeasurementMvpPresenter<V extends EditMeasurementMvpView> extends MvpPresenter<V> {
 
-    void onEditMeasurementClicked(Measurement measurement);
+    void onSubmitClicked();
 
-    void onDeleteMeasurementClicked(String sensorId, String measurementId);
+    void onCancelClicked();
 }

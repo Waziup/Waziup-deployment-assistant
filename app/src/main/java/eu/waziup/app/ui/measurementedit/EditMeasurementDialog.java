@@ -2,18 +2,25 @@ package eu.waziup.app.ui.measurementedit;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseDialog;
-import eu.waziup.app.ui.sensordetail.DetailSensorMvpPresenter;
+import eu.waziup.app.ui.base.MvpPresenter;
+import eu.waziup.app.ui.map.MapMvpPresenter;
+import eu.waziup.app.ui.map.MapMvpView;
 
 public class EditMeasurementDialog extends BaseDialog implements EditMeasurementMvpView {
 
@@ -21,6 +28,9 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
     private EditText mId, mName, mSensor, mQuantityKind, mUnit;
     private Measurement measurement;
     private TextView btnCancel, btnSubmit, title;
+
+    @Inject
+    EditMeasurementMvpPresenter<EditMeasurementMvpView> mPresenter;
 //    DetailSensorMvpPresenter<EditMeasurementMvpView> mPresenter;
 
 //    public EditMeasurementDialog(@NonNull Activity activity, Measurement measurement, EditMeasurementMvpPresenter<EditMeasurementMvpView> mPresenter) {
@@ -75,8 +85,46 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
 //        });
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_edit_measurement, container, false);
+
+        ActivityComponent component = getActivityComponent();
+        if (component != null) {
+
+            component.inject(this);
+
+            setUnBinder(ButterKnife.bind(this, view));
+
+            mPresenter.onAttach(this);
+        }
+
+        setUp(view);
+
+        return view;
+    }
+
+    @OnClick(R.id.btn_dialog_cancel)
+    void onCancelClicked() {
+
+        mPresenter.onCancelClicked();
+
+    }
+
     @Override
     protected void setUp(View view) {
 
+    }
+
+    @Override
+    public void closeDialog() {
+        dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.onDetach();
+        super.onDestroyView();
     }
 }
