@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.neterror;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
+import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 
@@ -32,6 +34,8 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
     public static String CURRENT_TAG = "";
     public static String parent;
     private Handler mHandler;
+
+    SensorCommunicator communicator;
 
     public static ErrorNetworkFragment newInstance(String pts) {
         Bundle args = new Bundle();
@@ -60,6 +64,12 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        communicator = (SensorCommunicator) context;
+    }
+
     @OnClick(R.id.btn_retry)
     void onRefreshClicked() {
         mPresenter.onRefreshClicked(parent);
@@ -67,7 +77,7 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
 
     @Override
     protected void setUp(View view) {
-
+        communicator.invisibleFab();
     }
 
     @Override

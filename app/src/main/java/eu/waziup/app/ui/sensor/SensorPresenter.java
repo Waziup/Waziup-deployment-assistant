@@ -44,7 +44,6 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
     @Override
     public void loadSensors() {
         if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
-            Log.e("--->ConnectivityUtil", "isConnected");
             getMvpView().showLoading();
             getCompositeDisposable().add(getDataManager().fetchSensors()//fetchSensors(1000, 0)
                     .subscribeOn(getSchedulerProvider().io())
@@ -67,7 +66,6 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
                             }
                     ));
         } else {
-            Log.e("--->ConnectivityUtil", "isNOTConnected");
             getMvpView().showNetworkErrorPage();
         }
 
