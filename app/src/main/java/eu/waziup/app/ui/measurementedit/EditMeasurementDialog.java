@@ -40,6 +40,13 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
 //        this.mPresenter = mPresenter;
 //    }
 
+    public static EditMeasurementDialog newInstance() {
+        EditMeasurementDialog fragment = new EditMeasurementDialog();
+        Bundle bundle = new Bundle();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

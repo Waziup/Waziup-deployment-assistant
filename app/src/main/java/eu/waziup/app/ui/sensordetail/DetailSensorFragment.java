@@ -274,6 +274,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @Override
     public void onItemEditClicked(Measurement measurement) {
+        EditMeasurementDialog.newInstance().show(getBaseActivity().getSupportFragmentManager(), "");
 //        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), measurement, mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

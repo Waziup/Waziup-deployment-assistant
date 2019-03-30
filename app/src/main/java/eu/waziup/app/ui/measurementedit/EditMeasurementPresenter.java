@@ -26,12 +26,22 @@ public class EditMeasurementPresenter<V extends EditMeasurementMvpView> extends 
     }
 
     @Override
-    public void onEditMeasurementClicked(Measurement measurement) {
+    public void onSubmitClicked() {
 
     }
 
     @Override
-    public void onDeleteMeasurementClicked(String sensorId, String measurementId) {
+    public void onCancelClicked() {
+
+    }
+
+//    @Override
+//    public void onEditMeasurementClicked(Measurement measurement) {
+//
+//    }
+
+//    @Override
+//    public void onDeleteMeasurementClicked(String sensorId, String measurementId) {
 //        getMvpView().showLoading();
 //        getCompositeDisposable().add(getDataManager().deleteMeasurement(sensorId, measurementId)
 //                .subscribeOn(getSchedulerProvider().io())
@@ -48,5 +58,5 @@ public class EditMeasurementPresenter<V extends EditMeasurementMvpView> extends 
 //                            getMvpView().onError(CommonUtils.getErrorMessage(throwable));
 //                        }
 //                ));
-    }
+//    }
 }
