@@ -8,4 +8,5 @@ import eu.waziup.app.ui.base.MvpView;
 public interface NotificationMvpView extends MvpView {
 
     void showNotifications(List<NotificationResponse> notificationResponses);
+    void showNetworkErrorPage();
 }

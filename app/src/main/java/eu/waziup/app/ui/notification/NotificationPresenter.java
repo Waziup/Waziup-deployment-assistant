@@ -1,10 +1,14 @@
 package eu.waziup.app.ui.notification;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
+import eu.waziup.app.DaApp;
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.ui.base.BasePresenter;
 import eu.waziup.app.utils.CommonUtils;
+import eu.waziup.app.utils.ConnectivityUtil;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -24,24 +28,29 @@ public class NotificationPresenter<V extends NotificationMvpView> extends BasePr
 
     @Override
     public void loadNotifications() {
-        getMvpView().showLoading();
-        getCompositeDisposable().add(getDataManager().getNotifications()
-                .subscribeOn(getSchedulerProvider().io())
-                .observeOn(getSchedulerProvider().ui())
-                .subscribe(notificationResponses -> {
-                    if (!isViewAttached())
-                        return;
+        if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
+            getMvpView().showLoading();
+            getCompositeDisposable().add(getDataManager().getNotifications()
+                    .subscribeOn(getSchedulerProvider().io())
+                    .observeOn(getSchedulerProvider().ui())
+                    .subscribe(notificationResponses -> {
+                        if (!isViewAttached())
+                            return;
 
-                    getMvpView().showNotifications(notificationResponses);
+                        getMvpView().showNotifications(notificationResponses);
 
-                }, throwable -> {
+                    }, throwable -> {
 
-                    if (!isViewAttached())
-                        return;
+                        if (!isViewAttached())
+                            return;
 
-                    getMvpView().hideLoading();
-                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
+                        getMvpView().hideLoading();
+                        getMvpView().onError(CommonUtils.getErrorMessage(throwable));
 
-                }));
+                    }));
+        } else {
+            getMvpView().showNetworkErrorPage();
+        }
+
     }
 }

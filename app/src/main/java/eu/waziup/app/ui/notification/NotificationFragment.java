@@ -24,6 +24,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 
@@ -128,6 +129,15 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
             }
         }
         hideLoading();
+    }
+
+    @Override
+    public void showNetworkErrorPage() {
+        getBaseActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.flContent, ErrorNetworkFragment.newInstance(NotificationFragment.TAG), ErrorNetworkFragment.TAG)
+                .commit();
     }
 
     @Override
