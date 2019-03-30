@@ -156,7 +156,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         getBaseActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, ErrorNetworkFragment.newInstance(), ErrorNetworkFragment.TAG)
+                .replace(R.id.flContent, ErrorNetworkFragment.newInstance(SensorFragment.TAG), ErrorNetworkFragment.TAG)
                 .commit();
     }
 
