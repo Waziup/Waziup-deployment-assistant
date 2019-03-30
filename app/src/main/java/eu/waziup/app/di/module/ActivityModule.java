@@ -19,6 +19,9 @@ import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.ui.map.MapMvpPresenter;
 import eu.waziup.app.ui.map.MapMvpView;
 import eu.waziup.app.ui.map.MapPresenter;
+import eu.waziup.app.ui.measurementedit.EditMeasurementMvpPresenter;
+import eu.waziup.app.ui.measurementedit.EditMeasurementMvpView;
+import eu.waziup.app.ui.measurementedit.EditMeasurementPresenter;
 import eu.waziup.app.ui.neterror.ErrorNetworkMvpPresenter;
 import eu.waziup.app.ui.neterror.ErrorNetworkMvpView;
 import eu.waziup.app.ui.neterror.ErrorNetworkPresenter;
@@ -134,6 +137,13 @@ public class ActivityModule {
     @PerActivity
     ErrorNetworkMvpPresenter<ErrorNetworkMvpView> provideErrorNetworkPresenter(
             ErrorNetworkPresenter<ErrorNetworkMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    EditMeasurementMvpPresenter<EditMeasurementMvpView> provideEditMeasurementPresenter(
+            EditMeasurementPresenter<EditMeasurementMvpView> presenter) {
         return presenter;
     }
 

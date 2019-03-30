@@ -3,6 +3,7 @@ package eu.waziup.app.di.component;
 import dagger.Component;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.di.module.ActivityModule;
+import eu.waziup.app.ui.measurementedit.EditMeasurementDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
@@ -44,4 +45,5 @@ public interface ActivityComponent {
 
     void inject(ErrorNetworkFragment fragment);
 
+    void inject(EditMeasurementDialog dialog);
 }

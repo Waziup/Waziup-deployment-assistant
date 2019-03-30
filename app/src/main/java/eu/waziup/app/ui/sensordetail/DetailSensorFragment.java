@@ -11,7 +11,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
+import eu.waziup.app.ui.measurementedit.EditMeasurementDialog;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
