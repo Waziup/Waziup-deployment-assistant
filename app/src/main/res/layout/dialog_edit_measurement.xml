@@ -44,48 +44,98 @@
                     android:layout_margin="5dp"
                     android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/dialog_measurement_id"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="id"
-                        android:textSize="16sp" />
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
 
-                    <EditText
-                        android:id="@+id/dialog_measurement_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="name"
-                        android:textSize="16sp" />
+                        <EditText
+                            android:id="@+id/dialog_measurement_id"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="measurement id"
+                            android:textSize="16sp" />
 
-                    <Spinner
-                        android:id="@+id/simpleSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:textSize="16sp" />
+                    </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/dialog_measurement_quantity_kind"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:hint="quantity kind"
-                        android:textSize="16sp" />
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
 
-                    <EditText
-                        android:id="@+id/dialog_measurement_unit"
+                        <EditText
+                            android:id="@+id/dialog_measurement_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="measurement name"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="unit"
-                        android:textSize="16sp" />
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <Spinner
+                            android:id="@+id/simpleSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:layout_marginStart="@dimen/vertical_margin_4"
+                            android:layout_marginEnd="@dimen/vertical_margin_4"
+                            android:entries="@array/visibility_options" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <EditText
+                            android:id="@+id/dialog_measurement_quantity_kind"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="measurement quantity kind"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:background="@drawable/rounded_grey_rectangle">
+
+                        <EditText
+                            android:id="@+id/dialog_measurement_unit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/vertical_margin_12"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:background="@color/transparent"
+                            android:hint="measurement unit"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

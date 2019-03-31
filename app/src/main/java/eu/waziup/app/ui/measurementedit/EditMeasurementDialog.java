@@ -1,6 +1,5 @@
 package eu.waziup.app.ui.measurementedit;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,24 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseDialog;
-import eu.waziup.app.ui.base.MvpPresenter;
-import eu.waziup.app.ui.map.MapMvpPresenter;
-import eu.waziup.app.ui.map.MapMvpView;
-import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 
-import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 import static eu.waziup.app.utils.AppConstants.MEASUREMENT_SENSOR_KEY;
 
 public class EditMeasurementDialog extends BaseDialog implements EditMeasurementMvpView {
@@ -34,9 +27,20 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
     @Inject
     EditMeasurementMvpPresenter<EditMeasurementMvpView> mPresenter;
 
-    public Activity c;
-    private EditText mId, mName, mSensor, mQuantityKind, mUnit;
-    private TextView btnCancel, btnSubmit, title;
+    @BindView(R.id.dialog_measurement_id)
+    TextView mId;
+
+    @BindView(R.id.dialog_measurement_name)
+    TextView mName;
+
+    @BindView(R.id.dialog_measurement_quantity_kind)
+    TextView mQuantityKind;
+
+    @BindView(R.id.dialog_measurement_unit)
+    TextView mUnit;
+
+    @BindView(R.id.dialog_measurement_title)
+    TextView title;
 
     private Measurement measurement;
 
@@ -97,7 +101,7 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
                 mUnit.setText(measurement.getUnit());
 
         } else {
-            Log.e("--->measurement Dialog","null");
+            Log.e("--->measurement Dialog", "null");
             title.setText(R.string.dialog_add_measurement);
         }
     }
