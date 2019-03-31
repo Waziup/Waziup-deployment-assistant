@@ -22,6 +22,8 @@ public final class AppConstants {
 
     public static final String TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss";
 
+    public static final String MEASUREMENT_SENSOR_KEY = "MEASUREMENT_SENSOR_KEY";
+
     //556484818818-lmptgg0pseli19di9h4h7k4t941oifdd.apps.googleusercontent.com - new
     //556484818818-4am2rqla0pdrked873u9rq4ohrvdhpoh.apps.googleusercontent.com - old
     public static final String AUTH_CLIENT_ID = "556484818818-lmptgg0pseli19di9h4h7k4t941oifdd.apps.googleusercontent.com";

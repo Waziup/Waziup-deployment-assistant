@@ -32,7 +32,7 @@ public class EditMeasurementPresenter<V extends EditMeasurementMvpView> extends 
 
     @Override
     public void onCancelClicked() {
-
+        getMvpView().closeDialog();
     }
 
 //    @Override
