@@ -43,8 +43,6 @@ public class MapPresenter<V extends MapMvpView> extends BasePresenter<V>
 
                     getMvpView().hideLoading();
                     getMvpView().onError(CommonUtils.getErrorMessage(throwable));
-
-
                 }));
     }
 }
