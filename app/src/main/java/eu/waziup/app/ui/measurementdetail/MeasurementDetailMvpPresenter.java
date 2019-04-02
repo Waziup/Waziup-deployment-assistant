@@ -10,7 +10,5 @@ import eu.waziup.app.ui.base.MvpPresenter;
 @PerActivity
 public interface MeasurementDetailMvpPresenter<V extends MeasurementDetailMvpView> extends MvpPresenter<V> {
 
-    void onSubmitClicked();
-
     void onCancelClicked();
 }

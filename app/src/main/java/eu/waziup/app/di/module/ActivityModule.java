@@ -10,6 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 import eu.waziup.app.di.ActivityContext;
 import eu.waziup.app.di.PerActivity;
+import eu.waziup.app.ui.base.MvpPresenter;
 import eu.waziup.app.ui.login.LoginMvpPresenter;
 import eu.waziup.app.ui.login.LoginMvpView;
 import eu.waziup.app.ui.login.LoginPresenter;
@@ -19,6 +20,9 @@ import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.ui.map.MapMvpPresenter;
 import eu.waziup.app.ui.map.MapMvpView;
 import eu.waziup.app.ui.map.MapPresenter;
+import eu.waziup.app.ui.measurementdetail.MeasurementDetailMvpPresenter;
+import eu.waziup.app.ui.measurementdetail.MeasurementDetailMvpView;
+import eu.waziup.app.ui.measurementdetail.MeasurementDetailPresenter;
 import eu.waziup.app.ui.measurementedit.EditMeasurementMvpPresenter;
 import eu.waziup.app.ui.measurementedit.EditMeasurementMvpView;
 import eu.waziup.app.ui.measurementedit.EditMeasurementPresenter;
@@ -144,6 +148,13 @@ public class ActivityModule {
     @PerActivity
     EditMeasurementMvpPresenter<EditMeasurementMvpView> provideEditMeasurementPresenter(
             EditMeasurementPresenter<EditMeasurementMvpView> presenter) {
+        return presenter;
+    }
+
+    @Provides
+    @PerActivity
+    MeasurementDetailMvpPresenter<MeasurementDetailMvpView> provideMeasurementDetailPresenter(
+            MeasurementDetailPresenter<MeasurementDetailMvpView> presenter) {
         return presenter;
     }
 
