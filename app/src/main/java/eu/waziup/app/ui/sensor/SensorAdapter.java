@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,6 +175,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         if (measurementValue.getParent() != null)
                             ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
                         measurementValue.setText(measurement.getId());
+                            Log.e("-->measurement", String.valueOf(measurement.getId()));
                         measurementValue.setOnClickListener(view -> mMeasurementCallback.onItemClicked(measurement));
                         measurementContainer.addView(measurementValue);
                     }

@@ -1,9 +1,7 @@
 package eu.waziup.app.ui.sensor;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,6 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.measurementdetail.MeasurementDetailDialog;
-import eu.waziup.app.ui.measurementedit.EditMeasurementDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 
 public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback, SensorAdapter.MeasurementCallback {

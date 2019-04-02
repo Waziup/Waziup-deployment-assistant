@@ -47,7 +47,6 @@ public class MeasurementDetailDialog extends BaseDialog implements MeasurementDe
         Bundle bundle = new Bundle();
         bundle.putSerializable(MEASUREMENT_DETAIL_KEY, msrmnt);
         fragment.setArguments(bundle);
-        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -67,9 +66,10 @@ public class MeasurementDetailDialog extends BaseDialog implements MeasurementDe
         }
 
         if (getArguments() != null)
-            measurement = (Measurement) getArguments().getSerializable(MEASUREMENT_SENSOR_KEY);
+            measurement = (Measurement) getArguments().getSerializable(MEASUREMENT_DETAIL_KEY);
 
         setUp(view);
+
         return view;
     }
 
