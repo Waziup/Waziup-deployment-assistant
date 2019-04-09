@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".ui.sensor.SensorFragment">
