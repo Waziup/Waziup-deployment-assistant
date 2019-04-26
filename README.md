@@ -1,4 +1,4 @@
-# Waziup Deployment Assistance
+# Waziup Deployment Assistant
 
 ![Travis-ci](https://api.travis-ci.org/Waziup/Waziup-deployment-assistant.svg)
 
