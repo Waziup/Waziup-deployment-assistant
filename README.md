@@ -34,7 +34,7 @@ Documentation: http://www.waziup.io/documentation/api/
 5. ButterKnife: http://jakewharton.github.io/butterknife/
 
 ## Install
-### FOR RUNNING THE PROJECT FROM COMMAND LINE
+### Install from command line
 - **On Windows**:
   ```
   gradlew task-name
@@ -44,3 +44,17 @@ Documentation: http://www.waziup.io/documentation/api/
   ./gradlew task-name
   ```
 for more information on how to build and run from command line check: https://developer.android.com/studio/build/building-cmdline
+
+## Install with Docker
+
+Compile docker image:
+```
+docker build -t waziup/gradle .
+```
+You may need to delete the content of ./app/build before.
+Then compile the APK:
+```
+docker run --rm -v "$PWD":/home/gradle/MyApp waziup/gradle
+```
+Your APK can be found in ./app/build/outputs/apk
+
