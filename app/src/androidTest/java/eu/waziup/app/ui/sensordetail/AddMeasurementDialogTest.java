@@ -53,7 +53,7 @@ public class AddMeasurementDialogTest {
     public void onButtonsAndTextViewsDisplayed() throws Exception {
 
         // add measurement button
-//        onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
+        onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
         // unDeploy button
 //        onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));
         // deploy button

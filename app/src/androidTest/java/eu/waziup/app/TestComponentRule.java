@@ -7,6 +7,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import eu.waziup.app.data.DataManager;
+import eu.waziup.app.di.component.DaggerTestComponent;
 import eu.waziup.app.di.component.TestComponent;
 import eu.waziup.app.di.module.ApplicationTestModule;
 

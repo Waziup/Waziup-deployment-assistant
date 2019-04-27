@@ -59,7 +59,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         getActivityComponent().inject(this);
 
-        mPresenter.onAttach(LoginActivity.this);
 
         //check the current user
         if (mAuth.getCurrentUser() != null)
@@ -67,6 +66,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         setContentView(R.layout.activity_login);
         setUnBinder(ButterKnife.bind(this));
+
+        mPresenter.onAttach(LoginActivity.this);
 
         setUp();
 
@@ -158,6 +159,13 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
+    }
+
 
     @Override
     public void setUp() {

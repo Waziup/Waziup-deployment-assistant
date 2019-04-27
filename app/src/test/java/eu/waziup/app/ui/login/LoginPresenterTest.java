@@ -1,17 +1,19 @@
 package eu.waziup.app.ui.login;
 
+import android.util.Log;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.LoginRequest;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
@@ -31,13 +33,26 @@ public class LoginPresenterTest {
     private LoginPresenter<LoginMvpView> mLoginPresenter;
     private TestScheduler mTestScheduler;
 
+    @BeforeClass
+    public static void onlyOnce() throws Exception {
+    }
+
+
     @Before
     public void setUp() throws Exception {
+//        MockitoAnnotations.initMocks(this);
+//        CompositeDisposable compositeDisposable = new CompositeDisposable();
+//        mTestScheduler = new TestScheduler();
+//        TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(mTestScheduler);
+//        mLoginPresenter = new LoginPresenter<>(
+//                mMockDataManager,
+//                testSchedulerProvider,
+//                compositeDisposable);
+//        mLoginPresenter.onAttach(mMockLoginMvpView);
+
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         mTestScheduler = new TestScheduler();
         TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(mTestScheduler);
-
-        // presenter
         mLoginPresenter = new LoginPresenter<>(
                 mMockDataManager,
                 testSchedulerProvider,
@@ -47,13 +62,12 @@ public class LoginPresenterTest {
     }
 
     @Test
-    public void onServerLoginClick() throws Exception {
+    public void testServerLoginSuccess() {
 
         String username = "cdupont";
         String password = "password";
 
-        // todo find out more about the doReturn method and what return type it is requiring
-        doReturn(Single.just(username))
+        doReturn(Single.just(""))
                 .when(mMockDataManager)
                 .serverLogin(new LoginRequest
                         .ServerLoginRequest(username, password));

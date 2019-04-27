@@ -78,9 +78,9 @@ public class EditMeasurementDialogTest {
 
         // -- below are views displayed on NotificationDetailFragment fragment
         // unDeploy button
-        onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));            //(1)
+//        onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));            //(1)
         // deploy button
-        onView(withId(R.id.btn_deploy)).check(matches(isDisplayed()));              //(2)
+//        onView(withId(R.id.btn_deploy)).check(matches(isDisplayed()));              //(2)
         // sensor date
         onView(withId(R.id.detail_sensor_date)).check(matches(isDisplayed()));      //(3)
         // toolbar title
