@@ -105,6 +105,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        loadPage();
         communicator = (SensorCommunicator) context;
     }
 

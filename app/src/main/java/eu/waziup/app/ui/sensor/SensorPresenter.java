@@ -35,11 +35,6 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
 //        getMvpView().openLoginActivity();
     }
 
-    @Override
-    public void onAttach(V mvpView) {
-        super.onAttach(mvpView);
-        mvpView.loadPage();
-    }
 
     @Override
     public void loadSensors() {
