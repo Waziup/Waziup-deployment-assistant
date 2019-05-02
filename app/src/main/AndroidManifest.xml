@@ -21,37 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!--
-          Set custom default icon. This is used when no icon is set for incoming notification messages.
-          See README(https://goo.gl/l4GJaQ) for more.
-        -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notifications" />
-
-        <!--
-             Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more.
-        -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a3ae059b872eb46697b82725339fe0dd9527495c"
             />
 
         <service android:name="eu.waziup.app.service.SyncService" />
-
-        <!-- FIREBASE CLOUD MESSAGING - FCM - SERVICE-->
-        <service
-            android:name="eu.waziup.app.fcm.MyFirebaseMessagingService"
-            android:stopWithTask="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">

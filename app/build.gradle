@@ -59,9 +59,6 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.retrofitInterceptorVersion"
 
-    // image
-    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
-
     // parser
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
 
@@ -87,9 +84,6 @@ dependencies {
     implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxVersion"
     implementation "com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:$rootProject.mapboxLocationLayerVersion"
 
-    // logger
-    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
-
     // QR Scanner
     implementation('me.dm7.barcodescanner:zxing:1.9.8') {
         exclude group: 'com.android.support'
@@ -98,15 +92,9 @@ dependencies {
     // google play service
     implementation "com.google.android.gms:play-services-location:$rootProject.gpsVersion"
 
-    // FCM - firebase Notification management
-    implementation 'com.google.firebase:firebase-messaging:17.4.0'
-
     // Firebase - Auth
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
-    // Firebase - Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'
@@ -117,8 +105,8 @@ dependencies {
     // for handling the time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
 
-    // paging library - arch component
-    implementation 'android.arch.paging:runtime:1.0.1'
+    // Firebase - Crashlytics
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
     implementation('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
         transitive = true
     }
