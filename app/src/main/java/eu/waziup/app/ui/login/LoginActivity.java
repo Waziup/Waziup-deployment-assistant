@@ -3,7 +3,6 @@ package eu.waziup.app.ui.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
@@ -31,12 +30,10 @@ import eu.waziup.app.ui.main.MainActivity;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
+    public static final String TAG = "LoginActivity";
+    private final static int RC_SIGN_IN = 123;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthListner;
-
-    public static final String TAG = "LoginActivity";
-
-    private final static int RC_SIGN_IN = 123;
     GoogleSignInClient mGoogleSignInClient;
 
     @Inject
@@ -71,7 +68,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         setUp();
 
-
     }
 
     @Override
@@ -79,7 +75,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser); TODO HAVE TO GET THE UPDATEUI() METHOD
+//        updateUI(currentUser);// TODO HAVE TO GET THE UPDATEUI() METHOD
     }
 
 //    -->> SIGN UP NEW USERS
@@ -193,7 +189,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                if (account != null)
+                    firebaseAuthWithGoogle(account);
+                else Log.e(TAG, "GoogleSignInAccount account is NULL");
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -212,7 +210,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         FirebaseUser user = mAuth.getCurrentUser();
                         //
                         if (user != null) {// the user has already logged in
-                            if (user.getDisplayName() != null && user.getEmail() != null && user.getPhotoUrl() != null){
+                            if (user.getDisplayName() != null && user.getEmail() != null && user.getPhotoUrl() != null) {
                                 mPresenter.onSaveUserInfo(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
                                 Log.e("--->userInfo", user.getDisplayName());
                             }
