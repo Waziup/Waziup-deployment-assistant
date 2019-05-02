@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "556484818818-lmptgg0pseli19di9h4h7k4t941oifdd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "eu.waziup.app",
-            "certificate_hash": "dc2fb86895cf7f50f4764d7389a6fd2da476ab37"
-          }
-        },
-        {
           "client_id": "556484818818-klndq001r3sqbhg87n9osc3b9odbp7ti.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -36,20 +28,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "556484818818-klndq001r3sqbhg87n9osc3b9odbp7ti.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     },
@@ -83,20 +68,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "556484818818-klndq001r3sqbhg87n9osc3b9odbp7ti.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

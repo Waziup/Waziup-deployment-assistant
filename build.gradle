@@ -43,8 +43,6 @@ ext {
     // App dependencies
     supportLibraryVersion = '28.0.0'
     gsonVersion = '2.8.0'
-    calligraphyVersion = '2.2.0'
-    glideVersion = '3.7.0'
 
     // Butter Knife
     butterKnifeVersion = '9.0.0-rc1'
@@ -66,8 +64,6 @@ ext {
     mapboxLocationLayerVersion = '0.11.0'
     qrsScannerVersion = '1.9.8'
     gpsVersion = '16.0.0'
-
-    oboxVersion = '2.2.0'
 
     //Test dependencies
     junitVersion = '4.12'
