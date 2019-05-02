@@ -27,18 +27,6 @@
 
         <service android:name="eu.waziup.app.service.SyncService" />
 
-        <!-- ACTIVITY FROM THE LIBRARY FOR HANDLING THE REDIRECTING FROM THE URL PASSED-->
-        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="eu.waziup.app" />
-            </intent-filter>
-        </activity>
-
         <!--LOGIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.login.LoginActivity"
