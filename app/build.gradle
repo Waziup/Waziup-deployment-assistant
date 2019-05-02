@@ -23,6 +23,7 @@ android {
 
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "BASE_URL", "\"https://api.waziup.io/api/v1/\"")
             buildConfigField("String", "MAPBOX_TOKEN", "\"pk.eyJ1Ijoia2lkdXNtdCIsImEiOiJjam9rc2s5c2kwMmcwM3BxYmwwb3p1OTZuIn0.z2_v79Kx2QWk3PuPKyRzbA\"")
