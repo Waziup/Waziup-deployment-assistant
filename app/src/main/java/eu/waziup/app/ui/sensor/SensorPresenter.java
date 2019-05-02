@@ -1,14 +1,10 @@
 package eu.waziup.app.ui.sensor;
 
-import android.util.Log;
-
 import javax.inject.Inject;
 
-import eu.waziup.app.DaApp;
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.ui.base.BasePresenter;
 import eu.waziup.app.utils.CommonUtils;
-import eu.waziup.app.utils.ConnectivityUtil;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -19,7 +15,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
         implements SensorMvpPresenter<V> {
 
-    private static final String TAG = "QRScanPresenter";
+    private static final String TAG = "SensorPresenter";
 
     @Inject
     public SensorPresenter(DataManager dataManager,
@@ -35,10 +31,10 @@ public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
 //        getMvpView().openLoginActivity();
     }
 
-
     @Override
     public void loadSensors() {
-        if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
+//        if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
+        if (getMvpView().isNetworkConnected()) {
             getMvpView().showLoading();
             getCompositeDisposable().add(getDataManager().fetchSensors()//fetchSensors(1000, 0)
                     .subscribeOn(getSchedulerProvider().io())

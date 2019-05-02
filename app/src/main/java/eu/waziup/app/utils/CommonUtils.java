@@ -108,51 +108,6 @@ public final class CommonUtils {
         return RequestBody.create(MediaType.parse("multipart/form-data"), request);
     }
 
-//    public static String getErrorMessage(Throwable throwable) {
-//        if (throwable instanceof SocketTimeoutException) {
-//            return "Please try again.";
-//        } else if (throwable instanceof IOException) {
-//            return "Please connect to the internet.";
-//        } else if (throwable instanceof HttpException) {
-//            int code = ((HttpException) throwable).response().code();
-//            if (code >= 400 && code < 404) {
-//                return DaApp.getContext().getString(R.string.error_invalid_credential);
-//            } else if (code == 404) {
-//                return DaApp.getContext().getString(R.string.error_file_does_not_exist);
-//            } else if (code == 500) {
-//                return DaApp.getContext().getString(R.string.error_server_error);
-//            } else if (code == 503) {
-//                return DaApp.getContext().getString(R.string.error_server_unreachable);
-//            } else {
-//
-//                //todo check if this works out for all scenarios
-//                ApiError apiError = ErrorUtils.parseError(((HttpException) throwable).response());
-//                return apiError.getMessage();
-//
-////                return DaApp.getContext().getString(R.string.error_something_wrong_happend);
-////                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
-////                try {//should display the correct error message form the http protocol
-////                    if (responseBody != null) {
-////                        JSONObject jObjError = new JSONObject(responseBody.toString());
-////                        return jObjError.toString();
-////                    }
-////                } catch (JSONException e1) {
-////                    e1.printStackTrace();
-////                }
-//            }
-//        }
-//        //todo find out if this is the right way of handling this condition
-//        else {
-//            if (throwable!=null){
-//                ApiError apiError = ErrorUtils.parseError(((com.jakewharton.retrofit2.adapter.rxjava2.HttpException) throwable).response());
-//                return apiError.getMessage();
-//            }else{
-//                return null;
-//            }
-//
-//        }
-//    }
-
     public static String getErrorMessage(Throwable throwable) {
         if (throwable instanceof SocketTimeoutException) {
             return "Please try again.";

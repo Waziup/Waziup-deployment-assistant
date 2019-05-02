@@ -30,7 +30,7 @@ import eu.waziup.app.di.component.DaggerActivityComponent;
 import eu.waziup.app.di.module.ActivityModule;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.utils.CommonUtils;
-import eu.waziup.app.utils.NetworkUtils;
+import eu.waziup.app.utils.ConnectivityUtil;
 
 import static android.content.pm.PackageManager.GET_META_DATA;
 
@@ -55,7 +55,6 @@ public abstract class BaseActivity extends AppCompatActivity
                 .activityModule(new ActivityModule(this))
                 .applicationComponent(((DaApp) getApplication()).getComponent())
                 .build();
-        Log.d(TAG, "onCreate");
         resetTitles();
     }
 
@@ -86,7 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(LocaleManager.setLocale(newBase));//.wrap(newBase));
         super.attachBaseContext(newBase);
         Log.d(TAG, "attachBaseContext");
     }
@@ -157,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public boolean isNetworkConnected() {
-        return NetworkUtils.isNetworkConnected(getApplicationContext());
+        return ConnectivityUtil.isConnected(getApplicationContext());
     }
 
     @Override
