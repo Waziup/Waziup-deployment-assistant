@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
 import com.github.thunder413.datetimeutils.DateTimeUtils;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
@@ -230,11 +229,11 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
     @Override
-    public void openMapFragment(LatLng latLng) {
+    public void openMapFragment() {
         if (getBaseActivity() != null)
             getBaseActivity().getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.flContent, MapFragment.newInstance(latLng), MapFragment.TAG)
+                    .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
                     .commit();
 
 //        getSupportFragmentManager()

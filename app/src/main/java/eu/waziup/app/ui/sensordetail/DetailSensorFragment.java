@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
 import com.github.thunder413.datetimeutils.DateTimeUtils;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
@@ -127,8 +126,8 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
         // map button on clickListener
         btnSensorLocation.setOnClickListener(view1 -> {
-            if (mSensor != null && mSensor.getLocation() != null)
-                openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
+//            if (mSensor != null && mSensor.getLocation() != null)
+//                openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
         });
 
         return view;
@@ -164,8 +163,8 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 
     @OnClick(R.id.btn_locate_on_map)
     void onLocateOnMapClicked() {
-        if (mSensor != null && mSensor.getLocation() != null)
-            openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
+//        if (mSensor != null && mSensor.getLocation() != null)
+//            openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
     }
 
     private void setUpRecyclerView() {
@@ -258,12 +257,12 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     }
 
     @Override
-    public void openMapFragment(LatLng latLng) {
+    public void openMapFragment() {
         if (getBaseActivity() != null){
-            getBaseActivity().getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.cl_root_view, MapFragment.newInstance(latLng), MapFragment.TAG)
-                    .commit();
+//            getBaseActivity().getSupportFragmentManager().beginTransaction()
+//                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                    .replace(R.id.cl_root_view, MapFragment.newInstance(latLng), MapFragment.TAG)
+//                    .commit();
         }
     }
 

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -81,10 +80,6 @@ dependencies {
     // date formatter
     implementation "com.github.thunder413:DateTimeUtils:$rootProject.dateVersion"
 
-    // MapBox
-    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxVersion"
-    implementation "com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:$rootProject.mapboxLocationLayerVersion"
-
     // QR Scanner
     implementation('me.dm7.barcodescanner:zxing:1.9.8') {
         exclude group: 'com.android.support'
@@ -106,12 +101,6 @@ dependencies {
 
     // for handling the time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
-
-    // Firebase - Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
-    implementation('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
-        transitive = true
-    }
 
     // UI Testing
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {

@@ -12,7 +12,6 @@ import eu.waziup.app.DaApp;
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.di.component.DaggerServiceComponent;
 import eu.waziup.app.di.component.ServiceComponent;
-import eu.waziup.app.utils.AppLogger;
 
 
 public class SyncService extends Service {
@@ -46,13 +45,11 @@ public class SyncService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        AppLogger.d(TAG, "SyncService started");
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        AppLogger.d(TAG, "SyncService stopped");
         super.onDestroy();
     }
 

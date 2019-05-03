@@ -28,13 +28,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
@@ -61,7 +59,6 @@ import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -107,9 +104,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         mHandler = new Handler();
@@ -364,64 +359,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
                     unlockDrawer();
 
-//                    if (TextUtils.equals(parent, MapFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
-//                                .commit();
-//                    } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-//                                .commit();
-//                    }
                 }
         }
 
-//        if (getSupportFragmentManager().getFragments().size() > 1) {
-//            Log.e("---->backPressed", "> 1");
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//
-//            // this is like popping out the top fragment on the fragment stack list
-//
-//            }
-//
-//            unlockDrawer();
-//        } else {
-//
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//            if (fragment != null) {
-//                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
-//            }
-//
-////            Log.e("---->backPressed", "<= 1");
-////            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
-////            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
-////            if(f instanceof SensorFragment){
-//
-//            if (getSupportFragmentManager().getFragments().size() <= 1) {
-////                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
-//                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
-//
-//                }
-//            } else {
-//                Log.e("---->backPressed", "else");
-//                // if the opened fragment is beside the sensorFragment which is the home fragment
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-//                        .commit();
-//            }
-//        }
-        // todo check for the significance of this statement
     }
 
     @Override
