@@ -92,9 +92,6 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.icon_sensor_owner)
         ImageView ownerIcon;
 
-        @BindView(R.id.sensor_measurements_title)
-        TextView measurementsTitle;
-
         Sensor sensor;
 
         public SensorViewHolder(View view) {
@@ -129,19 +126,17 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     mSensorOwner.setVisibility(View.VISIBLE);
                     mSensorOwner.setText(String.valueOf(sensor.getOwner()));
                 } else {
-                    ownerIcon.setVisibility(View.GONE);
-                    mSensorOwner.setVisibility(View.GONE);
+//                    ownerIcon.setVisibility(View.GONE);
+//                    mSensorOwner.setVisibility(View.GONE);
+                    ownerIcon.setVisibility(View.VISIBLE);
+                    mSensorOwner.setVisibility(View.VISIBLE);
+                    mSensorOwner.setText("Guest user");
+
                 }
 
                 measurementContainer.removeAllViews();
 
                 if (sensor.getMeasurements() != null) {
-
-                    if (sensor.getMeasurements().size() > 0) {
-                        measurementsTitle.setVisibility(View.VISIBLE);
-                    } else {
-                        measurementsTitle.setVisibility(View.GONE);
-                    }
 
                     for (Measurement measurement : sensor.getMeasurements()) {
                         TextView measurementValue = new TextView(itemView.getContext());

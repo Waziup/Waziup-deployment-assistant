@@ -108,20 +108,11 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/sensor_measurements_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/roboto_light"
-            android:maxLines="1"
-            android:text="Measurements"
-            android:textSize="14sp" />
-
         <HorizontalScrollView
             android:id="@+id/h_scroll_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/horizontal_margin_8">
 
             <LinearLayout
                 android:id="@+id/measurement_container"
