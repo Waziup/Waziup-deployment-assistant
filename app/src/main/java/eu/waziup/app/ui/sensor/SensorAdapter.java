@@ -86,9 +86,6 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.sensor_owner)
         TextView mSensorOwner;
 
-        @BindView(R.id.sensor_domain)
-        TextView mSensorDomain;
-
         @BindView(R.id.measurement_container)
         LinearLayout measurementContainer;
 
@@ -134,14 +131,6 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 } else {
                     ownerIcon.setVisibility(View.GONE);
                     mSensorOwner.setVisibility(View.GONE);
-                }
-
-                // domain
-                if (!TextUtils.isEmpty(sensor.getDomain())) {
-                    mSensorDomain.setVisibility(View.VISIBLE);
-                    mSensorDomain.setText(String.valueOf(sensor.getDomain()));
-                } else {
-                    mSensorDomain.setVisibility(View.GONE);
                 }
 
                 measurementContainer.removeAllViews();
@@ -191,7 +180,6 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         protected void clear() {
             mSensorId.setText("");
-            mSensorDomain.setText("");
             mSensorOwner.setText("");
             mSensorDate.setText("");
         }
