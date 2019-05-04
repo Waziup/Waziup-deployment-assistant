@@ -109,7 +109,7 @@
             android:id="@+id/h_scroll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/horizontal_margin_8">
+            android:layout_marginTop="@dimen/vertical_margin_4">
 
             <LinearLayout
                 android:id="@+id/measurement_container"
