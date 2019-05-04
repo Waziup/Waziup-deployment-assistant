@@ -110,7 +110,6 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 // id
                 mSensorId.setText((TextUtils.isEmpty(sensor.getId())) ? sensor.getName() : sensor.getId());
 
-                // TODO check visibility first for every view before setting visibility
                 // date
                 if (!TextUtils.isEmpty(sensor.getDateCreated())) {
                     mSensorDate.setVisibility(View.VISIBLE);
@@ -159,13 +158,10 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                         if (measurementValue.getParent() != null)
                             ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
                         measurementValue.setText(measurement.getId());
-                            Log.e("-->measurement", String.valueOf(measurement.getId()));
                         measurementValue.setOnClickListener(view -> mMeasurementCallback.onItemClicked(measurement));
                         measurementContainer.addView(measurementValue);
                     }
                 }
-            } else {
-                // todo find a better way of handling this condition
             }
 
             itemView.setOnClickListener(v -> mCallback.onItemClicked(sensors.get(getAdapterPosition())));

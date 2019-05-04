@@ -45,7 +45,6 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/roboto_light"
                 android:maxLines="1"
-                android:text="Jun 12, 2018"
                 android:textAlignment="textEnd"
                 android:textColor="@color/semi_gray"
                 android:textSize="14sp" />
