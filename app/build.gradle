@@ -37,12 +37,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2' //core
-    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2' //intent
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     // android support libraries
     implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -129,10 +123,18 @@ dependencies {
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
 
     // UI Testing
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
     androidTestImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    // excluding the library content for decreasing the size
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2' , {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })//core
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2' //intent
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
 }
 
