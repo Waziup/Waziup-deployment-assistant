@@ -4,21 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationService;
@@ -29,12 +14,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
+import eu.waziup.app.utils.AuthStateManager;
+import eu.waziup.app.utils.Configuration;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
@@ -44,16 +29,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     private final AtomicReference<String> mClientId = new AtomicReference<>();
     private final AtomicReference<AuthorizationRequest> mAuthRequest = new AtomicReference<>();
     private final AtomicReference<CustomTabsIntent> mAuthIntent = new AtomicReference<>();
+
+    @Inject
+    LoginMvpPresenter<LoginMvpView> mPresenter;
+
     private AuthorizationService mAuthService;
     private AuthStateManager mAuthStateManager;
     private Configuration mConfiguration;
     private CountDownLatch mAuthIntentLatch = new CountDownLatch(1);
     private ExecutorService mExecutor;
-
     private boolean mUsePendingIntents;
-
-    @Inject
-    LoginMvpPresenter<LoginMvpView> mPresenter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LoginActivity.class);
