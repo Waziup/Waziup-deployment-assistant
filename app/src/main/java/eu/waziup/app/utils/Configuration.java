@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 
+import eu.waziup.app.R;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.Okio;
