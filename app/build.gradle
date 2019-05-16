@@ -13,6 +13,12 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+
+        // Make sure this is consistent with the redirect URI used in res/raw/auth_config.json,
+        // or specify additional redirect URIs in AndroidManifest.xml
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'net.openid.appauthdemo'
+        ]
     }
     buildTypes {
         debug {
@@ -97,7 +103,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // keyCloak - AppAuth
-    implementation 'net.openid:appauth:0.7.1'
+    implementation 'net.openid:appauth:0.2.0'
 
     // for handling the time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'

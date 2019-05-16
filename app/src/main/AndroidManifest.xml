@@ -37,21 +37,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- this is for OAuth 2.0 authentication schema-->
-            <intent-filter>
-                <action android:name="com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
 
         <!--MAIN ACTIVITY-->
         <activity
             android:name="eu.waziup.app.ui.main.MainActivity"
-            android:theme="@style/AppTheme.no_toolbar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.no_toolbar"/>
 
         <!--SCANNER ACTIVITY-->
         <activity
