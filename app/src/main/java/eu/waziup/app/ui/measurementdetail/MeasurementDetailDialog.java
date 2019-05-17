@@ -106,7 +106,8 @@ public class MeasurementDetailDialog extends BaseDialog implements MeasurementDe
             // for the value
             if (measurement.getLastValue() != null && !TextUtils.isEmpty(measurement.getLastValue().getValue())) {
                 mMeasurementValue.setVisibility(View.VISIBLE);
-                mMeasurementValue.setText(measurement.getLastValue().getValue());
+                mMeasurementValue.setText(String.format("%s %s", measurement.getLastValue().getValue(),
+                        String.valueOf(measurement.getQuantityKind())));
             } else {
                 mMeasurementValue.setText(R.string.dialog_no_record);
             }
