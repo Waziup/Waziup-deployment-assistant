@@ -133,7 +133,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListner);
+//        mAuth.addAuthStateListener(mAuthListner);
     }
 
     // TODO all those things should be done when the user _icks logout button

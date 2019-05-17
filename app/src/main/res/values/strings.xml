@@ -42,9 +42,9 @@
     <string name="no_measurements_list_found">No measurements list found.</string>
     <string name="cancel">CANCEL</string>
     <string name="submit">SUBMIT</string>
-    <string name="edit_measurement">Edit Measurement</string>
-    <string name="dialog_add_measurement">Add Measurement</string>
-    <string name="add_sensor_node">Add Sensor Node</string>
+    <string name="edit_measurement">Edit Sensor</string>
+    <string name="dialog_add_measurement">Add Sensor</string>
+    <string name="add_sensor_node">Add device</string>
 
     <string-array name="visibility_options">
         <item>Public</item>
@@ -87,7 +87,7 @@
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
-    <string name="scan_sensor">Scan sensor</string>
+    <string name="scan_sensor">Scan device</string>
     <string name="login">login</string>
     <string name="dialog_no_record">no record</string>
     <string name="retry">Retry</string>
