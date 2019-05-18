@@ -27,22 +27,14 @@
 
         <service android:name="eu.waziup.app.service.SyncService" />
 
-        <!--LOGIN ACTIVITY-->
-        <activity
-            android:name="eu.waziup.app.ui.login.LoginActivity"
-            android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.no_toolbar"
-            android:windowSoftInputMode="stateHidden">
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="com.google.codelabs.appauth"/>
+            </intent-filter>
         </activity>
-
-        <!--<activity android:name="net.openid.appauth.RedirectUriReceiverActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<category android:name="android.intent.category.BROWSABLE"/>-->
-                <!--<data android:scheme="com.google.codelabs.appauth"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
 
         <!--MAIN ACTIVITY-->
         <activity

@@ -1,14 +1,17 @@
 package eu.waziup.app.ui.main;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -38,9 +41,11 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
-
-import java.util.List;
-import java.util.Objects;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationResponse;
+import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceConfiguration;
 
 import javax.inject.Inject;
 
@@ -50,7 +55,6 @@ import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
-import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.custom.RoundedImageView;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
@@ -65,39 +69,33 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
+    public static final String TAG = MainActivity.class.getSimpleName();
+    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
+    private static final String AUTH_STATE = "AUTH_STATE";
+    public static String CURRENT_TAG = SensorFragment.TAG;
+    private static final String USED_INTENT = "USED_INTENT";
+    private static final String LOGIN_HINT = "login_hint";
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
-
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
-
     @BindView(R.id.drawer_view)
     DrawerLayout mDrawer;
-
     @BindView(R.id.flContent)
     FrameLayout frameLayout;
-
     @BindView(R.id.navigation_view)
     NavigationView nvDrawer;
-
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
-
+    AuthState mAuthState;
+    FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListner;
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
     private TextView mEmailTextView;
-
     private ActionBarDrawerToggle mDrawerToggle;
-
-    public static String CURRENT_TAG = SensorFragment.TAG;
     private Handler mHandler;
-
-    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
-    private static final String AUTH_STATE = "AUTH_STATE";
-    AuthState mAuthState;
-
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListner;
     private GoogleSignInClient mGoogleSignInClient;
 
     public static Intent getStartIntent(Context context) {
@@ -128,12 +126,43 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
+
+
+        handleAuthorization();
+    }
+
+    public void handleAuthorization(){
+
+        AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
+                Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/auth") /* auth endpoint */,
+                Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token") /* token endpoint */
+        );
+
+        String clientId = "dashboard";
+        Uri redirectUri = Uri.parse("net.openid.appauthdemo:/oauth2redirect");
+        AuthorizationRequest.Builder builder = new AuthorizationRequest.Builder(
+                serviceConfiguration,
+                clientId,
+                AuthorizationRequest.RESPONSE_TYPE_CODE,
+                redirectUri
+        );
+
+        builder.setScopes("openid email profile");
+        AuthorizationRequest request = builder.build();
+
+        AuthorizationService authorizationService = new AuthorizationService(this);
+
+        String action = "com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE";
+        Intent postAuthorizationIntent = new Intent(action);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, request.hashCode(),
+                postAuthorizationIntent, 0);
+        authorizationService.performAuthorizationRequest(request, pendingIntent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        mAuth.addAuthStateListener(mAuthListner);
+        mAuth.addAuthStateListener(mAuthListner);
     }
 
     // TODO all those things should be done when the user _icks logout button
@@ -149,26 +178,21 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .apply();
     }
 
-    // todo check this out later - has it been implemented right ?
-    public static class SignOutListener implements Button.OnClickListener {
-
-        private final MainActivity mLoginActivity;
-
-        public SignOutListener(@NonNull MainActivity mainActivity) {
-            mLoginActivity = mainActivity;
-        }
-
-        @Override
-        public void onClick(View view) {
-            mLoginActivity.mAuthState = null;
-            mLoginActivity.clearAuthState();
-//            mLoginActivity.enablePostAuthorizationFlows();
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        checkIntent(getIntent());
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetach();
+        super.onDestroy();
     }
 
     @Override
@@ -362,7 +386,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .remove(fragment)
                         .commitNow();
 
-                    unlockDrawer();
+                unlockDrawer();
 
 //                    if (TextUtils.equals(parent, MapFragment.TAG)) {
 //                        getSupportFragmentManager()
@@ -377,7 +401,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
 //                                .commit();
 //                    }
-                }
+            }
         }
 
 //        if (getSupportFragmentManager().getFragments().size() > 1) {
@@ -597,4 +621,74 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     public void onMarkerClicked(Sensor sensor, String parentFragment) {
         openSensorDetailFragment(sensor, parentFragment);
     }
+
+    public void handleAuthorizationResponse(Intent intent) {
+        AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
+        AuthorizationException error = AuthorizationException.fromIntent(intent);
+        final AuthState authState = new AuthState(response, error);
+
+        if (response != null) {
+            Log.i(TAG, String.format("Handled Authorization Response %s ", authState.toJsonString()));
+            AuthorizationService service = new AuthorizationService(this);
+            service.performTokenRequest(response.createTokenExchangeRequest(), (tokenResponse, exception) -> {
+                if (exception != null) {
+                    Log.w(TAG, "Token Exchange failed", exception);
+                } else {
+                    if (tokenResponse != null) {
+                        authState.update(tokenResponse, exception);
+                        persistAuthState(authState);
+                        Log.i(TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
+                    }
+                }
+            });
+        }
+    }
+
+    private void persistAuthState(@NonNull AuthState authState) {
+        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).edit()
+                .putString(AUTH_STATE, authState.toJsonString())
+                .apply();
+//        enablePostAuthorizationFlows();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        checkIntent(intent);
+    }
+
+    private void checkIntent(@Nullable Intent intent) {
+        if (intent != null) {
+            String action = intent.getAction();
+            if (action != null)
+                switch (action) {
+                    case "com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE":
+                        if (!intent.hasExtra(USED_INTENT)) {
+                            Log.e(TAG, "---->handleAuthorizationResponse");
+                            handleAuthorizationResponse(intent);
+                            intent.putExtra(USED_INTENT, true);
+                        }
+                        break;
+                    default:
+                        // do nothing
+                }
+        }
+    }
+
+    // todo check this out later - has it been implemented right ?
+    public static class SignOutListener implements Button.OnClickListener {
+
+        private final MainActivity mLoginActivity;
+
+        public SignOutListener(@NonNull MainActivity mainActivity) {
+            mLoginActivity = mainActivity;
+        }
+
+        @Override
+        public void onClick(View view) {
+            mLoginActivity.mAuthState = null;
+            mLoginActivity.clearAuthState();
+//            mLoginActivity.enablePostAuthorizationFlows();
+        }
+    }
+
 }

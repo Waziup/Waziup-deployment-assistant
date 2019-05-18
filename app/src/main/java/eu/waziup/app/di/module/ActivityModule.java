@@ -10,10 +10,6 @@ import dagger.Module;
 import dagger.Provides;
 import eu.waziup.app.di.ActivityContext;
 import eu.waziup.app.di.PerActivity;
-import eu.waziup.app.ui.base.MvpPresenter;
-import eu.waziup.app.ui.login.LoginMvpPresenter;
-import eu.waziup.app.ui.login.LoginMvpView;
-import eu.waziup.app.ui.login.LoginPresenter;
 import eu.waziup.app.ui.main.MainMvpPresenter;
 import eu.waziup.app.ui.main.MainMvpView;
 import eu.waziup.app.ui.main.MainPresenter;
@@ -79,13 +75,6 @@ public class ActivityModule {
     @Provides
     SchedulerProvider provideSchedulerProvider() {
         return new AppSchedulerProvider();
-    }
-
-    @Provides
-    @PerActivity
-    LoginMvpPresenter<LoginMvpView> provideLoginPresenter(
-            LoginPresenter<LoginMvpView> presenter) {
-        return presenter;
     }
 
     @Provides
