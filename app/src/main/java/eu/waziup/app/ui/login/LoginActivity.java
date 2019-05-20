@@ -39,7 +39,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         getActivityComponent().inject(this);
 
-
         //check the current user
 //        if (mAuth.getCurrentUser() != null)
         openSensorActivity();
