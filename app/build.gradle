@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -91,14 +89,6 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    // google play service
-    implementation "com.google.android.gms:play-services-location:$rootProject.gpsVersion"
-
-    // Firebase - Auth
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-auth:16.1.0'
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
     // allowing multi-dex for api < 20
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -107,12 +97,6 @@ dependencies {
 
     // for handling the time
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
-
-    // Firebase - Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
-    implementation('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
-        transitive = true
-    }
 
     // UI Testing
     androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {
