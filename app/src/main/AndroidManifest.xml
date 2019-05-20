@@ -21,10 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="a3ae059b872eb46697b82725339fe0dd9527495c" />
-
         <service android:name="eu.waziup.app.service.SyncService" />
 
         <!--LOGIN ACTIVITY-->
@@ -58,12 +54,6 @@
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
 
-        <!--
-           for the authorization and authentication from google
-       -->
-        <meta-data
-            android:name="android.content.APP_RESTRICTIONS"
-            android:resource="@xml/app_restrictions" />
     </application>
 
 </manifest>
