@@ -50,7 +50,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
                     if (!isViewAttached()) {
                         return;
                     }
-                    getDataManager().updateUserInfo( s, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
+                    getDataManager().updateUserInfo(s, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
                     getMvpView().openSensorActivity();
                     // todo this part should be removed later when fixed on the api side
                     getDataManager().setCurrentUserName("Corentin Dupont");
@@ -90,9 +90,7 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
 
     public void onDecideNextActivity() {
         if (getDataManager().getCurrentUserLoggedInMode()
-                == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {
-           return;
-        } else {
+                != DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {
             getMvpView().openSensorActivity();
         }
     }

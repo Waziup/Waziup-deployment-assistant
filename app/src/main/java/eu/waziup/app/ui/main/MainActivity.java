@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
 //                            mAuth.signOut();
                             mPresenter.onLogOutClicked();
-
+                            Log.e("--->logut", "clicked");
                             // Google revoke access && singOut -> This is best practice. Though not required
 //                            mGoogleSignInClient.revokeAccess();
 //                            mGoogleSignInClient.signOut();
@@ -277,78 +277,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     .show();
         } else {
             if (fragment != null) {
-                Log.e("---->backPressed", "fragment != null");
-                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
                 getSupportFragmentManager()
                         .beginTransaction()
                         .remove(fragment)
                         .commitNow();
 
                 unlockDrawer();
-
-//                    if (TextUtils.equals(parent, MapFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
-//                                .commit();
-//                    } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-//                                .commit();
-//                    }
             }
         }
-
-//        if (getSupportFragmentManager().getFragments().size() > 1) {
-//            Log.e("---->backPressed", "> 1");
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//
-//            // this is like popping out the top fragment on the fragment stack list
-//
-//            }
-//
-//            unlockDrawer();
-//        } else {
-//
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//            if (fragment != null) {
-//                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
-//            }
-//
-////            Log.e("---->backPressed", "<= 1");
-////            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
-////            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
-////            if(f instanceof SensorFragment){
-//
-//            if (getSupportFragmentManager().getFragments().size() <= 1) {
-////                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
-//                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
-//
-//                }
-//            } else {
-//                Log.e("---->backPressed", "else");
-//                // if the opened fragment is beside the sensorFragment which is the home fragment
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
-//                        .commit();
-//            }
-//        }
-        // todo check for the significance of this statement
     }
 
     @Override
     public void onFragmentDetached(String tag, String parent) {
-        Log.e("--->", "onFragmentDetached");
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
@@ -375,9 +315,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     private void loadNavHeader() {
-//        mNameTextView.setText("Corentin Dupont");
-//        mEmailTextView.setText("test@gmail.com");
-
         // showing dot next to notifications label
         nvDrawer.getMenu().getItem(1).setActionView(R.layout.menu_dot);
     }

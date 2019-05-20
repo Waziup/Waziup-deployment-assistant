@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         //check the current user
 //        if (mAuth.getCurrentUser() != null)
-        openSensorActivity();
+//        openSensorActivity();
 
         setContentView(R.layout.activity_login);
         setUnBinder(ButterKnife.bind(this));

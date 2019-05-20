@@ -30,13 +30,9 @@
             android:theme="@style/AppTheme.no_toolbar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <!-- this is for OAuth 2.0 authentication schema-->
-            <intent-filter>
-                <action android:name="com.google.codelabs.appauth.HANDLE_AUTHORIZATION_RESPONSE" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
