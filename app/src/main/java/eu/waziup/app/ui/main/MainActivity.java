@@ -30,8 +30,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
 
-import net.openid.appauth.AuthState;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -68,7 +66,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     NavigationView nvDrawer;
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
-    AuthState mAuthState;
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
     private TextView mEmailTextView;
