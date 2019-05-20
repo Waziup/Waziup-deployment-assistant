@@ -21,14 +21,13 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import butterknife.Unbinder;
 import eu.waziup.app.DaApp;
 import eu.waziup.app.R;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.di.component.DaggerActivityComponent;
 import eu.waziup.app.di.module.ActivityModule;
-import eu.waziup.app.ui.login.LoginActivity;
+import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.ConnectivityUtil;
 
@@ -38,13 +37,10 @@ import static android.content.pm.PackageManager.GET_META_DATA;
 public abstract class BaseActivity extends AppCompatActivity
         implements MvpView, BaseFragment.Callback {
 
-    private ProgressDialog mProgressDialog;
-
-    private ActivityComponent mActivityComponent;
-
-    private Unbinder mUnBinder;
-
     private static final String TAG = "BaseActivity";
+    private ProgressDialog mProgressDialog;
+    private ActivityComponent mActivityComponent;
+    private Unbinder mUnBinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -181,7 +177,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void openActivityOnTokenExpire() {
-        startActivity(LoginActivity.getStartIntent(this));
+        startActivity(MainActivity.getStartIntent(this));
         finish();
     }
 

@@ -56,7 +56,6 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
-import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
@@ -72,10 +71,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     private static final String AUTH_STATE = "AUTH_STATE";
-    public static String CURRENT_TAG = SensorFragment.TAG;
     private static final String USED_INTENT = "USED_INTENT";
     private static final String LOGIN_HINT = "login_hint";
-
+    public static String CURRENT_TAG = SensorFragment.TAG;
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
     @BindView(R.id.main_toolbar)
@@ -131,7 +129,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         handleAuthorization();
     }
 
-    public void handleAuthorization(){
+    public void handleAuthorization() {
 
         AuthorizationServiceConfiguration serviceConfiguration = new AuthorizationServiceConfiguration(
                 Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/auth") /* auth endpoint */,
@@ -157,7 +155,37 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         PendingIntent pendingIntent = PendingIntent.getActivity(this, request.hashCode(),
                 postAuthorizationIntent, 0);
         authorizationService.performAuthorizationRequest(request, pendingIntent);
+
+//        mAuthService.performAuthorizationRequest(
+//                mAuthRequest.get(),
+//                PendingIntent.getActivity(this, 0, completionIntent, 0),
+//                PendingIntent.getActivity(this, 0, cancelIntent, 0),
+//                mAuthIntent.get());
     }
+
+//    private void doAuth() {
+//
+//        AuthorizationService authorizationService = new AuthorizationService(this);
+//
+//        try {
+//            mAuthIntentLatch.await();
+//        } catch (InterruptedException ex) {
+//            Log.w(TAG, "Interrupted while waiting for auth intent");
+//        }
+//
+//        Log.e("=====>", "doAuth");
+//        Intent completionIntent = new Intent(this, TokenActivity.class);
+//        Intent cancelIntent = new Intent(this, LoginActivity.class);
+//        cancelIntent.putExtra(EXTRA_FAILED, true);
+//        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        authorizationService.performAuthorizationRequest(
+//                mAuthRequest.get(),
+//                PendingIntent.getActivity(this, 0, completionIntent, 0),
+//                PendingIntent.getActivity(this, 0, cancelIntent, 0),
+//                mAuthIntent.get());
+//
+//    }
 
     @Override
     protected void onStart() {
@@ -165,7 +193,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mAuth.addAuthStateListener(mAuthListner);
     }
 
-    // TODO all those things should be done when the user _icks logout button
+    // TODO all those things should be done when the user _clicks logout button
 //    mMainActivity.mAuthState =null;
 //    mMainActivity.clearAuthState();
 //    mMainActivity.enablePostAuthorizationFlows();
@@ -505,8 +533,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void openLoginActivity() {
-        startActivity(LoginActivity.getStartIntent(MainActivity.this));
-        finish();
+//        startActivity(LoginActivity.getStartIntent(MainActivity.this));
+//        finish();
     }
 
     @Override
