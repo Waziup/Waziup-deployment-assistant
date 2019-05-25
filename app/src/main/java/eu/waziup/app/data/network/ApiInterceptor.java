@@ -1,5 +1,8 @@
 package eu.waziup.app.data.network;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -26,7 +29,7 @@ public class ApiInterceptor implements Interceptor {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         final Request request = chain.request();
         final Request.Builder builder = request.newBuilder();
         String apiAuthType = request.header(ApiHeader.API_AUTH_TYPE);
@@ -37,10 +40,9 @@ public class ApiInterceptor implements Interceptor {
         switch (apiAuthType) {
             case ApiHeader.PROTECTED_API:
                 builder.addHeader(ApiHeader.HEADER_PARAM_ACCESS_TOKEN, mApiHeader.getAccessToken());
-//                builder.addHeader(ApiHeader.HEADER_PARAM_USER_ID, String.valueOf(mApiHeader.getUserId()));
+                break;
             case ApiHeader.PUBLIC_API:
-//            default:
-//                builder.addHeader(ApiHeader.HEADER_PARAM_API_KEY, mApiHeader.getApiKey());
+                break;
         }
 
         return chain.proceed(builder.build());
