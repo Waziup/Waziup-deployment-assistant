@@ -88,6 +88,12 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         getDataManager().updateUserInfo(s, DataManager.LoggedInMode.LOGGED_IN_MODE_SERVER);
     }
 
+    @Override
+    public void updateToken(String token) {
+        getDataManager().updateUserToken(token);
+        getDataManager().updateApiHeader(token);
+    }
+
     public void onDecideNextActivity() {
         if (getDataManager().getCurrentUserLoggedInMode()
                 != DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {

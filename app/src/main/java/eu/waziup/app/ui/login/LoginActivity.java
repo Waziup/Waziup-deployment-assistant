@@ -184,6 +184,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     PendingIntent.getActivity(this, 0, cancelIntent, 0),
                     mAuthIntent.get());
 
+
 //            Intent intent = mAuthService.getAuthorizationRequestIntent(
 //                mAuthRequest.get(),
 //                mAuthIntent.get());

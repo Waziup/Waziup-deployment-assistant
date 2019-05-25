@@ -20,4 +20,6 @@ public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<
     void onSavePicture(String pic);
 
     void updateUserInfo(String s, DataManager.LoggedInMode mode);
+
+    void updateToken(String token);
 }
