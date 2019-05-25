@@ -100,9 +100,5 @@ public interface ApiCall {
             return retrofit.create(ApiCall.class);
 
         }
-
-        public static Retrofit retrofit() {
-            return retrofit;
-        }
     }
 }
