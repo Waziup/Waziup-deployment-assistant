@@ -29,8 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
@@ -70,7 +68,6 @@ import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -99,7 +96,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     private TextView mEmailTextView;
     private ActionBarDrawerToggle mDrawerToggle;
     private Handler mHandler;
-    private GoogleSignInClient mGoogleSignInClient;
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
     private Configuration mConfiguration;
@@ -114,15 +110,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
-        Fabric.with(this, new Crashlytics());
 
         Log.e(TAG, "---> mainActivity");
 
         mStateManager = AuthStateManager.getInstance(this);
         mConfiguration = Configuration.getInstance(this);
 
+        Configuration config = Configuration.getInstance(this);
         mAuthService = new AuthorizationService(this, new AppAuthConfiguration.Builder()
-                .setConnectionBuilder(mConfiguration.getConnectionBuilder())
+                .setConnectionBuilder(config.getConnectionBuilder())
                 .build());
 
         setContentView(R.layout.activity_main);
@@ -182,8 +178,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mStateManager.updateAfterAuthorization(response, ex);
             exchangeAuthorizationCode(response);
         } else if (ex != null) {
+            signOut();
 //            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
         } else {
+            signOut();
 //            displayNotAuthorized("No authorization state retained - reauthorization required");
         }
 
@@ -219,9 +217,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             //noinspection WrongThread
             // todo handle this
             Log.e(TAG, message);
-//            runOnUiThread(() -> displayNotAuthorized(message));
+
+            runOnUiThread(this::signOut);
         } else {
             // todo handle this
+            runOnUiThread(this::fetchUserInfo);
 //            runOnUiThread(this::displayAuthorized);
         }
     }
@@ -235,7 +235,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @MainThread
     private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
 
-        Log.e(TAG, String.format("token--> %s", idToken));
+        Log.e(TAG, String.format("token-idToken-> %s", idToken));
+        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
         if (ex != null) {
             Log.e(TAG, "Token refresh failed when fetching user info");
             mUserInfoJson.set(null);
@@ -283,16 +284,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //        });
     }
 
-    // TODO all those things should be done when the user clicks logout button
-
-    //    SHOULD BE CALLED WHEN THE USER CLICK LOGOUT BUTTON SO HE CAN CLEAR THE STATE
-    private void clearAuthState() {
-        getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                .edit()
-                .remove(AUTH_STATE)
-                .apply();
-    }
-
     @MainThread
     private void signOut() {
         // discard the authorization and token state, but retain the configuration and
@@ -306,7 +297,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mStateManager.replace(clearedState);
 
         Intent mainIntent = new Intent(this, LoginActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
     }
@@ -394,8 +385,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 builder.setMessage(R.string.are_you_sure_you_want_to_logout)
                         .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
 
-                            signOut();
                             mPresenter.onLogOutClicked();
+                            signOut();
 
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
@@ -669,7 +660,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAuthService.dispose();
+        if (mAuthService != null) {
+            mAuthService.dispose();
+        }
     }
 
     @Override

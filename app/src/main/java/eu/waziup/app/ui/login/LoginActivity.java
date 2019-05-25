@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -29,6 +30,7 @@ import eu.waziup.app.R;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.utils.AuthStateManager;
+import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
@@ -70,7 +72,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             return;
         }
 
-        setContentView(R.layout.activity_login);
+
+        configureBrowserSelector();
+
+        initializeAppAuth();
+
+//        setContentView(R.layout.activity_login);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
 
@@ -111,10 +118,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     public void setUp() {
 
-        configureBrowserSelector();
-
-        initializeAppAuth();
-
     }
 
     private void configureBrowserSelector() {
@@ -138,12 +141,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
             mAuthStateManager.replace(new AuthState(config));
 //            -----------------------------------------------------------------------------------
-//            initializeClient();
             Log.e(TAG, "Using static client ID: " + mConfiguration.getClientId());
             // use a statically configured client ID
             mClientId.set(mConfiguration.getClientId());
 
-//            createAuthRequest();
             AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
                     mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
                     mClientId.get(),
@@ -152,7 +153,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     .setScope(mConfiguration.getScope());
 
             mAuthRequest.set(authRequestBuilder.build());
-//            warmUpBrowser();
+
             Log.e(TAG, "Warming up browser instance for auth request");
             Log.e(TAG, "mAuthRequest " + String.valueOf(mAuthRequest.get().toUri()));
             CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
@@ -176,12 +177,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             cancelIntent.putExtra(EXTRA_FAILED, true);
             cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+            Log.e(TAG, "====> doAuth  =====>");
             mAuthService.performAuthorizationRequest(
                     mAuthRequest.get(),
                     PendingIntent.getActivity(this, 0, completionIntent, 0),
                     PendingIntent.getActivity(this, 0, cancelIntent, 0),
                     mAuthIntent.get());
-
 
 //            Intent intent = mAuthService.getAuthorizationRequestIntent(
 //                mAuthRequest.get(),
@@ -191,15 +192,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             Log.e(TAG, "=====>doAuthComplete");
         }
 
-
-    }
-
-    private void warmUpBrowser() {
-        Log.e(TAG, "Warming up browser instance for auth request");
-        CustomTabsIntent.Builder intentBuilder =
-                mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
-        intentBuilder.setToolbarColor(getColorCompat(R.color.colorPrimary));
-        mAuthIntent.set(intentBuilder.build());
     }
 
     private void recreateAuthorizationService() {
@@ -226,7 +218,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         if (resultCode == RESULT_CANCELED) {
             // do something here
+            Log.e(TAG, "onActivityResult---->RESULT_CANCELED");
+            CommonUtils.toast("RESULT_CANCELED");
         } else {
+            Log.e(TAG, "onActivityResult");
             startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
         }
 

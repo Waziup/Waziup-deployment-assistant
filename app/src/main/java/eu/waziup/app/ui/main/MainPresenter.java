@@ -26,7 +26,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     public void onLogOutClicked() {
         // removing the token when the user logout
         getDataManager().setUserAsLoggedOut();
-        getMvpView().openLoginActivity();
     }
 
     @Override
