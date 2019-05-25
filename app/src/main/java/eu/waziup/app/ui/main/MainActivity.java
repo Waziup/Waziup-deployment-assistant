@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
@@ -26,16 +25,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
@@ -51,13 +46,8 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -68,7 +58,6 @@ import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
-import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.custom.RoundedImageView;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
@@ -80,52 +69,37 @@ import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
-import io.fabric.sdk.android.Fabric;
 import eu.waziup.app.utils.Configuration;
-import okio.Okio;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
+    private static final String AUTH_STATE = "AUTH_STATE";
+    // AUTHORIZATION VARIABLES
+    private static final String KEY_USER_INFO = "userInfo";
+    public static String CURRENT_TAG = SensorFragment.TAG;
+    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
-
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
-
     @BindView(R.id.drawer_view)
     DrawerLayout mDrawer;
-
     @BindView(R.id.flContent)
     FrameLayout frameLayout;
-
     @BindView(R.id.navigation_view)
     NavigationView nvDrawer;
-
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
-
+    AuthState mAuthState;
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
     private TextView mEmailTextView;
-
     private ActionBarDrawerToggle mDrawerToggle;
-
-    public static String CURRENT_TAG = SensorFragment.TAG;
     private Handler mHandler;
-
-    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
-    private static final String AUTH_STATE = "AUTH_STATE";
-    AuthState mAuthState;
-
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListner;
     private GoogleSignInClient mGoogleSignInClient;
-
-
-    // AUTHORIZATION VARIABLES
-    private static final String KEY_USER_INFO = "userInfo";
-    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
     private Configuration mConfiguration;
@@ -147,13 +121,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mStateManager = AuthStateManager.getInstance(this);
         mConfiguration = Configuration.getInstance(this);
 
-        Configuration config = Configuration.getInstance(this);
-
-        mAuthService = new AuthorizationService(
-                this,
-                new AppAuthConfiguration.Builder()
-                        .setConnectionBuilder(config.getConnectionBuilder())
-                        .build());
+        mAuthService = new AuthorizationService(this, new AppAuthConfiguration.Builder()
+                .setConnectionBuilder(mConfiguration.getConnectionBuilder())
+                .build());
 
         setContentView(R.layout.activity_main);
 
@@ -186,7 +156,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListner);
 
         if (mStateManager.getCurrent().isAuthorized()) {
             // todo handle this later -> ############
@@ -223,7 +192,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @MainThread
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
 //        displayLoading("Exchanging authorization code");
-        Log.e(TAG, String.format("----->Token %s",authorizationResponse.accessToken));
+        Log.e(TAG, String.format("----->Token %s", authorizationResponse.accessToken));
         mAuthService.performTokenRequest(
                 authorizationResponse.createTokenExchangeRequest(),
                 this::handleCodeExchangeResponse);
@@ -342,28 +311,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         finish();
     }
 
-    // todo check this out later - has it been implemented right ?
-    public static class SignOutListener implements Button.OnClickListener {
-
-        private final MainActivity mLoginActivity;
-
-        public SignOutListener(@NonNull MainActivity mainActivity) {
-            mLoginActivity = mainActivity;
-        }
-
-        @Override
-        public void onClick(View view) {
-            mLoginActivity.mAuthState = null;
-            mLoginActivity.clearAuthState();
-//            mLoginActivity.enablePostAuthorizationFlows();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
     @Override
     protected void setUp() {
         changeToolbarTitle(getString(R.string.sensors));
@@ -391,23 +338,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         setupDrawerContent(nvDrawer);
 
         mPresenter.onNavMenuCreated();
-
-        // [START config_signin]
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        // [END config_signin]
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListner = firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser() == null && !mPresenter.onUserLoggedIn())
-                openLoginActivity();
-        };
 
     }
 
@@ -463,16 +393,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.are_you_sure_you_want_to_logout)
                         .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
-                            mAuth.signOut();
-                            mPresenter.onLogOutClicked();
-
-                            // Google revoke access && singOut -> This is best practice. Though not required
-                            mGoogleSignInClient.revokeAccess();
-                            mGoogleSignInClient.signOut();
-
 
                             signOut();
-
+                            mPresenter.onLogOutClicked();
 
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
@@ -560,7 +483,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .remove(fragment)
                         .commitNow();
 
-                    unlockDrawer();
+                unlockDrawer();
 
 //                    if (TextUtils.equals(parent, MapFragment.TAG)) {
 //                        getSupportFragmentManager()
@@ -575,7 +498,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
 //                                .commit();
 //                    }
-                }
+            }
         }
 
 //        if (getSupportFragmentManager().getFragments().size() > 1) {
