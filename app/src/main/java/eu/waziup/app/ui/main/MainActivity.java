@@ -3,12 +3,14 @@ package eu.waziup.app.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,10 +40,25 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
 
+import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationResponse;
+import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceDiscovery;
+import net.openid.appauth.TokenResponse;
 
-import java.util.List;
-import java.util.Objects;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
@@ -60,11 +78,15 @@ import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.sensor.SensorCommunicator;
 import eu.waziup.app.ui.sensor.SensorFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
+import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import io.fabric.sdk.android.Fabric;
+import eu.waziup.app.utils.Configuration;
+import okio.Okio;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
+    public static final String TAG = MainActivity.class.getSimpleName();
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
@@ -100,6 +122,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     FirebaseAuth.AuthStateListener mAuthListner;
     private GoogleSignInClient mGoogleSignInClient;
 
+
+    // AUTHORIZATION VARIABLES
+    private static final String KEY_USER_INFO = "userInfo";
+    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
+    private AuthorizationService mAuthService;
+    private AuthStateManager mStateManager;
+    private Configuration mConfiguration;
+
+
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -110,7 +141,29 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
         Fabric.with(this, new Crashlytics());
+
+        Log.e(TAG, "---> mainActivity");
+
+        mStateManager = AuthStateManager.getInstance(this);
+        mConfiguration = Configuration.getInstance(this);
+
+        Configuration config = Configuration.getInstance(this);
+
+        mAuthService = new AuthorizationService(
+                this,
+                new AppAuthConfiguration.Builder()
+                        .setConnectionBuilder(config.getConnectionBuilder())
+                        .build());
+
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState != null) {
+            try {
+                mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
+            } catch (JSONException ex) {
+                Log.e(TAG, "Failed to parse saved user info JSON, discarding", ex);
+            }
+        }
 
         mHandler = new Handler();
 
@@ -134,12 +187,134 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListner);
+
+        if (mStateManager.getCurrent().isAuthorized()) {
+            // todo handle this later -> ############
+            AuthState state = mStateManager.getCurrent();
+            Toast.makeText(this, String.valueOf(state.getAccessToken()), Toast.LENGTH_SHORT).show();
+
+            Log.e(TAG, String.valueOf(state.getAccessToken()));
+            Log.e(TAG, String.valueOf(state.getIdToken()));
+            Log.e(TAG, String.valueOf(state.getRefreshToken()));
+            return;
+        }
+
+        // the stored AuthState is incomplete, so check if we are currently receiving the result of
+        // the authorization flow from the browser.
+        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+
+        if (response != null || ex != null) {
+            mStateManager.updateAfterAuthorization(response, ex);
+        }
+
+        if (response != null && response.authorizationCode != null) {
+            // authorization code exchange is required
+            mStateManager.updateAfterAuthorization(response, ex);
+            exchangeAuthorizationCode(response);
+        } else if (ex != null) {
+//            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
+        } else {
+//            displayNotAuthorized("No authorization state retained - reauthorization required");
+        }
+
     }
 
-    // TODO all those things should be done when the user _icks logout button
-//    mMainActivity.mAuthState =null;
-//    mMainActivity.clearAuthState();
-//    mMainActivity.enablePostAuthorizationFlows();
+    @MainThread
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
+//        displayLoading("Exchanging authorization code");
+        Log.e(TAG, String.format("----->Token %s",authorizationResponse.accessToken));
+        mAuthService.performTokenRequest(
+                authorizationResponse.createTokenExchangeRequest(),
+                this::handleCodeExchangeResponse);
+    }
+
+    @WorkerThread
+    private void handleCodeExchangeResponse(
+            @Nullable TokenResponse tokenResponse,
+            @Nullable AuthorizationException authException) {
+
+        mStateManager.updateAfterTokenResponse(tokenResponse, authException);
+        if (!mStateManager.getCurrent().isAuthorized()) {
+            final String message = "Authorization Code exchange failed"
+                    + ((authException != null) ? authException.error : "");
+
+            if (authException != null) {
+                Log.e(TAG, String.valueOf(authException.error));
+                Log.e(TAG, String.valueOf(authException.errorDescription));
+                Log.e(TAG, String.valueOf(authException.errorUri));
+                Log.e(TAG, String.valueOf(authException.code));
+            }
+
+            // WrongThread inference is incorrect for lambdas
+            //noinspection WrongThread
+            // todo handle this
+            Log.e(TAG, message);
+//            runOnUiThread(() -> displayNotAuthorized(message));
+        } else {
+            // todo handle this
+//            runOnUiThread(this::displayAuthorized);
+        }
+    }
+
+    @MainThread
+    private void fetchUserInfo() {
+//        displayLoading("Fetching user info");
+        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+    }
+
+    @MainThread
+    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
+
+        Log.e(TAG, String.format("token--> %s", idToken));
+        if (ex != null) {
+            Log.e(TAG, "Token refresh failed when fetching user info");
+            mUserInfoJson.set(null);
+            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
+//            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+
+        AuthorizationServiceDiscovery discovery =
+                mStateManager.getCurrent()
+                        .getAuthorizationServiceConfiguration()
+                        .discoveryDoc;
+
+        URL userInfoEndpoint;
+        try {
+            userInfoEndpoint =
+                    mConfiguration.getUserInfoEndpointUri() != null
+                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
+                            : new URL(discovery.getUserinfoEndpoint().toString());
+        } catch (MalformedURLException urlEx) {
+            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+            mUserInfoJson.set(null);
+//            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+
+//        mExecutor.submit(() -> {
+//            try {
+//                HttpURLConnection conn =
+//                        (HttpURLConnection) userInfoEndpoint.openConnection();
+//                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+//                conn.setInstanceFollowRedirects(false);
+//                String response = Okio.buffer(Okio.source(conn.getInputStream()))
+//                        .readString(Charset.forName("UTF-8"));
+//                mUserInfoJson.set(new JSONObject(response));
+//            } catch (IOException ioEx) {
+//                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+//                CommonUtils.toast("Fetching user info failed");
+//            } catch (JSONException jsonEx) {
+//                Log.e(TAG, "Failed to parse userinfo response");
+//                CommonUtils.toast("Failed to parse user info");
+//            }
+//
+////            runOnUiThread(this::displayAuthorized);
+//        });
+    }
+
+    // TODO all those things should be done when the user clicks logout button
 
     //    SHOULD BE CALLED WHEN THE USER CLICK LOGOUT BUTTON SO HE CAN CLEAR THE STATE
     private void clearAuthState() {
@@ -147,6 +322,24 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .edit()
                 .remove(AUTH_STATE)
                 .apply();
+    }
+
+    @MainThread
+    private void signOut() {
+        // discard the authorization and token state, but retain the configuration and
+        // dynamic client registration (if applicable), to save from retrieving them again.
+        AuthState currentState = mStateManager.getCurrent();
+        AuthState clearedState =
+                new AuthState(currentState.getAuthorizationServiceConfiguration());
+        if (currentState.getLastRegistrationResponse() != null) {
+            clearedState.update(currentState.getLastRegistrationResponse());
+        }
+        mStateManager.replace(clearedState);
+
+        Intent mainIntent = new Intent(this, LoginActivity.class);
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainIntent);
+        finish();
     }
 
     // todo check this out later - has it been implemented right ?
@@ -276,6 +469,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                             // Google revoke access && singOut -> This is best practice. Though not required
                             mGoogleSignInClient.revokeAccess();
                             mGoogleSignInClient.signOut();
+
+
+                            signOut();
+
+
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
                             dialog.dismiss();
@@ -546,7 +744,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    protected void onDestroy() {
+        super.onDestroy();
+        mAuthService.dispose();
+    }
+
+    @Override
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggles
         mDrawerToggle.onConfigurationChanged(newConfig);

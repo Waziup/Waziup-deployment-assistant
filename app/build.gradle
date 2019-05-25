@@ -13,6 +13,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
+        // Make sure this is consistent with the redirect URI used in res/raw/auth_config.json,
+        // or specify additional redirect URIs in AndroidManifest.xml
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'net.openid.appauthdemo'
+        ]
     }
     buildTypes {
         debug {
