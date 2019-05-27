@@ -198,9 +198,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     @WorkerThread
-    private void handleCodeExchangeResponse(
-            @Nullable TokenResponse tokenResponse,
-            @Nullable AuthorizationException authException) {
+    private void handleCodeExchangeResponse(@Nullable TokenResponse tokenResponse,
+                                            @Nullable AuthorizationException authException) {
 
         mStateManager.updateAfterTokenResponse(tokenResponse, authException);
         if (!mStateManager.getCurrent().isAuthorized()) {

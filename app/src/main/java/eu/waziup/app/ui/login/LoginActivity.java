@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         initializeAppAuth();
 
-//        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
 
@@ -253,6 +253,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     } else {
                         if (tokenResponse != null) {
                             authState.update(tokenResponse, exception);
+                            mAuthStateManager.updateAfterTokenResponse(tokenResponse, exception);
 //                            persistAuthState(authState);
                             Log.e(TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
                             startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
