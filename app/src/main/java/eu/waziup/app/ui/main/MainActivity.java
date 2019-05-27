@@ -153,10 +153,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     protected void onStart() {
         super.onStart();
 
+        Log.e(TAG, "isAuthorized=> " + mStateManager.getCurrent().isAuthorized());
+
         if (mStateManager.getCurrent().isAuthorized()) {
             // todo handle this later -> ############
             AuthState state = mStateManager.getCurrent();
-            Toast.makeText(this, String.valueOf(state.getAccessToken()), Toast.LENGTH_SHORT).show();
 
             Log.e(TAG, String.valueOf(state.getAccessToken()));
             Log.e(TAG, String.valueOf(state.getIdToken()));

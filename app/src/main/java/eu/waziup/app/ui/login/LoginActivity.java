@@ -4,23 +4,29 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
+import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.ClientSecretBasic;
+import net.openid.appauth.RegistrationRequest;
+import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -71,7 +77,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             finish();
             return;
         }
-
 
         configureBrowserSelector();
 
@@ -125,6 +130,31 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Log.e(TAG, "mBrowserMatcher: " + mBrowserMatcher.toString());
     }
 
+    private void initializeAuthRequest() {
+        createAuthRequest();
+        warmUpBrowser();
+    }
+
+    private void createAuthRequest() {
+        if (mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration()!=null){
+            AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
+                    mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
+                    mClientId.get(),
+                    ResponseTypeValues.CODE,
+                    mConfiguration.getRedirectUri())
+                    .setScope(mConfiguration.getScope());
+
+            mAuthRequest.set(authRequestBuilder.build());
+        }
+    }
+
+    private void warmUpBrowser() {
+        Log.e(TAG, "Warming up browser instance for auth request");
+        Log.e(TAG, "mAuthRequest " + String.valueOf(mAuthRequest.get().toUri()));
+        CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
+        intentBuilder.setToolbarColor(getColorCompat(R.color.colorPrimary));
+        mAuthIntent.set(intentBuilder.build());
+    }
 
     private void initializeAppAuth() {
         recreateAuthorizationService();
@@ -140,59 +170,45 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     mConfiguration.getRegistrationEndpointUri());
 
             mAuthStateManager.replace(new AuthState(config));
-//            -----------------------------------------------------------------------------------
-            Log.e(TAG, "Using static client ID: " + mConfiguration.getClientId());
-            // use a statically configured client ID
-            mClientId.set(mConfiguration.getClientId());
-
-            AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
-                    mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
-                    mClientId.get(),
-                    ResponseTypeValues.CODE,
-                    mConfiguration.getRedirectUri())
-                    .setScope(mConfiguration.getScope());
-
-            mAuthRequest.set(authRequestBuilder.build());
-
-            Log.e(TAG, "Warming up browser instance for auth request");
-            Log.e(TAG, "mAuthRequest " + String.valueOf(mAuthRequest.get().toUri()));
-            CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
-            intentBuilder.setToolbarColor(getColorCompat(R.color.colorPrimary));
-            mAuthIntent.set(intentBuilder.build());
-
-//            new AsyncTask<Void, Void, Void>() {
-//                @Override
-//                protected Void doInBackground(Void... voids) {
-//                    initializeAuthRequest();
-//                    return null;
-//                }
-//            }.execute();
-            Log.e(TAG, "---> do Auth");
-
+            initializeClient();
 
 //            -----------------------------------------------------------------------------------
             Log.e(TAG, "====> doAuth");
-            Intent completionIntent = new Intent(this, MainActivity.class);
-            Intent cancelIntent = new Intent(this, LoginActivity.class);
-            cancelIntent.putExtra(EXTRA_FAILED, true);
-            cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            Log.e(TAG, "====> doAuth  =====>");
-            mAuthService.performAuthorizationRequest(
-                    mAuthRequest.get(),
-                    PendingIntent.getActivity(this, 0, completionIntent, 0),
-                    PendingIntent.getActivity(this, 0, cancelIntent, 0),
-                    mAuthIntent.get());
-
-
-//            Intent intent = mAuthService.getAuthorizationRequestIntent(
-//                mAuthRequest.get(),
-//                mAuthIntent.get());
-//            startActivityForResult(intent, RC_AUTH);
-
+            // do Authentication
+            doAuth();
             Log.e(TAG, "=====>doAuthComplete");
         }
 
+    }
+
+    private void doAuth() {
+        // performAuthorizationRequest -> opening the chromeCustomTab
+//        Intent completionIntent = new Intent(this, MainActivity.class);
+//        Intent cancelIntent = new Intent(this, LoginActivity.class);
+//        cancelIntent.putExtra(EXTRA_FAILED, true);
+//        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        Log.e(TAG, "====> doAuth  =====>");
+//        mAuthService.performAuthorizationRequest(
+//                mAuthRequest.get(),
+//                PendingIntent.getActivity(this, 0, completionIntent, 0),
+//                PendingIntent.getActivity(this, 0, cancelIntent, 0),
+//                mAuthIntent.get());
+
+        AuthorizationService authService = new AuthorizationService(this);
+        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get());
+        startActivityForResult(authIntent, RC_AUTH);
+
+    }
+
+    private void initializeClient() {
+        if (mConfiguration.getClientId() != null) {
+            Log.i(TAG, "Using static client ID: " + mConfiguration.getClientId());
+            // use a statically configured client ID
+            mClientId.set(mConfiguration.getClientId());
+            runOnUiThread(this::initializeAuthRequest);
+            return;
+        }
     }
 
     private void recreateAuthorizationService() {
@@ -221,9 +237,21 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             // do something here
             Log.e(TAG, "onActivityResult---->RESULT_CANCELED");
             CommonUtils.toast("RESULT_CANCELED");
-        } else {
-            Log.e(TAG, "onActivityResult");
+        } else if (requestCode == RC_AUTH) {
+            // updated logged out mode and
+            AuthorizationResponse resp = AuthorizationResponse.fromIntent(data);
+            AuthorizationException ex = AuthorizationException.fromIntent(data);
+            if (resp != null) {
+                // authorization completed
+                mAuthStateManager.getCurrent().update(resp, ex);
+            } else {
+                // authorization failed, check ex for more details
+            }
+            // ... process the response or exception ...
             startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
+
+        } else {
+            // ...
         }
 
     }
