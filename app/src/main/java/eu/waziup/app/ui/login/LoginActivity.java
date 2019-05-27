@@ -1,15 +1,12 @@
 package eu.waziup.app.ui.login;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
@@ -20,20 +17,16 @@ import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
-import net.openid.appauth.ClientSecretBasic;
-import net.openid.appauth.RegistrationRequest;
-import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
-import net.openid.appauth.TokenResponse;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
@@ -127,6 +120,12 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     }
 
+
+    @OnClick(R.id.start_auth)
+    void startAuth() {
+        doAuth();
+    }
+
     private void configureBrowserSelector() {
         mBrowserMatcher = AnyBrowserMatcher.INSTANCE;
         Log.e(TAG, "mBrowserMatcher: " + mBrowserMatcher.toString());
@@ -138,7 +137,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     }
 
     private void createAuthRequest() {
-        if (mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration()!=null){
+        if (mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration() != null) {
             AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
                     mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
                     mClientId.get(),
@@ -177,10 +176,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //            -----------------------------------------------------------------------------------
             Log.e(TAG, "====> doAuth");
             // do Authentication
-            doAuth();
+//            doAuth();
             Log.e(TAG, "=====>doAuthComplete");
         }
-
     }
 
     private void doAuth() {
@@ -262,8 +260,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 });
             }
         }
-
-
     }
 
     @TargetApi(Build.VERSION_CODES.M)
