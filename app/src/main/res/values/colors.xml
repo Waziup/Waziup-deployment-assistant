@@ -3,6 +3,7 @@
     <color name="colorPrimary">#2069A7</color>
     <color name="colorPrimaryDark">#104e83</color>
     <color name="colorAccent">#E4794D</color>
+    <color name="chromeTab">#1e4355</color>
 
     <color name="background_color">#FA3E3E</color>
     <color name="email_password_field_background_color">#f1f1f1</color>

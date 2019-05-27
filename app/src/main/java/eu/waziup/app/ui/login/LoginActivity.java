@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
@@ -23,6 +24,7 @@ import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.RegistrationRequest;
 import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
+import net.openid.appauth.TokenResponse;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
@@ -150,9 +152,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     private void warmUpBrowser() {
         Log.e(TAG, "Warming up browser instance for auth request");
-        Log.e(TAG, "mAuthRequest " + String.valueOf(mAuthRequest.get().toUri()));
+        Log.e(TAG, "mAuthRequest " + mAuthRequest.get().toUri());
         CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
-        intentBuilder.setToolbarColor(getColorCompat(R.color.colorPrimary));
+        intentBuilder.setToolbarColor(getColorCompat(R.color.chromeTab));
         mAuthIntent.set(intentBuilder.build());
     }
 
@@ -196,7 +198,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //                mAuthIntent.get());
 
         AuthorizationService authService = new AuthorizationService(this);
-        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get());
+        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get());
         startActivityForResult(authIntent, RC_AUTH);
 
     }
@@ -241,18 +243,25 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             // updated logged out mode and
             AuthorizationResponse resp = AuthorizationResponse.fromIntent(data);
             AuthorizationException ex = AuthorizationException.fromIntent(data);
+            final AuthState authState = new AuthState(resp, ex);
             if (resp != null) {
-                // authorization completed
-                mAuthStateManager.getCurrent().update(resp, ex);
-            } else {
-                // authorization failed, check ex for more details
+//                Log.i(TAG, String.format("Handled Authorization Response %s ", authState.toJsonString()));
+                AuthorizationService service = new AuthorizationService(this);
+                service.performTokenRequest(resp.createTokenExchangeRequest(), (tokenResponse, exception) -> {
+                    if (exception != null) {
+                        Log.e(TAG, "Token Exchange failed", exception);
+                    } else {
+                        if (tokenResponse != null) {
+                            authState.update(tokenResponse, exception);
+//                            persistAuthState(authState);
+                            Log.e(TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
+                            startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
+                        }
+                    }
+                });
             }
-            // ... process the response or exception ...
-            startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
-
-        } else {
-            // ...
         }
+
 
     }
 
