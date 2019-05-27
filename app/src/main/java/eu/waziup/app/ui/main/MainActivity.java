@@ -44,8 +44,11 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -68,6 +71,7 @@ import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
+import okio.Okio;
 
 public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
 
@@ -90,6 +94,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     NavigationView nvDrawer;
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
+
     AuthState mAuthState;
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
@@ -147,6 +152,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
                 .commit();
+
+
     }
 
     @Override
@@ -221,7 +228,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             runOnUiThread(this::signOut);
         } else {
             // todo handle this
-            runOnUiThread(this::fetchUserInfo);
+            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
 //            runOnUiThread(this::displayAuthorized);
         }
     }
@@ -264,23 +271,23 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         }
 
 //        mExecutor.submit(() -> {
-//            try {
-//                HttpURLConnection conn =
-//                        (HttpURLConnection) userInfoEndpoint.openConnection();
-//                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-//                conn.setInstanceFollowRedirects(false);
-//                String response = Okio.buffer(Okio.source(conn.getInputStream()))
-//                        .readString(Charset.forName("UTF-8"));
-//                mUserInfoJson.set(new JSONObject(response));
-//            } catch (IOException ioEx) {
-//                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-//                CommonUtils.toast("Fetching user info failed");
-//            } catch (JSONException jsonEx) {
-//                Log.e(TAG, "Failed to parse userinfo response");
-//                CommonUtils.toast("Failed to parse user info");
-//            }
-//
-////            runOnUiThread(this::displayAuthorized);
+            try {
+                HttpURLConnection conn =
+                        (HttpURLConnection) userInfoEndpoint.openConnection();
+                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                conn.setInstanceFollowRedirects(false);
+                String response = Okio.buffer(Okio.source(conn.getInputStream()))
+                        .readString(Charset.forName("UTF-8"));
+                mUserInfoJson.set(new JSONObject(response));
+            } catch (IOException ioEx) {
+                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+                CommonUtils.toast("Fetching user info failed");
+            } catch (JSONException jsonEx) {
+                Log.e(TAG, "Failed to parse userinfo response");
+                CommonUtils.toast("Failed to parse user info");
+            }
+
+//            runOnUiThread(this::displayAuthorized);
 //        });
     }
 

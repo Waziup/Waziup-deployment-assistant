@@ -1,6 +1,7 @@
 package eu.waziup.app.ui.login;
 
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -183,21 +184,21 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     private void doAuth() {
         // performAuthorizationRequest -> opening the chromeCustomTab
-//        Intent completionIntent = new Intent(this, MainActivity.class);
-//        Intent cancelIntent = new Intent(this, LoginActivity.class);
-//        cancelIntent.putExtra(EXTRA_FAILED, true);
-//        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//        Log.e(TAG, "====> doAuth  =====>");
-//        mAuthService.performAuthorizationRequest(
-//                mAuthRequest.get(),
-//                PendingIntent.getActivity(this, 0, completionIntent, 0),
-//                PendingIntent.getActivity(this, 0, cancelIntent, 0),
-//                mAuthIntent.get());
+        Intent completionIntent = new Intent(this, MainActivity.class);
+        Intent cancelIntent = new Intent(this, LoginActivity.class);
+        cancelIntent.putExtra(EXTRA_FAILED, true);
+        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        AuthorizationService authService = new AuthorizationService(this);
-        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get());
-        startActivityForResult(authIntent, RC_AUTH);
+        Log.e(TAG, "====> doAuth  =====>");
+        mAuthService.performAuthorizationRequest(
+                mAuthRequest.get(),
+                PendingIntent.getActivity(this, 0, completionIntent, 0),
+                PendingIntent.getActivity(this, 0, cancelIntent, 0),
+                mAuthIntent.get());
+
+//        AuthorizationService authService = new AuthorizationService(this);
+//        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get());
+//        startActivityForResult(authIntent, RC_AUTH);
 
     }
 
