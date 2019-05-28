@@ -9,6 +9,8 @@ import android.support.annotation.VisibleForTesting;
 import android.support.customtabs.CustomTabsIntent;
 import android.text.TextUtils;
 
+import net.openid.appauth.internal.Logger;
+
 import static net.openid.appauth.Preconditions.checkNotNull;
 
 public class LogoutService {

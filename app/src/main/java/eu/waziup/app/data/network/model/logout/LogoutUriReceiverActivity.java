@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import net.openid.appauth.Clock;
-import net.openid.appauth.SystemClock;
+import net.openid.appauth.internal.Logger;
+
 
 /**
  * Created by emanuel.couto on 22/04/2016.
