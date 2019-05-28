@@ -38,4 +38,5 @@ public interface ApiHelper {
     Single<List<User>> getUsers();
 
     Single<List<NotificationResponse>> getNotifications();
+
 }

@@ -233,6 +233,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
             runOnUiThread(this::fetchUserInfo);
         }
+
     }
 
     @MainThread
