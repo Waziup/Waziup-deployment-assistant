@@ -91,4 +91,9 @@
     <string name="login">login</string>
     <string name="dialog_no_record">no record</string>
     <string name="retry">Retry</string>
+
+    <string name="keycloak_auth_redirect_scheme" translatable="false">net.openid.appauthdemo</string>
+    <string name="keycloak_auth_logout_scheme" translatable="false">net.openid.appauthdemo</string>
+    <string name="keycloak_auth_redirect_uri" translatable="false">net.openid.appauthdemo:/oauth2Callback</string>
+    <string name="keycloak_auth_logout_uri" translatable="false">"net.openid.appauthdemo:/oauth2Callback"</string>
 </resources>

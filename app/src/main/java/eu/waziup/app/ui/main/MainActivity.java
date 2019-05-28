@@ -1,10 +1,12 @@
 package eu.waziup.app.ui.main;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +41,8 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
-import net.openid.appauth.AuthorizationServiceDiscovery;
+import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
+
 import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
@@ -58,6 +61,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.logout.LogoutRequest;
+import eu.waziup.app.data.network.model.logout.LogoutService;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
@@ -79,6 +84,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     private static final String AUTH_STATE = "AUTH_STATE";
+
+    private static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
+
     // AUTHORIZATION VARIABLES
     private static final String KEY_USER_INFO = "userInfo";
     public static String CURRENT_TAG = SensorFragment.TAG;
@@ -230,8 +238,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             runOnUiThread(this::signOut);
         } else {
             // todo handle this
-//            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
-            runOnUiThread(this::fetchUserInfo);
+            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
+//            runOnUiThread(this::fetchUserInfo);
         }
 
     }
@@ -239,75 +247,75 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @MainThread
     private void fetchUserInfo() {
 //        displayLoading("Fetching user info");
-        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+//        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @MainThread
-    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
-
-        Log.e(TAG, String.format("token-idToken-> %s", idToken));
-        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
-        if (ex != null) {
-            Log.e(TAG, "Token refresh failed when fetching user info");
-            mUserInfoJson.set(null);
-            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
-//            runOnUiThread(this::displayAuthorized);
-            return;
-        }
-
-        AuthorizationServiceDiscovery discovery =
-                mStateManager.getCurrent()
-                        .getAuthorizationServiceConfiguration()
-                        .discoveryDoc;
-
-        URL userInfoEndpoint;
-        try {
-            userInfoEndpoint =
-                    mConfiguration.getUserInfoEndpointUri() != null
-                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
-                            : new URL(discovery.getUserinfoEndpoint().toString());
-        } catch (MalformedURLException urlEx) {
-            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
-            mUserInfoJson.set(null);
-//            runOnUiThread(this::displayAuthorized);
-            return;
-        }
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-//String name, String preferredName, String givenName, String familyName, String email
-                try {
-                    HttpURLConnection conn =
-                            (HttpURLConnection) userInfoEndpoint.openConnection();
-                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-                    conn.setInstanceFollowRedirects(false);
-                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
-                            .readString(Charset.forName("UTF-8"));
-                    mUserInfoJson.set(new JSONObject(response));
-                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
-                    //String name, String preferredName, String givenName, String familyName, String email
-                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
-                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
-                            mUserInfoJson.get().get("email").toString());
-                } catch (IOException ioEx) {
-                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-//                    CommonUtils.toast("Fetching user info failed");
-                } catch (JSONException jsonEx) {
-                    Log.e(TAG, "Failed to parse userinfo response");
-//                    CommonUtils.toast("Failed to parse user info");
-                }
-
-                return null;
-            }
-        }.execute();
-
-//        mExecutor.submit(() -> {
-
-//            runOnUiThread(this::displayAuthorized);
-//        });
-    }
+//    @SuppressLint("StaticFieldLeak")
+//    @MainThread
+//    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
+//
+//        Log.e(TAG, String.format("token-idToken-> %s", idToken));
+//        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
+//        if (ex != null) {
+//            Log.e(TAG, "Token refresh failed when fetching user info");
+//            mUserInfoJson.set(null);
+//            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
+////            runOnUiThread(this::displayAuthorized);
+//            return;
+//        }
+//
+//        AuthorizationServiceDiscovery discovery =
+//                mStateManager.getCurrent()
+//                        .getAuthorizationServiceConfiguration()
+//                        .discoveryDoc;
+//
+//        URL userInfoEndpoint;
+//        try {
+//            userInfoEndpoint =
+//                    mConfiguration.getUserInfoEndpointUri() != null
+//                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
+//                            : new URL(discovery.getUserinfoEndpoint().toString());
+//        } catch (MalformedURLException urlEx) {
+//            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+//            mUserInfoJson.set(null);
+////            runOnUiThread(this::displayAuthorized);
+//            return;
+//        }
+//
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+////String name, String preferredName, String givenName, String familyName, String email
+//                try {
+//                    HttpURLConnection conn =
+//                            (HttpURLConnection) userInfoEndpoint.openConnection();
+//                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+//                    conn.setInstanceFollowRedirects(false);
+//                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
+//                            .readString(Charset.forName("UTF-8"));
+//                    mUserInfoJson.set(new JSONObject(response));
+//                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
+//                    //String name, String preferredName, String givenName, String familyName, String email
+//                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
+//                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
+//                            mUserInfoJson.get().get("email").toString());
+//                } catch (IOException ioEx) {
+//                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+////                    CommonUtils.toast("Fetching user info failed");
+//                } catch (JSONException jsonEx) {
+//                    Log.e(TAG, "Failed to parse userinfo response");
+////                    CommonUtils.toast("Failed to parse user info");
+//                }
+//
+//                return null;
+//            }
+//        }.execute();
+//
+////        mExecutor.submit(() -> {
+//
+////            runOnUiThread(this::displayAuthorized);
+////        });
+//    }
 
     @MainThread
     private void signOut() {
@@ -325,6 +333,53 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
+    }
+
+    private void logout() {
+        if (mAuthState.getAuthorizationServiceConfiguration() == null) {
+            Log.e(TAG, "Cannot make userInfo request without service configuration");
+        }
+
+        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
+            @Override
+            public void execute(String accessToken, String idToken, AuthorizationException ex) {
+                if (ex != null) {
+                    Log.e(TAG, "Token refresh failed when fetching user info");
+                    return;
+                }
+
+                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+                if (discoveryDoc == null) {
+                    throw new IllegalStateException("no available discovery doc");
+                }
+
+                Uri endSessionEndpoint = Uri.parse(discoveryDoc.getEndSessionEndpoint().toString());
+
+                String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+                LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
+                        Uri.parse(logoutUri));
+
+                LogoutService logoutService = new LogoutService(MainActivity.this);
+                logoutService.performLogoutRequest(
+                        logoutRequest,
+                        PendingIntent.getActivity(
+                                MainActivity.this, logoutRequest.hashCode(),
+                                new Intent(MainActivity.this, LoginActivity.class), 0)
+                );
+            }
+        });
+    }
+
+    static AuthorizationServiceDiscovery getDiscoveryDocFromIntent(Intent intent) {
+        if (!intent.hasExtra(EXTRA_AUTH_SERVICE_DISCOVERY)) {
+            return null;
+        }
+        String discoveryJson = intent.getStringExtra(EXTRA_AUTH_SERVICE_DISCOVERY);
+        try {
+            return new AuthorizationServiceDiscovery(new JSONObject(discoveryJson));
+        } catch (JSONException | AuthorizationServiceDiscovery.MissingArgumentException  ex) {
+            throw new IllegalStateException("Malformed JSON in discovery doc");
+        }
     }
 
     @Override
@@ -373,6 +428,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 });
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
@@ -411,7 +467,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .setPositiveButton(getString(R.string.logout), (dialog, id) -> {
 
                             mPresenter.onLogOutClicked();
-                            signOut();
+//                            signOut();
+                            //todo get back here and resolve this
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    logout();
+                                    return null;
+                                }
+                            }.execute();
 
                         })
                         .setNegativeButton(getString(R.string.cancel), (dialog, id) -> {
