@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.main;
 
+import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
@@ -22,4 +23,10 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
     boolean onUserLoggedIn();
 
     void initializedView();
+
+//    void updateUserInformation(String accessToken, String name, String picture, DataManager.LoggedInMode loggedInMode);
+
+    void updateAccessToken(String accessToken);
+
+    void updateUserInfo(String name, String preferredName, String givenName, String familyName, String email);
 }

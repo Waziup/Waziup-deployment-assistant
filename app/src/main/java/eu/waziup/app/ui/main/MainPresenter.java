@@ -1,5 +1,7 @@
 package eu.waziup.app.ui.main;
 
+import android.text.TextUtils;
+
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
@@ -73,4 +75,25 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
         getMvpView().updateUserProfilePic(getDataManager().getCurrentUserProfilePicUrl());
     }
 
+    @Override
+    public void updateAccessToken(String accessToken) {
+
+    }
+
+    @Override
+    public void updateUserInfo(String name, String preferredName, String givenName, String familyName, String email) {
+        if (name != null && !TextUtils.isEmpty(name)) {
+            getDataManager().setCurrentUserName(name);
+        } else if (preferredName != null && !TextUtils.isEmpty(preferredName)) {
+            getDataManager().setCurrentUserName(preferredName);
+        } else if (givenName != null && !TextUtils.isEmpty(givenName)) {
+            getDataManager().setCurrentUserName(givenName);
+        } else if (familyName != null && !TextUtils.isEmpty(familyName)) {
+            getDataManager().setCurrentUserName(familyName);
+        }
+
+        if (email != null && !TextUtils.isEmpty(email)) {
+            getDataManager().setCurrentUserEmail(email);
+        }
+    }
 }

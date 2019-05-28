@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.MainThread;
@@ -187,6 +188,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             exchangeAuthorizationCode(response);
         } else if (ex != null) {
             signOut();
+            // todo display something to the user telling them what goes wrong.
 //            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
         } else {
             signOut();
@@ -228,8 +230,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             runOnUiThread(this::signOut);
         } else {
             // todo handle this
-            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
-//            runOnUiThread(this::displayAuthorized);
+//            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
+            runOnUiThread(this::fetchUserInfo);
         }
     }
 
@@ -239,6 +241,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @MainThread
     private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
 
@@ -270,22 +273,36 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             return;
         }
 
-//        mExecutor.submit(() -> {
-            try {
-                HttpURLConnection conn =
-                        (HttpURLConnection) userInfoEndpoint.openConnection();
-                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-                conn.setInstanceFollowRedirects(false);
-                String response = Okio.buffer(Okio.source(conn.getInputStream()))
-                        .readString(Charset.forName("UTF-8"));
-                mUserInfoJson.set(new JSONObject(response));
-            } catch (IOException ioEx) {
-                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-                CommonUtils.toast("Fetching user info failed");
-            } catch (JSONException jsonEx) {
-                Log.e(TAG, "Failed to parse userinfo response");
-                CommonUtils.toast("Failed to parse user info");
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+//String name, String preferredName, String givenName, String familyName, String email
+                try {
+                    HttpURLConnection conn =
+                            (HttpURLConnection) userInfoEndpoint.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                    conn.setInstanceFollowRedirects(false);
+                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
+                            .readString(Charset.forName("UTF-8"));
+                    mUserInfoJson.set(new JSONObject(response));
+                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
+                    //String name, String preferredName, String givenName, String familyName, String email
+                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
+                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
+                            mUserInfoJson.get().get("email").toString());
+                } catch (IOException ioEx) {
+                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+//                    CommonUtils.toast("Fetching user info failed");
+                } catch (JSONException jsonEx) {
+                    Log.e(TAG, "Failed to parse userinfo response");
+//                    CommonUtils.toast("Failed to parse user info");
+                }
+
+                return null;
             }
+        }.execute();
+
+//        mExecutor.submit(() -> {
 
 //            runOnUiThread(this::displayAuthorized);
 //        });
