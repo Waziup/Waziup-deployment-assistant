@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             runOnUiThread(this::signOut);
         } else {
             // todo handle this
-            Toast.makeText(this, "working", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "fetching user information", Toast.LENGTH_SHORT).show();
 //            runOnUiThread(this::fetchUserInfo);
         }
 
@@ -336,37 +336,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     }
 
     private void logout() {
-        if (mAuthState.getAuthorizationServiceConfiguration() == null) {
+        // todo handle mAuthState NullPointerException here
+        if (mStateManager.getCurrent().getAuthorizationServiceConfiguration() == null) {
             Log.e(TAG, "Cannot make userInfo request without service configuration");
         }
 
-        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
-            @Override
-            public void execute(String accessToken, String idToken, AuthorizationException ex) {
-                if (ex != null) {
-                    Log.e(TAG, "Token refresh failed when fetching user info");
-                    return;
-                }
-
-                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-                if (discoveryDoc == null) {
-                    throw new IllegalStateException("no available discovery doc");
-                }
-
-                Uri endSessionEndpoint = Uri.parse(discoveryDoc.getEndSessionEndpoint().toString());
-
-                String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
-                LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
-                        Uri.parse(logoutUri));
-
-                LogoutService logoutService = new LogoutService(MainActivity.this);
-                logoutService.performLogoutRequest(
-                        logoutRequest,
-                        PendingIntent.getActivity(
-                                MainActivity.this, logoutRequest.hashCode(),
-                                new Intent(MainActivity.this, LoginActivity.class), 0)
-                );
+        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+            if (ex != null) {// todo it has to logout the user if the there is an exception happing in here
+                Log.e(TAG, "Token refresh failed when fetching user info");
+                signOut();// todo will be removed and replaced with another method
+                return;
             }
+
+            // todo find a solution for the discoveryDocument thing later
+//            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+//            if (discoveryDoc == null) {
+//                throw new IllegalStateException("no available discovery doc");
+//            }
+
+            //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token
+            Uri endSessionEndpoint = Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout");
+
+            String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+            LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
+                    Uri.parse(logoutUri));
+
+            LogoutService logoutService = new LogoutService(MainActivity.this);
+            logoutService.performLogoutRequest(
+                    logoutRequest,
+                    PendingIntent.getActivity(
+                            MainActivity.this, logoutRequest.hashCode(),
+                            new Intent(MainActivity.this, LoginActivity.class), 0)
+            );
         });
     }
 
