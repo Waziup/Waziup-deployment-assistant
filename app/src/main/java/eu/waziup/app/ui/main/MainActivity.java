@@ -223,10 +223,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                     + ((authException != null) ? authException.error : "");
 
             if (authException != null) {
-                Log.e(TAG, String.valueOf(authException.error));
-                Log.e(TAG, String.valueOf(authException.errorDescription));
-                Log.e(TAG, String.valueOf(authException.errorUri));
-                Log.e(TAG, String.valueOf(authException.code));
+                Log.e(TAG, "error--> " + String.valueOf(authException.error));
+                Log.e(TAG, "errorDescription--> " + String.valueOf(authException.errorDescription));
+                Log.e(TAG, "errorUri--> " + String.valueOf(authException.errorUri));
+                Log.e(TAG, "code--> " + String.valueOf(authException.code));
             }
 
             // WrongThread inference is incorrect for lambdas
