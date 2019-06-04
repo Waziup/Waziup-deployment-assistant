@@ -41,8 +41,6 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
-import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
-
 import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
@@ -61,6 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
 import eu.waziup.app.data.network.model.logout.LogoutRequest;
 import eu.waziup.app.data.network.model.logout.LogoutService;
 import eu.waziup.app.data.network.model.sensor.Sensor;
@@ -116,6 +115,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
+    }
+
+    static AuthorizationServiceDiscovery getDiscoveryDocFromIntent(Intent intent) {
+        if (!intent.hasExtra(EXTRA_AUTH_SERVICE_DISCOVERY)) {
+            return null;
+        }
+        String discoveryJson = intent.getStringExtra(EXTRA_AUTH_SERVICE_DISCOVERY);
+        try {
+            return new AuthorizationServiceDiscovery(new JSONObject(discoveryJson));
+        } catch (JSONException | AuthorizationServiceDiscovery.MissingArgumentException ex) {
+            throw new IllegalStateException("Malformed JSON in discovery doc");
+        }
     }
 
     @Override
@@ -194,11 +205,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             mStateManager.updateAfterAuthorization(response, ex);
             exchangeAuthorizationCode(response);
         } else if (ex != null) {
-            signOut();
+//            signOut();
+            runOnUiThread(this::logout);
             // todo display something to the user telling them what goes wrong.
 //            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
         } else {
-            signOut();
+//            signOut();
+            runOnUiThread(this::logout);
 //            displayNotAuthorized("No authorization state retained - reauthorization required");
         }
 
@@ -234,11 +247,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             // todo handle this
             Log.e(TAG, message);
 
-            runOnUiThread(this::signOut);
+//            runOnUiThread(this::signOut);
+            runOnUiThread(this::logout);// todo check is and findOut if it didn't work
         } else {
             // todo handle this
             Toast.makeText(this, "fetching user information", Toast.LENGTH_SHORT).show();
-//            runOnUiThread(this::fetchUserInfo);
+            runOnUiThread(this::fetchUserInfo);
         }
 
     }
@@ -246,28 +260,30 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @MainThread
     private void fetchUserInfo() {
 //        displayLoading("Fetching user info");
-//        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
+        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
     }
 
-//    @SuppressLint("StaticFieldLeak")
-//    @MainThread
-//    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
-//
-//        Log.e(TAG, String.format("token-idToken-> %s", idToken));
-//        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
-//        if (ex != null) {
-//            Log.e(TAG, "Token refresh failed when fetching user info");
-//            mUserInfoJson.set(null);
-//            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
-////            runOnUiThread(this::displayAuthorized);
-//            return;
-//        }
-//
+
+    @SuppressLint("StaticFieldLeak")
+    @MainThread
+    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
+
+        Log.e(TAG, String.format("token-idToken-> %s", idToken));
+        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
+        if (ex != null) {
+            Log.e(TAG, "Token refresh failed when fetching user info");
+            mUserInfoJson.set(null);
+            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
+//            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+        //todo this has to be fixed
+
 //        AuthorizationServiceDiscovery discovery =
 //                mStateManager.getCurrent()
 //                        .getAuthorizationServiceConfiguration()
 //                        .discoveryDoc;
-//
+
 //        URL userInfoEndpoint;
 //        try {
 //            userInfoEndpoint =
@@ -280,11 +296,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 ////            runOnUiThread(this::displayAuthorized);
 //            return;
 //        }
-//
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-////String name, String preferredName, String givenName, String familyName, String email
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+//String name, String preferredName, String givenName, String familyName, String email
 //                try {
 //                    HttpURLConnection conn =
 //                            (HttpURLConnection) userInfoEndpoint.openConnection();
@@ -305,16 +321,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                    Log.e(TAG, "Failed to parse userinfo response");
 ////                    CommonUtils.toast("Failed to parse user info");
 //                }
-//
-//                return null;
-//            }
-//        }.execute();
-//
-////        mExecutor.submit(() -> {
-//
-////            runOnUiThread(this::displayAuthorized);
-////        });
-//    }
+
+                return null;
+            }
+        }.execute();
+
+//        mExecutor.submit(() -> {
+
+//            runOnUiThread(this::displayAuthorized);
+//        });
+    }
 
     @MainThread
     private void signOut() {
@@ -343,7 +359,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
             if (ex != null) {// todo it has to logout the user if the there is an exception happing in here
                 Log.e(TAG, "Token refresh failed when fetching user info");
-                signOut();// todo will be removed and replaced with another method
+//                signOut();// todo will be removed and replaced with another method
+                runOnUiThread(this::logout);
                 return;
             }
 
@@ -378,18 +395,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                             new Intent(MainActivity.this, LoginActivity.class), 0)
             );
         });
-    }
-
-    static AuthorizationServiceDiscovery getDiscoveryDocFromIntent(Intent intent) {
-        if (!intent.hasExtra(EXTRA_AUTH_SERVICE_DISCOVERY)) {
-            return null;
-        }
-        String discoveryJson = intent.getStringExtra(EXTRA_AUTH_SERVICE_DISCOVERY);
-        try {
-            return new AuthorizationServiceDiscovery(new JSONObject(discoveryJson));
-        } catch (JSONException | AuthorizationServiceDiscovery.MissingArgumentException  ex) {
-            throw new IllegalStateException("Malformed JSON in discovery doc");
-        }
     }
 
     @Override
