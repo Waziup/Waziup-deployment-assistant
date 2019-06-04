@@ -177,7 +177,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 //            -----------------------------------------------------------------------------------
             Log.e(TAG, "====> doAuth");
             // do Authentication
-//            doAuth();
+            doAuth();
             Log.e(TAG, "=====>doAuthComplete");
         }
     }
