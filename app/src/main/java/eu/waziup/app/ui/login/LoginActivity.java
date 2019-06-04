@@ -78,7 +78,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         initializeAppAuth();
 
+        // this is where the layout display is going to happen
         setContentView(R.layout.activity_login);
+
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
 

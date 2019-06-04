@@ -354,6 +354,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                throw new IllegalStateException("no available discovery doc");
 //            }
 
+            //============================ for clearing the state ==================================
+            AuthState currentState = mStateManager.getCurrent();
+            AuthState clearedState =
+                    new AuthState(currentState.getAuthorizationServiceConfiguration());
+            if (currentState.getLastRegistrationResponse() != null) {
+                clearedState.update(currentState.getLastRegistrationResponse());
+            }
+            mStateManager.replace(clearedState);
+            //======================================================================================
+
             //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token
             Uri endSessionEndpoint = Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout");
 
