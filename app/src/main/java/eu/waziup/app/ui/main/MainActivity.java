@@ -104,7 +104,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
 
-    AuthState mAuthState;
     private RoundedImageView mProfileView;
     private TextView mNameTextView;
     private TextView mEmailTextView;
