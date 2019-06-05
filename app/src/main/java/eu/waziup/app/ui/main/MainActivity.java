@@ -252,7 +252,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         } else {
             // todo handle this
             Toast.makeText(this, "fetching user information", Toast.LENGTH_SHORT).show();
-            runOnUiThread(this::fetchUserInfo);
+//            runOnUiThread(this::fetchUserInfo);
         }
 
     }
@@ -297,34 +297,34 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //            return;
 //        }
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-//String name, String preferredName, String givenName, String familyName, String email
-//                try {
-//                    HttpURLConnection conn =
-//                            (HttpURLConnection) userInfoEndpoint.openConnection();
-//                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-//                    conn.setInstanceFollowRedirects(false);
-//                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
-//                            .readString(Charset.forName("UTF-8"));
-//                    mUserInfoJson.set(new JSONObject(response));
-//                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
-//                    //String name, String preferredName, String givenName, String familyName, String email
-//                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
-//                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
-//                            mUserInfoJson.get().get("email").toString());
-//                } catch (IOException ioEx) {
-//                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-////                    CommonUtils.toast("Fetching user info failed");
-//                } catch (JSONException jsonEx) {
-//                    Log.e(TAG, "Failed to parse userinfo response");
-////                    CommonUtils.toast("Failed to parse user info");
-//                }
-
-                return null;
-            }
-        }.execute();
+//        new AsyncTask<Void, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Void... voids) {
+////String name, String preferredName, String givenName, String familyName, String email
+////                try {
+////                    HttpURLConnection conn =
+////                            (HttpURLConnection) userInfoEndpoint.openConnection();
+////                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+////                    conn.setInstanceFollowRedirects(false);
+////                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
+////                            .readString(Charset.forName("UTF-8"));
+////                    mUserInfoJson.set(new JSONObject(response));
+////                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
+////                    //String name, String preferredName, String givenName, String familyName, String email
+////                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
+////                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
+////                            mUserInfoJson.get().get("email").toString());
+////                } catch (IOException ioEx) {
+////                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+//////                    CommonUtils.toast("Fetching user info failed");
+////                } catch (JSONException jsonEx) {
+////                    Log.e(TAG, "Failed to parse userinfo response");
+//////                    CommonUtils.toast("Failed to parse user info");
+////                }
+//
+//                return null;
+//            }
+//        }.execute();
 
 //        mExecutor.submit(() -> {
 

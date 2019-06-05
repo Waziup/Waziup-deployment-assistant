@@ -236,6 +236,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.e(TAG, "--->onActivityResult");
         if (resultCode == RESULT_CANCELED) {
             // do something here
             Log.e(TAG, "onActivityResult---->RESULT_CANCELED");
