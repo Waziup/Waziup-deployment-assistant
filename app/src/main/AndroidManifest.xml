@@ -51,6 +51,20 @@
             android:name="eu.waziup.app.ui.register.SimpleScannerActivity"
             android:theme="@style/AppTheme.no_toolbar" />
 
+        <!-- Callback from logout screen -->
+        <activity android:name=".data.network.model.logout.LogoutUriReceiverActivity">
+            <!--
+                Filter which captures custom scheme based redirects for Google authorization
+                requests.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="@string/keycloak_auth_logout_scheme"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

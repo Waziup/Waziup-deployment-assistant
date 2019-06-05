@@ -64,11 +64,5 @@ public class DaApp extends Application {
         MultiDex.install(this);
     }
 
-    private void warmUpBrowser() {
-        Log.e(TAG, "Warming up browser instance for auth request");
-        Log.e(TAG, "mAuthRequest " + mAuthRequest.get().toUri());
-        CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
-        intentBuilder.setToolbarColor(getColorCompat(R.color.chromeTab));
-        mAuthIntent.set(intentBuilder.build());
-    }
+
 }
