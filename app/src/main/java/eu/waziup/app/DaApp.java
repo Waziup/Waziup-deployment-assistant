@@ -2,7 +2,9 @@ package eu.waziup.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -15,6 +17,7 @@ import eu.waziup.app.utils.AppLogger;
 public class DaApp extends Application {
 
     public static final String LOG_TAG = "AppAuthSample";
+    public static final String TAG = DaApp.class.getSimpleName();
     public static Context context;
     public static Application application;
     @Inject
@@ -59,5 +62,13 @@ public class DaApp extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    private void warmUpBrowser() {
+        Log.e(TAG, "Warming up browser instance for auth request");
+        Log.e(TAG, "mAuthRequest " + mAuthRequest.get().toUri());
+        CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
+        intentBuilder.setToolbarColor(getColorCompat(R.color.chromeTab));
+        mAuthIntent.set(intentBuilder.build());
     }
 }
