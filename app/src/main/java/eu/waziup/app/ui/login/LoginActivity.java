@@ -18,10 +18,14 @@ import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
+import net.openid.appauth.ClientSecretBasic;
+import net.openid.appauth.RegistrationRequest;
+import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -29,6 +33,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.login.IdentityProvider;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.utils.AuthStateManager;
@@ -74,10 +79,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             return;
         }
 
-        configureBrowserSelector();
-
-        initializeAppAuth();
-
         // this is where the layout display is going to happen
         setContentView(R.layout.activity_login);
 
@@ -118,6 +119,62 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     }
 
+    private void makeAuthRequest(
+            @NonNull AuthorizationServiceConfiguration serviceConfig,
+            @NonNull IdentityProvider idp) {
+
+        AuthorizationRequest authRequest = new AuthorizationRequest.Builder(
+                serviceConfig,
+                idp.getClientId(),
+                ResponseTypeValues.CODE,
+                idp.getRedirectUri())
+                .setScope(idp.getScope())
+                .build();
+
+        Log.d(TAG, "Making auth request to " + serviceConfig.authorizationEndpoint);
+        mAuthService.performAuthorizationRequest(
+                authRequest,
+                TokenActivity.createPostAuthorizationIntent(
+                        this,
+                        authRequest,
+                        serviceConfig.discoveryDoc,
+                        idp.getClientSecret()),
+                mAuthService.createCustomTabsIntentBuilder()
+                        .setToolbarColor(getColorCompat(R.color.colorAccent))
+                        .build());
+    }
+
+    private void makeRegistrationRequest(
+            @NonNull AuthorizationServiceConfiguration serviceConfig,
+            @NonNull final IdentityProvider idp) {
+
+        final RegistrationRequest registrationRequest = new RegistrationRequest.Builder(
+                serviceConfig,
+                Arrays.asList(idp.getRedirectUri()))
+                .setTokenEndpointAuthenticationMethod(ClientSecretBasic.NAME)
+                .build();
+
+        Log.d(TAG, "Making registration request to " + serviceConfig.registrationEndpoint);
+        mAuthService.performRegistrationRequest(
+                registrationRequest,
+                new AuthorizationService.RegistrationResponseCallback() {
+                    @Override
+                    public void onRegistrationRequestCompleted(
+                            @Nullable RegistrationResponse registrationResponse,
+                            @Nullable AuthorizationException ex) {
+                        Log.d(TAG, "Registration request complete");
+                        if (registrationResponse != null) {
+                            idp.setClientId(registrationResponse.clientId);
+                            idp.setClientSecret(registrationResponse.clientSecret);
+                            Log.d(TAG, "Registration request complete successfully");
+                            // Continue with the authentication
+                            makeAuthRequest(registrationResponse.request.configuration, idp);
+                        }
+                    }
+                });
+    }
+
+
     @Override
     public void setUp() {
 
@@ -126,96 +183,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @OnClick(R.id.start_auth)
     void startAuth() {
-        doAuth();
-    }
 
-    private void configureBrowserSelector() {
-        mBrowserMatcher = AnyBrowserMatcher.INSTANCE;
-        Log.e(TAG, "mBrowserMatcher: " + mBrowserMatcher.toString());
-    }
-
-    private void initializeAuthRequest() {
-        createAuthRequest();
-        warmUpBrowser();
-    }
-
-    private void createAuthRequest() {
-        if (mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration() != null) {
-            AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
-                    mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
-                    mClientId.get(),
-                    ResponseTypeValues.CODE,
-                    mConfiguration.getRedirectUri())
-                    .setScope(mConfiguration.getScope());
-
-            mAuthRequest.set(authRequestBuilder.build());
-        }
-    }
-
-
-
-    private void initializeAppAuth() {
-        recreateAuthorizationService();
-
-        // configuration is already created, skip to client initialization
-        Log.e(TAG, "auth config already established");
-
-        Log.i(TAG, "Creating auth config from res/raw/auth_config.json");
-        if (mConfiguration.getAuthEndpointUri() != null && mConfiguration.getTokenEndpointUri() != null) {
-            AuthorizationServiceConfiguration config = new AuthorizationServiceConfiguration(
-                    mConfiguration.getAuthEndpointUri(),
-                    mConfiguration.getTokenEndpointUri(),
-                    mConfiguration.getRegistrationEndpointUri());
-
-            mAuthStateManager.replace(new AuthState(config));
-            initializeClient();
-
-//            -----------------------------------------------------------------------------------
-            Log.e(TAG, "====> doAuth");
-            // do Authentication
-            doAuth();
-            Log.e(TAG, "=====>doAuthComplete");
-        }
-    }
-
-    private void doAuth() {
-        // performAuthorizationRequest -> opening the chromeCustomTab
-        Intent completionIntent = new Intent(this, MainActivity.class);
-        Intent cancelIntent = new Intent(this, LoginActivity.class);
-        cancelIntent.putExtra(EXTRA_FAILED, true);
-        cancelIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        Log.e(TAG, "====> doAuth  =====>");
-        mAuthService.performAuthorizationRequest(
-                mAuthRequest.get(),
-                PendingIntent.getActivity(this, 0, completionIntent, 0),
-                PendingIntent.getActivity(this, 0, cancelIntent, 0),
-                mAuthIntent.get());
-
-//        AuthorizationService authService = new AuthorizationService(this);
-//        Intent authIntent = authService.getAuthorizationRequestIntent(mAuthRequest.get(), mAuthIntent.get());
-//        startActivityForResult(authIntent, RC_AUTH);
-
-    }
-
-    private void initializeClient() {
-        if (mConfiguration.getClientId() != null) {
-            Log.i(TAG, "Using static client ID: " + mConfiguration.getClientId());
-            // use a statically configured client ID
-            mClientId.set(mConfiguration.getClientId());
-            runOnUiThread(this::initializeAuthRequest);
-            return;
-        }
-    }
-
-    private void recreateAuthorizationService() {
-        if (mAuthService != null) {
-            Log.e(TAG, "Discarding existing AuthService instance");
-            mAuthService.dispose();
-        }
-        mAuthService = createAuthorizationService();
-        mAuthRequest.set(null);
-        mAuthIntent.set(null);
     }
 
     private void warmUpBrowser() {
@@ -224,48 +192,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         CustomTabsIntent.Builder intentBuilder = mAuthService.createCustomTabsIntentBuilder(mAuthRequest.get().toUri());
         intentBuilder.setToolbarColor(getColorCompat(R.color.chromeTab));
         mAuthIntent.set(intentBuilder.build());
-    }
-
-    private AuthorizationService createAuthorizationService() {
-        Log.e(TAG, "Creating authorization service");
-        AppAuthConfiguration.Builder builder = new AppAuthConfiguration.Builder();
-        builder.setBrowserMatcher(mBrowserMatcher);
-        builder.setConnectionBuilder(mConfiguration.getConnectionBuilder());
-
-        return new AuthorizationService(this, builder.build());
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.e(TAG, "--->onActivityResult");
-        if (resultCode == RESULT_CANCELED) {
-            // do something here
-            Log.e(TAG, "onActivityResult---->RESULT_CANCELED");
-            CommonUtils.toast("RESULT_CANCELED");
-        } else if (requestCode == RC_AUTH) {
-            // updated logged out mode and
-            AuthorizationResponse resp = AuthorizationResponse.fromIntent(data);
-            AuthorizationException ex = AuthorizationException.fromIntent(data);
-            final AuthState authState = new AuthState(resp, ex);
-            if (resp != null) {
-//                Log.i(TAG, String.format("Handled Authorization Response %s ", authState.toJsonString()));
-                AuthorizationService service = new AuthorizationService(this);
-                service.performTokenRequest(resp.createTokenExchangeRequest(), (tokenResponse, exception) -> {
-                    if (exception != null) {
-                        Log.e(TAG, "Token Exchange failed", exception);
-                    } else {
-                        if (tokenResponse != null) {
-                            authState.update(tokenResponse, exception);
-                            mAuthStateManager.updateAfterTokenResponse(tokenResponse, exception);
-//                            persistAuthState(authState);
-                            Log.e(TAG, String.format("Token Response [ Access Token: %s, ID Token: %s ]", tokenResponse.accessToken, tokenResponse.idToken));
-                            startActivity(MainActivity.getStartIntent(LoginActivity.this).putExtras(data.getExtras()));
-                        }
-                    }
-                });
-            }
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.M)

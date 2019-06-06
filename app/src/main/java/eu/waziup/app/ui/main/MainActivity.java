@@ -279,52 +279,54 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         }
         //todo this has to be fixed
 
-//        AuthorizationServiceDiscovery discovery =
-//                mStateManager.getCurrent()
-//                        .getAuthorizationServiceConfiguration()
-//                        .discoveryDoc;
+        net.openid.appauth.AuthorizationServiceDiscovery discovery =
+                mStateManager.getCurrent()
+                        .getAuthorizationServiceConfiguration()
+                        .discoveryDoc;
 
-//        URL userInfoEndpoint;
-//        try {
-//            userInfoEndpoint =
-//                    mConfiguration.getUserInfoEndpointUri() != null
-//                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
-//                            : new URL(discovery.getUserinfoEndpoint().toString());
-//        } catch (MalformedURLException urlEx) {
-//            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
-//            mUserInfoJson.set(null);
-////            runOnUiThread(this::displayAuthorized);
-//            return;
-//        }
 
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-////String name, String preferredName, String givenName, String familyName, String email
-////                try {
-////                    HttpURLConnection conn =
-////                            (HttpURLConnection) userInfoEndpoint.openConnection();
-////                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-////                    conn.setInstanceFollowRedirects(false);
-////                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
-////                            .readString(Charset.forName("UTF-8"));
-////                    mUserInfoJson.set(new JSONObject(response));
-////                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
-////                    //String name, String preferredName, String givenName, String familyName, String email
-////                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
-////                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
-////                            mUserInfoJson.get().get("email").toString());
-////                } catch (IOException ioEx) {
-////                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-//////                    CommonUtils.toast("Fetching user info failed");
-////                } catch (JSONException jsonEx) {
-////                    Log.e(TAG, "Failed to parse userinfo response");
-//////                    CommonUtils.toast("Failed to parse user info");
-////                }
-//
-//                return null;
-//            }
-//        }.execute();
+
+        URL userInfoEndpoint;
+        try {
+            userInfoEndpoint =
+                    mConfiguration.getUserInfoEndpointUri() != null
+                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
+                            : new URL(discovery.getUserinfoEndpoint().toString());
+        } catch (MalformedURLException urlEx) {
+            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+            mUserInfoJson.set(null);
+//            runOnUiThread(this::displayAuthorized);
+            return;
+        }
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                //String name, String preferredName, String givenName, String familyName, String email
+                try {
+                    HttpURLConnection conn =
+                            (HttpURLConnection) userInfoEndpoint.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                    conn.setInstanceFollowRedirects(false);
+                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
+                            .readString(Charset.forName("UTF-8"));
+                    mUserInfoJson.set(new JSONObject(response));
+                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
+                    //String name, String preferredName, String givenName, String familyName, String email
+                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
+                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
+                            mUserInfoJson.get().get("email").toString());
+                } catch (IOException ioEx) {
+                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+//                    CommonUtils.toast("Fetching user info failed");
+                } catch (JSONException jsonEx) {
+                    Log.e(TAG, "Failed to parse userinfo response");
+//                    CommonUtils.toast("Failed to parse user info");
+                }
+
+                return null;
+            }
+        }.execute();
 
 //        mExecutor.submit(() -> {
 
@@ -365,10 +367,10 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             }
 
             // todo find a solution for the discoveryDocument thing later
-//            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-//            if (discoveryDoc == null) {
-//                throw new IllegalStateException("no available discovery doc");
-//            }
+            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+            if (discoveryDoc == null) {
+                throw new IllegalStateException("no available discovery doc");
+            }
 
             //============================ for clearing the state ==================================
             AuthState currentState = mStateManager.getCurrent();
