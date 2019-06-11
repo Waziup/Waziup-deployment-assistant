@@ -36,7 +36,7 @@ import eu.waziup.app.R;
 /**
  * An abstraction of identity providers, containing all necessary info for the demo app.
  */
-class IdentityProvider {
+public class IdentityProvider {
 
     /**
      * Value used to indicate that a configured property is not specified or required.

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
@@ -39,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.TokenResponse;
@@ -84,6 +86,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
     private static final String AUTH_STATE = "AUTH_STATE";
 
+    private static final String EXTRA_CLIENT_SECRET = "clientSecret";
     private static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
 
     // AUTHORIZATION VARIABLES
@@ -334,6 +337,22 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //        });
     }
 
+    public static PendingIntent createPostAuthorizationIntent(
+            @NonNull Context context,
+            @NonNull AuthorizationRequest request,
+            @Nullable net.openid.appauth.AuthorizationServiceDiscovery discoveryDoc,
+            @Nullable String clientSecret) {
+        Intent intent = new Intent(context, MainActivity.class);
+        if (discoveryDoc != null) {
+            intent.putExtra(EXTRA_AUTH_SERVICE_DISCOVERY, discoveryDoc.docJson.toString());
+        }
+        if (clientSecret != null) {
+            intent.putExtra(EXTRA_CLIENT_SECRET, clientSecret);
+        }
+
+        return PendingIntent.getActivity(context, request.hashCode(), intent, 0);
+    }
+
     @MainThread
     private void signOut() {
         // discard the authorization and token state, but retain the configuration and
@@ -385,7 +404,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token
             Uri endSessionEndpoint = Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout");
 
-            String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+            String logoutUri = getResources().getString(R.string.keycloak_auth_redirect_uri);
             LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
                     Uri.parse(logoutUri));
 

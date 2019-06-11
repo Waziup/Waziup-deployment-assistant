@@ -4,11 +4,12 @@
     This file contains the OAuth2 configuration details that do not typically need to be changed
     for the demo app to correctly interact with each IDP.
     -->
-    <eat-comment/>
+    <eat-comment />
 
     <string name="keycloak_name">Keycloak</string>
     <!-- Change KEYCLOAK to the location of Keycloak -->
-    <string name="keycloak_discovery_uri" translatable="false">http://KEYCLOAK:8080/auth/realms/demo/.well-known/openid-configuration</string>
+    <string name="keycloak_discovery_uri" translatable="false">
+        http://keycloak.staging.waziup.io/auth/realms/demo/.well-known/openid-configuration
+    </string>
     <string name="keycloak_scope_string" translatable="false">openid profile email</string>
-
 </resources>

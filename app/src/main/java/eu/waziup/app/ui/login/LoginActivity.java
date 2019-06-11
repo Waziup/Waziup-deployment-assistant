@@ -1,7 +1,6 @@
 package eu.waziup.app.ui.login;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,16 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
-import net.openid.appauth.AppAuthConfiguration;
-import net.openid.appauth.AuthState;
-import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
-import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
 import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.RegistrationRequest;
-import net.openid.appauth.RegistrationResponse;
 import net.openid.appauth.ResponseTypeValues;
 import net.openid.appauth.browser.AnyBrowserMatcher;
 import net.openid.appauth.browser.BrowserMatcher;
@@ -37,7 +31,6 @@ import eu.waziup.app.data.network.model.login.IdentityProvider;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
 import eu.waziup.app.utils.AuthStateManager;
-import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
@@ -134,7 +127,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Log.d(TAG, "Making auth request to " + serviceConfig.authorizationEndpoint);
         mAuthService.performAuthorizationRequest(
                 authRequest,
-                TokenActivity.createPostAuthorizationIntent(
+                MainActivity.createPostAuthorizationIntent(
                         this,
                         authRequest,
                         serviceConfig.discoveryDoc,
@@ -157,19 +150,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Log.d(TAG, "Making registration request to " + serviceConfig.registrationEndpoint);
         mAuthService.performRegistrationRequest(
                 registrationRequest,
-                new AuthorizationService.RegistrationResponseCallback() {
-                    @Override
-                    public void onRegistrationRequestCompleted(
-                            @Nullable RegistrationResponse registrationResponse,
-                            @Nullable AuthorizationException ex) {
-                        Log.d(TAG, "Registration request complete");
-                        if (registrationResponse != null) {
-                            idp.setClientId(registrationResponse.clientId);
-                            idp.setClientSecret(registrationResponse.clientSecret);
-                            Log.d(TAG, "Registration request complete successfully");
-                            // Continue with the authentication
-                            makeAuthRequest(registrationResponse.request.configuration, idp);
-                        }
+                (registrationResponse, ex) -> {
+                    Log.d(TAG, "Registration request complete");
+                    if (registrationResponse != null) {
+                        idp.setClientId(registrationResponse.clientId);
+                        idp.setClientSecret(registrationResponse.clientSecret);
+                        Log.d(TAG, "Registration request complete successfully");
+                        // Continue with the authentication
+                        makeAuthRequest(registrationResponse.request.configuration, idp);
                     }
                 });
     }
