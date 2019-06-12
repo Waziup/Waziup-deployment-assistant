@@ -10,6 +10,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
+import android.widget.Toast;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -123,7 +124,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     }
 
-
     @OnClick(R.id.start_auth)
     void startAuth() {
         doAuth();
@@ -141,6 +141,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     private void createAuthRequest() {
         if (mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration() != null) {
+            Toast.makeText(this, "createAuthRequest has been called", Toast.LENGTH_SHORT).show();
             AuthorizationRequest.Builder authRequestBuilder = new AuthorizationRequest.Builder(
                     mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
                     mClientId.get(),
@@ -149,6 +150,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     .setScope(mConfiguration.getScope());
 
             mAuthRequest.set(authRequestBuilder.build());
+        }else{
+            Toast.makeText(this, "=========", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -162,6 +165,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         Log.i(TAG, "Creating auth config from res/raw/auth_config.json");
         if (mConfiguration.getAuthEndpointUri() != null && mConfiguration.getTokenEndpointUri() != null) {
+            Log.i(TAG, "===============>mConfiguration.getAuthEndpointUri() != null");
             AuthorizationServiceConfiguration config = new AuthorizationServiceConfiguration(
                     mConfiguration.getAuthEndpointUri(),
                     mConfiguration.getTokenEndpointUri(),
