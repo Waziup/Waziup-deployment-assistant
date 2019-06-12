@@ -92,12 +92,14 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 && mAuthStateManager.getCurrent() != null
                 && mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration() != null
                 && IdentityProvider.getEnabledProviders(this).size() > 0)
-            makeAuthRequest(mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(), IdentityProvider.getEnabledProviders(this).get(0));
+            makeAuthRequest(mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(),
+                    IdentityProvider.getEnabledProviders(this).get(0));
+        else
+            Toast.makeText(this, "mAuthStateManager is null", Toast.LENGTH_SHORT).show();
 
     }
 
     private AuthorizationService createAuthorizationService() {
-        Log.e(TAG, "Creating authorization service");
         AppAuthConfiguration.Builder builder = new AppAuthConfiguration.Builder();
         builder.setBrowserMatcher(mBrowserMatcher);
         builder.setConnectionBuilder(mConfiguration.getConnectionBuilder());
