@@ -102,7 +102,7 @@
     <string name="keycloak_name">Keycloak</string>
     <!-- Change KEYCLOAK to the location of Keycloak -->
     <string name="keycloak_discovery_uri" translatable="false">
-        http://keycloak.staging.waziup.io/auth/realms/demo/.well-known/openid-configuration
+        http://keycloak.waziup.io/auth/realms/demo/.well-known/openid-configuration
     </string>
     <string name="keycloak_scope_string" translatable="false">openid profile email</string>
 

@@ -9,7 +9,9 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
+import android.widget.Toast;
 
+import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
@@ -80,9 +82,29 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         mPresenter.onAttach(LoginActivity.this);
 
+        if (mAuthService == null){
+            mAuthService = createAuthorizationService();
+        }
+
         setUp();
 
+        if (mAuthStateManager != null
+                && mAuthStateManager.getCurrent() != null
+                && mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration() != null
+                && IdentityProvider.getEnabledProviders(this).size() > 0)
+            makeAuthRequest(mAuthStateManager.getCurrent().getAuthorizationServiceConfiguration(), IdentityProvider.getEnabledProviders(this).get(0));
+
     }
+
+    private AuthorizationService createAuthorizationService() {
+        Log.e(TAG, "Creating authorization service");
+        AppAuthConfiguration.Builder builder = new AppAuthConfiguration.Builder();
+        builder.setBrowserMatcher(mBrowserMatcher);
+        builder.setConnectionBuilder(mConfiguration.getConnectionBuilder());
+
+        return new AuthorizationService(this, builder.build());
+    }
+
 
     @Override
     protected void onStart() {
@@ -124,7 +146,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .setScope(idp.getScope())
                 .build();
 
-        Log.d(TAG, "Making auth request to " + serviceConfig.authorizationEndpoint);
+        Log.e(TAG, "Making auth request to " + serviceConfig.authorizationEndpoint);
         mAuthService.performAuthorizationRequest(
                 authRequest,
                 MainActivity.createPostAuthorizationIntent(
