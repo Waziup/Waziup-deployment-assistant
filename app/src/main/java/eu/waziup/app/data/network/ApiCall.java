@@ -38,11 +38,11 @@ public interface ApiCall {
 
     String HEADER_PARAM_SEPARATOR = ":";
 
-    @GET(ApiEndPoint.SENSOR)
+    @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<Device>> getSensors();
 
-    @GET(ApiEndPoint.SENSOR)
+    @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<Device>> getSensors(@Query("limit") int limit, @Query("offset") int skip);
 
@@ -50,7 +50,7 @@ public interface ApiCall {
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<NotificationResponse>> getNotifications();
 
-    @POST(ApiEndPoint.SENSOR)
+    @POST(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<RegisterSensorResponse> createSensor(@Body Sensor sensor);
 
