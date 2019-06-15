@@ -61,13 +61,13 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
 import eu.waziup.app.ui.device.DevicesFragment;
+import eu.waziup.app.ui.devicesdetail.DetailDevicesFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.device.DevicesCommunicator;
-import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
@@ -711,7 +711,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
-                .replace(R.id.cl_root_view, DetailSensorFragment.newInstance(sensor, parentFragment), DetailSensorFragment.TAG)
+                .replace(R.id.cl_root_view, DetailDevicesFragment.newInstance(sensor, parentFragment), DetailDevicesFragment.TAG)
                 .commit();
     }
 

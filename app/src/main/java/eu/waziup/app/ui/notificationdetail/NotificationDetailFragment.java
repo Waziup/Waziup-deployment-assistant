@@ -8,11 +8,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.thunder413.datetimeutils.DateTimeStyle;
@@ -32,7 +30,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
-import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
+import eu.waziup.app.ui.devicesdetail.MeasurementAdapter;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 

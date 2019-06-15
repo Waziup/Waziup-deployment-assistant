@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensordetail;
+package eu.waziup.app.ui.devicesdetail;
 
 import android.content.Intent;
 import android.support.test.espresso.contrib.RecyclerViewActions;
@@ -33,7 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @SmallTest
 public class EditMeasurementDialogTest {
 
-    DetailSensorFragment mDetailSensorFragment;
+    DetailDevicesFragment mDetailDevicesFragment;
 
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class, true, false);
@@ -61,13 +61,13 @@ public class EditMeasurementDialogTest {
         //passing mock measurement data to mock sensor data
         mSensor.setMeasurements(measurements);
         // for inflating the fragment - with mock data
-        mDetailSensorFragment = DetailSensorFragment.newInstance(mSensor, DevicesFragment.TAG);
+        mDetailDevicesFragment = DetailDevicesFragment.newInstance(mSensor, DevicesFragment.TAG);
 
         // inflating NotificationDetailFragment
         rule.getActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.cl_root_view, mDetailSensorFragment, DetailSensorFragment.TAG)
+                .replace(R.id.cl_root_view, mDetailDevicesFragment, DetailDevicesFragment.TAG)
                 .commit();
     }
 

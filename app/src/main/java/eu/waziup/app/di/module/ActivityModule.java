@@ -13,6 +13,7 @@ import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.device.DevicesAdapter;
 import eu.waziup.app.ui.device.DevicesMvpPresenter;
 import eu.waziup.app.ui.device.DevicesPresenter;
+import eu.waziup.app.ui.devicesdetail.DetailDevicesPresenter;
 import eu.waziup.app.ui.login.LoginMvpPresenter;
 import eu.waziup.app.ui.login.LoginMvpView;
 import eu.waziup.app.ui.login.LoginPresenter;
@@ -42,10 +43,9 @@ import eu.waziup.app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpView;
 import eu.waziup.app.ui.register.RegisterSensorPresenter;
 import eu.waziup.app.ui.device.DevicesMvpView;
-import eu.waziup.app.ui.sensordetail.DetailSensorMvpPresenter;
-import eu.waziup.app.ui.sensordetail.DetailSensorMvpView;
-import eu.waziup.app.ui.sensordetail.DetailSensorPresenter;
-import eu.waziup.app.ui.sensordetail.MeasurementAdapter;
+import eu.waziup.app.ui.devicesdetail.DetailDevicesMvpPresenter;
+import eu.waziup.app.ui.devicesdetail.DetailSensorMvpView;
+import eu.waziup.app.ui.devicesdetail.MeasurementAdapter;
 import eu.waziup.app.utils.rx.AppSchedulerProvider;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
@@ -110,8 +110,8 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    DetailSensorMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
-            DetailSensorPresenter<DetailSensorMvpView> presenter) {
+    DetailDevicesMvpPresenter<DetailSensorMvpView> provideDetailSensorPresenter(
+            DetailDevicesPresenter<DetailSensorMvpView> presenter) {
         return presenter;
     }
 

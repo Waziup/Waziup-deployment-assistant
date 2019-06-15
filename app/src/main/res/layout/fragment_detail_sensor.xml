@@ -6,7 +6,7 @@
     android:clickable="true"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".ui.sensordetail.DetailSensorFragment">
+    tools:context=".ui.devicesdetail.DetailDevicesFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

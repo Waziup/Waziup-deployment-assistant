@@ -18,12 +18,12 @@ import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
+import eu.waziup.app.ui.devicesdetail.DetailDevicesFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.ui.device.DevicesCommunicator;
 import eu.waziup.app.ui.device.DevicesFragment;
-import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 
 public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMvpView {
 
@@ -100,7 +100,7 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
             case RegisterSensorFragment.TAG:
                 fragmentClass = RegisterSensorFragment.class;
                 break;
-            case DetailSensorFragment.TAG:
+            case DetailDevicesFragment.TAG:
                 fragmentClass = DevicesFragment.class;
                 break;
             case NotificationDetailFragment.TAG:

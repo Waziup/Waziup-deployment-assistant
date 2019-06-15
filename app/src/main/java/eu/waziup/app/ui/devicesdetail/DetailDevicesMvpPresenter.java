@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensordetail;
+package eu.waziup.app.ui.devicesdetail;
 
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.PerActivity;
@@ -9,7 +9,7 @@ import eu.waziup.app.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface DetailSensorMvpPresenter<V extends DetailSensorMvpView> extends MvpPresenter<V> {
+public interface DetailDevicesMvpPresenter<V extends DetailSensorMvpView> extends MvpPresenter<V> {
 
     void onEditMeasurementClicked(Measurement measurement);
 

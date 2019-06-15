@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensordetail;
+package eu.waziup.app.ui.devicesdetail;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
