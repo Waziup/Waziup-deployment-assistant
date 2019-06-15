@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
@@ -82,9 +83,9 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     public static String parentFragment;
 
     //    https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    public static DetailDevicesFragment newInstance(Sensor sensor, String fragmentPassed) {
+    public static DetailDevicesFragment newInstance(Device device, String fragmentPassed) {
         Bundle args = new Bundle();
-        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
+        args.putSerializable(DETAIL_SENSOR_KEY, device);
         DetailDevicesFragment fragment = new DetailDevicesFragment();
         fragment.setArguments(args);
         parentFragment = fragmentPassed;

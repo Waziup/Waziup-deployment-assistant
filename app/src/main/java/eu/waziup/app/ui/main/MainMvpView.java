@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.main;
 
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.MvpView;
 
@@ -9,7 +10,7 @@ public interface MainMvpView extends MvpView {
 
     void openRegistrationSensor();
 
-    void openSensorDetailFragment(Sensor sensor, String parentFragment);
+    void openSensorDetailFragment(Device device, String parentFragment);
 
     void lockDrawer();
 

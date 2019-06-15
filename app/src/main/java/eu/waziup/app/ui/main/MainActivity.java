@@ -707,12 +707,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
     @Override
-    public void openSensorDetailFragment(Sensor sensor, String parentFragment) {
+    public void openSensorDetailFragment(Device device, String parentFragment) {
         lockDrawer();
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)//adding animation
-                .replace(R.id.cl_root_view, DetailDevicesFragment.newInstance(sensor, parentFragment), DetailDevicesFragment.TAG)
+                .replace(R.id.cl_root_view, DetailDevicesFragment.newInstance(device, parentFragment), DetailDevicesFragment.TAG)
                 .commit();
     }
 
@@ -813,7 +813,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
     @Override
-    public void onMarkerClicked(Sensor sensor, String parentFragment) {
-        openSensorDetailFragment(sensor, parentFragment);
+    public void onMarkerClicked(Device device, String parentFragment) {
+        openSensorDetailFragment(device, parentFragment);
     }
 }

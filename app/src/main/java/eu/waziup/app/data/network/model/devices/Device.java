@@ -1,11 +1,12 @@
 
 package eu.waziup.app.data.network.model.devices;
 
+import java.io.Serializable;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Device {
+public class Device implements Serializable {
 
     @SerializedName("deployed")
     @Expose

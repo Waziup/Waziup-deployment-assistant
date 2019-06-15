@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BasePresenter;
 import eu.waziup.app.utils.rx.SchedulerProvider;
@@ -59,9 +60,9 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
     }
 
     @Override
-    public void onSensorItemClicked(Sensor sensor, String parent) {
+    public void onSensorItemClicked(Device device, String parent) {
         getMvpView().lockDrawer();
-        getMvpView().openSensorDetailFragment(sensor, parent);
+        getMvpView().openSensorDetailFragment(device, parent);
     }
 
     @Override

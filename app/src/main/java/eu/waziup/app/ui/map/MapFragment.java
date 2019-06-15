@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
@@ -45,7 +46,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     private MapView mapView;
 
-    List<Sensor> sensorList = new ArrayList<>();
+    List<Device> deviceList = new ArrayList<>();
 
     MapCommunicator communicator;
     DevicesCommunicator DevicesCommunicator;
@@ -220,22 +221,22 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     }
 
     @Override
-    public void showSensorsOnMap(List<Sensor> sensors) {
+    public void showSensorsOnMap(List<Device> sensors) {
         hideLoading();
-        sensorList.addAll(sensors);
+        deviceList.addAll(sensors);
 
         // One way to add a marker view
         // Filling up the list
         if (map != null)
-            for (int i = 0; i < sensorList.size(); i++) {
-                if (sensorList.get(i).getLocation() != null) {
-                    if (sensorList.get(i).getLocation().getLatitude() != null &&
-                            sensorList.get(i).getLocation().getLongitude() != null)
+            for (int i = 0; i < deviceList.size(); i++) {
+                if (deviceList.get(i).getLocation() != null) {
+                    if (deviceList.get(i).getLocation().getLatitude() != null &&
+                            deviceList.get(i).getLocation().getLongitude() != null)
                         map.addMarker(new MarkerOptions()
-                                .position(new LatLng(sensorList.get(i).getLocation().getLatitude(),
-                                        sensorList.get(i).getLocation().getLongitude()))
-                                .title(String.valueOf(sensorList.get(i).getId())))
-                                .setSnippet(String.valueOf(sensorList.get(i).getDomain()));
+                                .position(new LatLng(deviceList.get(i).getLocation().getLatitude(),
+                                        deviceList.get(i).getLocation().getLongitude()))
+                                .title(String.valueOf(deviceList.get(i).getId())))
+                                .setSnippet(String.valueOf(deviceList.get(i).getDomain()));
                 }
             }
     }
@@ -416,11 +417,11 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @Override
     public boolean onInfoWindowClick(@NonNull Marker marker) {
-        if (sensorList.size() > 0) {
-            Sensor selectedSensor = null;
-            for (Sensor sensor : sensorList) {
-                if (TextUtils.equals(sensor.getId(), marker.getTitle())) {
-                    selectedSensor = sensor;
+        if (deviceList.size() > 0) {
+            Device selectedSensor = null;
+            for (Device device : deviceList) {
+                if (TextUtils.equals(device.getId(), marker.getTitle())) {
+                    selectedSensor = device;
                 }
             }
             if (selectedSensor != null)
