@@ -54,6 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
 import eu.waziup.app.data.network.model.logout.LogoutRequest;
 import eu.waziup.app.data.network.model.logout.LogoutService;
@@ -393,7 +394,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     @Override
     protected void setUp() {
-        changeToolbarTitle(getString(R.string.sensors));
+        changeToolbarTitle(getString(R.string.devices));
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -447,7 +448,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             case R.id.nav_sensor:
                 fragmentClass = DevicesFragment.class;
                 CURRENT_TAG = DevicesFragment.TAG;
-                changeToolbarTitle(getString(R.string.sensors));
+                changeToolbarTitle(getString(R.string.devices));
                 break;
             case R.id.nav_notification:
                 fragmentClass = NotificationFragment.class;
@@ -771,8 +772,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
     @Override
-    public void onItemClicked(Sensor sensor) {
-        mPresenter.onSensorItemClicked(sensor, DevicesFragment.TAG);
+    public void onItemClicked(Device device) {
+        mPresenter.onSensorItemClicked(device, DevicesFragment.TAG);
     }
 
     @Override

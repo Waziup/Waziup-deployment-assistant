@@ -1,5 +1,6 @@
 package eu.waziup.app.ui.main;
 
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
@@ -17,7 +18,7 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 
     void onFabClicked();
 
-    void onSensorItemClicked(Sensor sensor, String parent);
+    void onSensorItemClicked(Device device, String parent);
 
     boolean onUserLoggedIn();
 
