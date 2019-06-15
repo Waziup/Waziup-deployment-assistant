@@ -22,7 +22,7 @@
     <string name="empty_username">Please provide a non empty deviceToken.</string>
     <string name="invalid_email">Please provide a valid deviceToken.</string>
     <string name="empty_password">Please provide a non empty password.</string>
-    <string name="no_sensors_list_found">No sensors list found.</string>
+    <string name="no_sensors_list_found">No devices list found.</string>
     <string name="username">username</string>
     <string name="email">email</string>
 
@@ -81,7 +81,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="no_notification_list_found">No notification list found.</string>
     <string name="notification">Notifications</string>
-    <string name="sensors">Sensors</string>
+    <string name="devices">Devices</string>
     <string name="map">Sensor\'s location</string>
     <string name="yes">Yes</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>

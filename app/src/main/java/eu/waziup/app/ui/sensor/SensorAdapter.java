@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +20,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseViewHolder;
 
 public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    private List<Sensor> sensors;
+    private List<Device> devices;
     private Callback mCallback;
     private MeasurementCallback mMeasurementCallback;
 
-    public SensorAdapter(List<Sensor> sensors) {
-        this.sensors = sensors;
+    public SensorAdapter(List<Device> devices) {
+        this.devices = devices;
     }
 
     @NonNull
@@ -48,15 +48,15 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         sensorViewHolder.onBind(i);
     }
 
-    public void addItems(List<Sensor> sensors) {
-        this.sensors.clear();
-        this.sensors.addAll(sensors);
+    public void addItems(List<Device> devices) {
+        this.devices.clear();
+        this.devices.addAll(devices);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return sensors.size();
+        return devices.size();
     }
 
     public void setCallback(Callback callback) {
@@ -68,7 +68,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface Callback {
-        void onItemClicked(Sensor sensor);
+        void onItemClicked(Device device);
     }
 
     public interface MeasurementCallback {
@@ -92,7 +92,7 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.icon_sensor_owner)
         ImageView ownerIcon;
 
-        Sensor sensor;
+        Device device;
 
         public SensorViewHolder(View view) {
             super(view);
@@ -103,68 +103,68 @@ public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
 
-            if (sensors != null) {
+            if (devices != null) {
 
-                sensor = sensors.get(position);
+                device = devices.get(position);
 
                 // id
-                mSensorId.setText((TextUtils.isEmpty(sensor.getId())) ? sensor.getName() : sensor.getId());
+                mSensorId.setText((TextUtils.isEmpty(device.getId())) ? device.getName() : device.getId());
 
                 // date
-                if (!TextUtils.isEmpty(sensor.getDateCreated())) {
-                    mSensorDate.setVisibility(View.VISIBLE);
-                    mSensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(sensor.getDateCreated(),
-                            DateTimeStyle.MEDIUM)));
-                } else {
-                    mSensorDate.setVisibility(View.GONE);
-                }
+//                if (!TextUtils.isEmpty(device.getDateCreated())) {
+//                    mSensorDate.setVisibility(View.VISIBLE);
+//                    mSensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(device.getDateCreated(),
+//                            DateTimeStyle.MEDIUM)));
+//                } else {
+//                    mSensorDate.setVisibility(View.GONE);
+//                }
 
                 // owner
-                if (!TextUtils.isEmpty(sensor.getOwner())) {
-                    ownerIcon.setVisibility(View.VISIBLE);
-                    mSensorOwner.setVisibility(View.VISIBLE);
-                    mSensorOwner.setText(String.valueOf(sensor.getOwner()));
-                } else {
-//                    ownerIcon.setVisibility(View.GONE);
-//                    mSensorOwner.setVisibility(View.GONE);
-                    ownerIcon.setVisibility(View.VISIBLE);
-                    mSensorOwner.setVisibility(View.VISIBLE);
-                    mSensorOwner.setText("Guest user");
-
-                }
+//                if (!TextUtils.isEmpty(device.getOwner())) {
+//                    ownerIcon.setVisibility(View.VISIBLE);
+//                    mSensorOwner.setVisibility(View.VISIBLE);
+//                    mSensorOwner.setText(String.valueOf(device.getOwner()));
+//                } else {
+////                    ownerIcon.setVisibility(View.GONE);
+////                    mSensorOwner.setVisibility(View.GONE);
+//                    ownerIcon.setVisibility(View.VISIBLE);
+//                    mSensorOwner.setVisibility(View.VISIBLE);
+//                    mSensorOwner.setText("Guest user");
+//
+//                }
 
                 measurementContainer.removeAllViews();
 
-                if (sensor.getMeasurements() != null) {
-
-                    for (Measurement measurement : sensor.getMeasurements()) {
-                        TextView measurementValue = new TextView(itemView.getContext());
-                        measurementValue.setTextColor(itemView.getResources().getColor(R.color.white));
-                        measurementValue.setGravity(Gravity.CENTER);
-                        measurementValue.setBackground(itemView.getResources().getDrawable(R.drawable.bg_curved_accent_color));
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT
-                        );
-                        params.setMargins(0, 5, 3, 5);
-                        measurementValue.setLayoutParams(params);
-                        measurementValue.setWidth(120);
-                        measurementValue.setHeight(70);
-                        // for limiting the number of character that can be displayed
-                        measurementValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
-                        measurementValue.setMaxLines(1);
-                        measurementValue.setEllipsize(TextUtils.TruncateAt.END);
-
-                        if (measurementValue.getParent() != null)
-                            ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
-                        measurementValue.setText(measurement.getId());
-                        measurementValue.setOnClickListener(view -> mMeasurementCallback.onItemClicked(measurement));
-                        measurementContainer.addView(measurementValue);
-                    }
-                }
+//                if (device.getMeasurements() != null) {
+//
+//                    for (Measurement measurement : device.getMeasurements()) {
+//                        TextView measurementValue = new TextView(itemView.getContext());
+//                        measurementValue.setTextColor(itemView.getResources().getColor(R.color.white));
+//                        measurementValue.setGravity(Gravity.CENTER);
+//                        measurementValue.setBackground(itemView.getResources().getDrawable(R.drawable.bg_curved_accent_color));
+//                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                ViewGroup.LayoutParams.WRAP_CONTENT
+//                        );
+//                        params.setMargins(0, 5, 3, 5);
+//                        measurementValue.setLayoutParams(params);
+//                        measurementValue.setWidth(120);
+//                        measurementValue.setHeight(70);
+//                        // for limiting the number of character that can be displayed
+//                        measurementValue.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
+//                        measurementValue.setMaxLines(1);
+//                        measurementValue.setEllipsize(TextUtils.TruncateAt.END);
+//
+//                        if (measurementValue.getParent() != null)
+//                            ((ViewGroup) measurementValue.getParent()).removeView(measurementValue);
+//                        measurementValue.setText(measurement.getId());
+//                        measurementValue.setOnClickListener(view -> mMeasurementCallback.onItemClicked(measurement));
+//                        measurementContainer.addView(measurementValue);
+//                    }
+//                }
             }
 
-            itemView.setOnClickListener(v -> mCallback.onItemClicked(sensors.get(getAdapterPosition())));
+            itemView.setOnClickListener(v -> mCallback.onItemClicked(devices.get(getAdapterPosition())));
 
         }
 

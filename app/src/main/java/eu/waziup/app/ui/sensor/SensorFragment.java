@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
@@ -114,7 +115,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         setUpRecyclerView();
         mPresenter.loadSensors();
         if (getBaseActivity().getSupportActionBar() != null)
-            getBaseActivity().getSupportActionBar().setTitle(R.string.sensors);
+            getBaseActivity().getSupportActionBar().setTitle(R.string.devices);
 
         // Telling the MainActivity to make the Fab visible
         communicator.visibleFab();
@@ -127,14 +128,14 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     }
 
     @Override
-    public void showSensors(List<Sensor> sensors) {
-        if (sensors != null) {
-            if (sensors.size() > 0) {
+    public void showSensors(List<Device> devices) {
+        if (devices != null) {
+            if (devices.size() > 0) {
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(sensors);
+                mAdapter.addItems(devices);
             } else {
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
                     tvNoSensors.setVisibility(View.VISIBLE);
@@ -171,8 +172,8 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     }
 
     @Override
-    public void onItemClicked(Sensor sensor) {
-        communicator.onItemClicked(sensor);
+    public void onItemClicked(Device device) {
+        communicator.onItemClicked(device);
     }
 
     @Override
