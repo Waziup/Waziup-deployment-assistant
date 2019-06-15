@@ -46,11 +46,6 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -65,20 +60,19 @@ import eu.waziup.app.data.network.model.logout.LogoutService;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.login.LoginActivity;
 import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesCommunicator;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
-import okio.Okio;
 
-public class MainActivity extends BaseActivity implements MainMvpView, SensorCommunicator, MapCommunicator {
+public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
@@ -88,7 +82,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     // AUTHORIZATION VARIABLES
     private static final String KEY_USER_INFO = "userInfo";
-    public static String CURRENT_TAG = SensorFragment.TAG;
+    public static String CURRENT_TAG = DevicesFragment.TAG;
     private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -169,7 +163,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
                 .commit();
 
 
@@ -451,8 +445,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
         switch (menuItem.getItemId()) {
             case R.id.nav_sensor:
-                fragmentClass = SensorFragment.class;
-                CURRENT_TAG = SensorFragment.TAG;
+                fragmentClass = DevicesFragment.class;
+                CURRENT_TAG = DevicesFragment.TAG;
                 changeToolbarTitle(getString(R.string.sensors));
                 break;
             case R.id.nav_notification:
@@ -474,7 +468,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 break;
             case R.id.nav_setting:
                 CommonUtils.toast("settings clicked");
-                CURRENT_TAG = SensorFragment.TAG;
+                CURRENT_TAG = DevicesFragment.TAG;
                 break;
             case R.id.nav_logout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -500,7 +494,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                 alert.show();
                 break;
             default:
-                fragmentClass = SensorFragment.class;
+                fragmentClass = DevicesFragment.class;
         }
 
         try {
@@ -561,7 +555,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
             return;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(SensorFragment.TAG);
+        Fragment fragment = fragmentManager.findFragmentByTag(DevicesFragment.TAG);
         if (fragment == null) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
@@ -586,11 +580,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
 //                                .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
 //                                .commit();
-//                    } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
+//                    } else if (TextUtils.equals(parent, DevicesFragment.TAG)) {
 //                        getSupportFragmentManager()
 //                                .beginTransaction()
 //                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+//                                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
 //                                .commit();
 //                    }
             }
@@ -619,11 +613,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 ////            Log.e("---->backPressed", "<= 1");
 ////            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
 ////            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
-////            if(f instanceof SensorFragment){
+////            if(f instanceof DevicesFragment){
 //
 //            if (getSupportFragmentManager().getFragments().size() <= 1) {
-////                SensorFragment sensorFragment = (SensorFragment) getSupportFragmentManager().findFragmentByTag(SensorFragment.TAG);
-//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), SensorFragment.TAG)) {// && sensorFragment.isVisible()) {
+////                DevicesFragment sensorFragment = (DevicesFragment) getSupportFragmentManager().findFragmentByTag(DevicesFragment.TAG);
+//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), DevicesFragment.TAG)) {// && sensorFragment.isVisible()) {
 //                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
 //
 //                }
@@ -633,7 +627,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 //                getSupportFragmentManager()
 //                        .beginTransaction()
 //                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+//                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
 //                        .commit();
 //            }
 //        }
@@ -658,11 +652,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
-            } else if (TextUtils.equals(parent, SensorFragment.TAG)) {
+            } else if (TextUtils.equals(parent, DevicesFragment.TAG)) {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
                         .commit();
             }
         }
@@ -778,7 +772,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, SensorCom
 
     @Override
     public void onItemClicked(Sensor sensor) {
-        mPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
+        mPresenter.onSensorItemClicked(sensor, DevicesFragment.TAG);
     }
 
     @Override

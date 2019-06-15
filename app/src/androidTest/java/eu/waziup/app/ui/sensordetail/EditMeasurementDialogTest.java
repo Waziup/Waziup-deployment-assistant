@@ -17,8 +17,8 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.LastValue;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.ui.sensor.SensorFragment;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -61,7 +61,7 @@ public class EditMeasurementDialogTest {
         //passing mock measurement data to mock sensor data
         mSensor.setMeasurements(measurements);
         // for inflating the fragment - with mock data
-        mDetailSensorFragment = DetailSensorFragment.newInstance(mSensor, SensorFragment.TAG);
+        mDetailSensorFragment = DetailSensorFragment.newInstance(mSensor, DevicesFragment.TAG);
 
         // inflating NotificationDetailFragment
         rule.getActivity()

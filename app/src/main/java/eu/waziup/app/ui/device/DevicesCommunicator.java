@@ -1,9 +1,8 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 
-public interface SensorCommunicator {
+public interface DevicesCommunicator {
     void onItemClicked(Device device);
     void showFab();
     void hideFab();

@@ -34,8 +34,8 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesCommunicator;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.utils.CommonUtils;
 
 public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.OnInfoWindowClickListener, PermissionsListener {
@@ -48,7 +48,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     List<Sensor> sensorList = new ArrayList<>();
 
     MapCommunicator communicator;
-    SensorCommunicator SensorCommunicator;
+    DevicesCommunicator DevicesCommunicator;
     //    private static final int PERMISSIONS_LOCATION = 9910;
     public static final String TAG = "MapFragment";
 
@@ -128,12 +128,12 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
 
     @OnClick(R.id.nav_back_btn)
     void onNavBackClick() {
-        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
+        getBaseActivity().onFragmentDetached(TAG, DevicesFragment.TAG);
     }
 
     @Override
     protected void setUp(View view) {
-        SensorCommunicator.invisibleFab();
+        DevicesCommunicator.invisibleFab();
     }
 
     @OnClick(R.id.gps_fab)
@@ -180,7 +180,7 @@ public class MapFragment extends BaseFragment implements MapMvpView, MapboxMap.O
     public void onAttach(Context context) {
         super.onAttach(context);
         communicator = (MapCommunicator) context;
-        SensorCommunicator = (SensorCommunicator) context;
+        DevicesCommunicator = (DevicesCommunicator) context;
     }
 
     @Override

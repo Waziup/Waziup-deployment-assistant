@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +37,8 @@ import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesCommunicator;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.utils.CommonUtils;
 
 import static android.app.Activity.RESULT_OK;
@@ -93,7 +92,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     public static final String TAG = "RegisterSensorFragment";
 
-    SensorCommunicator communicator;
+    DevicesCommunicator communicator;
 
     public static RegisterSensorFragment newInstance() {
         Bundle args = new Bundle();
@@ -123,7 +122,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        communicator = (SensorCommunicator) context;
+        communicator = (DevicesCommunicator) context;
     }
 
     @OnClick(R.id.btn_register_get_current_location)
@@ -146,7 +145,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
 
     @OnClick(R.id.nav_back_btn)
     void onNavBackClick() {
-        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
+        getBaseActivity().onFragmentDetached(TAG, DevicesFragment.TAG);
     }
 
     @OnClick(R.id.register_scan_qr)
@@ -527,7 +526,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
     @Override
     public void openSensorListFragment() {
         hideLoading();
-        getBaseActivity().onFragmentDetached(TAG, SensorFragment.TAG);
+        getBaseActivity().onFragmentDetached(TAG, DevicesFragment.TAG);
     }
 
     @Override

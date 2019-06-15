@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
@@ -12,15 +12,12 @@ import org.junit.runner.RunWith;
 import eu.waziup.app.R;
 import eu.waziup.app.ui.main.MainActivity;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class SensorFragmentTest {
+public class DevicesFragmentTest {
 
-    private SensorFragment mSensorFragment;
+    private DevicesFragment mDevicesFragment;
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -35,7 +32,7 @@ public class SensorFragmentTest {
         rule.getActivity()
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.flContent, SensorFragment.newInstance(), SensorFragment.TAG)
+                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
                 .commit();
     }
 
@@ -45,7 +42,7 @@ public class SensorFragmentTest {
 //        onView(withId(R.id.fab_sensor)).perform(click());
 //        getInstrumentation().waitForIdleSync();// for telling the test to wait for a while so that the inflation comes first before searching for a view with its id
 //        onView(withId(R.id.fab_sensor)).check(matches(isDisplayed()));
-//        mSensorFragment.getView().findViewById(R.id.fab_sensor)
+//        mDevicesFragment.getView().findViewById(R.id.fab_sensor)
     }
 
 }

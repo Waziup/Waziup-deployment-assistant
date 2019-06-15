@@ -1,8 +1,6 @@
 package eu.waziup.app.ui.sensordetail;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,7 +33,7 @@ import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.measurementedit.EditMeasurementDialog;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
+import eu.waziup.app.ui.device.DevicesCommunicator;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
 
@@ -102,7 +100,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
 //        return fragment;
 //    }
 
-    private SensorCommunicator communicator;
+    private DevicesCommunicator communicator;
 
     @Nullable
     @Override
@@ -137,7 +135,7 @@ public class DetailSensorFragment extends BaseFragment implements DetailSensorMv
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        communicator = (SensorCommunicator) context;
+        communicator = (DevicesCommunicator) context;
     }
 
     @Override

@@ -10,7 +10,7 @@
     android:clickable="true"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context=".ui.sensor.SensorFragment">
+    tools:context=".ui.device.DevicesFragment">
 
     <ImageView
         android:layout_width="match_parent"

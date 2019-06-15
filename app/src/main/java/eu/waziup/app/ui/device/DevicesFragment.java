@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import android.content.Context;
 import android.graphics.drawable.Animatable;
@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,19 +25,18 @@ import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.measurementdetail.MeasurementDetailDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 
-public class SensorFragment extends BaseFragment implements SensorMvpView, SensorAdapter.Callback, SensorAdapter.MeasurementCallback {
+public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
 
     @Inject
-    SensorMvpPresenter<SensorMvpView> mPresenter;
+    DevicesMvpPresenter<DevicesMvpView> mPresenter;
 
     @Inject
-    SensorAdapter mAdapter;
+    DevicesAdapter mAdapter;
 
     @Inject
     LinearLayoutManager mLayoutManager;
@@ -52,13 +50,13 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
 
-    SensorCommunicator communicator;
+    DevicesCommunicator communicator;
 
-    public static final String TAG = "SensorFragment";
+    public static final String TAG = "DevicesFragment";
 
-    public static SensorFragment newInstance() {
+    public static DevicesFragment newInstance() {
         Bundle args = new Bundle();
-        SensorFragment fragment = new SensorFragment();
+        DevicesFragment fragment = new DevicesFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,7 +105,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
     public void onAttach(Context context) {
         super.onAttach(context);
         loadPage();
-        communicator = (SensorCommunicator) context;
+        communicator = (DevicesCommunicator) context;
     }
 
     @Override
@@ -158,7 +156,7 @@ public class SensorFragment extends BaseFragment implements SensorMvpView, Senso
         getBaseActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, ErrorNetworkFragment.newInstance(SensorFragment.TAG), ErrorNetworkFragment.TAG)
+                .replace(R.id.flContent, ErrorNetworkFragment.newInstance(DevicesFragment.TAG), ErrorNetworkFragment.TAG)
                 .commit();
     }
 

@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import eu.waziup.app.R;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.ui.sensor.SensorFragment;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -18,7 +17,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.*;
 
 public class NotificationFragmentTest {
 

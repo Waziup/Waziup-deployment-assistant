@@ -1,19 +1,14 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.thunder413.datetimeutils.DateTimeStyle;
-import com.github.thunder413.datetimeutils.DateTimeUtils;
 
 import java.util.List;
 
@@ -22,16 +17,15 @@ import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseViewHolder;
 
-public class SensorAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private List<Device> devices;
     private Callback mCallback;
     private MeasurementCallback mMeasurementCallback;
 
-    public SensorAdapter(List<Device> devices) {
+    public DevicesAdapter(List<Device> devices) {
         this.devices = devices;
     }
 

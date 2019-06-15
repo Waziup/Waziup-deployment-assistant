@@ -7,7 +7,7 @@
     android:clickable="true"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.sensor.SensorFragment">
+    tools:context=".ui.device.DevicesFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sensor_swipe_to_refresh"

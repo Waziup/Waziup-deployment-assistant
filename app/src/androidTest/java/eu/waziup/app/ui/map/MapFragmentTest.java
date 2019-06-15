@@ -11,9 +11,6 @@ import org.junit.Test;
 
 import eu.waziup.app.R;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.ui.sensor.SensorFragment;
-
-import static org.junit.Assert.*;
 
 public class MapFragmentTest {
 

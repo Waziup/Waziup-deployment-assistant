@@ -1,16 +1,11 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import eu.waziup.app.data.DataManager;
-import eu.waziup.app.ui.base.MvpView;
-import eu.waziup.app.ui.main.MainMvpView;
-import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
@@ -20,12 +15,12 @@ import static org.mockito.Mockito.verify;
 public class SensorPresenterTest {
 
     @Mock
-    SensorMvpView mMockSensorMvpView;
+    DevicesMvpView mMockDevicesMvpView;
 
     @Mock
     DataManager mMockDataManager;
 
-    private SensorPresenter<SensorMvpView> mSensorPresenter;
+    private DevicesPresenter<DevicesMvpView> mSensorPresenter;
     private TestScheduler mTestScheduler;
 
     @Before
@@ -35,11 +30,11 @@ public class SensorPresenterTest {
         TestSchedulerProvider testSchedulerProvider = new TestSchedulerProvider(mTestScheduler);
 
         // presenter
-        mSensorPresenter = new SensorPresenter<>(
+        mSensorPresenter = new DevicesPresenter<>(
                 mMockDataManager,
                 testSchedulerProvider,
                 compositeDisposable);
-        mSensorPresenter.onAttach(mMockSensorMvpView);
+        mSensorPresenter.onAttach(mMockDevicesMvpView);
     }
 
     @After

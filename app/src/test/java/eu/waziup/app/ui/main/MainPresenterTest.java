@@ -11,7 +11,7 @@ import java.util.Random;
 
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.sensor.Sensor;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
@@ -65,10 +65,10 @@ public class MainPresenterTest {
         // todo check if this is the right way of doing it.
         Sensor sensor = new Sensor(
                 new Random(4).toString(), "APTD-123-asd", "Hawassa", "VISIBLE");
-        mMainPresenter.onSensorItemClicked(sensor, SensorFragment.TAG);
+        mMainPresenter.onSensorItemClicked(sensor, DevicesFragment.TAG);
 
         // has to open selected Sensor detail fragment
-        verify(mMockMainMvpView).openSensorDetailFragment(sensor, SensorFragment.TAG);
+        verify(mMockMainMvpView).openSensorDetailFragment(sensor, DevicesFragment.TAG);
     }
 
     @After

@@ -21,8 +21,8 @@ import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesCommunicator;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.sensordetail.DetailSensorFragment;
 
 public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMvpView {
@@ -35,7 +35,7 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
     public static String parent;
     private Handler mHandler;
 
-    SensorCommunicator communicator;
+    DevicesCommunicator communicator;
 
     public static ErrorNetworkFragment newInstance(String pts) {
         Bundle args = new Bundle();
@@ -67,7 +67,7 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        communicator = (SensorCommunicator) context;
+        communicator = (DevicesCommunicator) context;
     }
 
     @OnClick(R.id.btn_retry)
@@ -91,8 +91,8 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
         Class fragmentClass = null;
 
         switch (parent) {
-            case SensorFragment.TAG:
-                fragmentClass = SensorFragment.class;
+            case DevicesFragment.TAG:
+                fragmentClass = DevicesFragment.class;
                 break;
             case NotificationFragment.TAG:
                 fragmentClass = NotificationFragment.class;
@@ -101,7 +101,7 @@ public class ErrorNetworkFragment extends BaseFragment implements ErrorNetworkMv
                 fragmentClass = RegisterSensorFragment.class;
                 break;
             case DetailSensorFragment.TAG:
-                fragmentClass = SensorFragment.class;
+                fragmentClass = DevicesFragment.class;
                 break;
             case NotificationDetailFragment.TAG:
                 fragmentClass = NotificationDetailFragment.class;

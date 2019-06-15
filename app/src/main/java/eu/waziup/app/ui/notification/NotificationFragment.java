@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,7 @@ import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
-import eu.waziup.app.ui.sensor.SensorCommunicator;
-import eu.waziup.app.ui.sensor.SensorFragment;
+import eu.waziup.app.ui.device.DevicesCommunicator;
 
 public class NotificationFragment extends BaseFragment implements NotificationMvpView, NotificationAdapter.Callback {
 
@@ -51,7 +49,7 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     @BindView(R.id.tv_no_notification)
     TextView tvNoNotification;
 
-    SensorCommunicator communicator;
+    DevicesCommunicator communicator;
 
     public static final String TAG = "NotificationFragment";
 
@@ -90,7 +88,7 @@ public class NotificationFragment extends BaseFragment implements NotificationMv
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        communicator = (SensorCommunicator) context;
+        communicator = (DevicesCommunicator) context;
     }
 
 

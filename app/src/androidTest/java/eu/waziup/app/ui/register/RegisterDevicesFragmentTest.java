@@ -11,8 +11,6 @@ import org.junit.runner.RunWith;
 
 import eu.waziup.app.R;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.ui.register.RegisterSensorFragment;
-import eu.waziup.app.ui.sensor.SensorFragment;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -22,7 +20,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class RegisterSensorFragmentTest {
+public class RegisterDevicesFragmentTest {
 
     // note: should not be inflating the a fragment in as a rule. should only be activity and through
     // the activity its possible to inflate the fragment

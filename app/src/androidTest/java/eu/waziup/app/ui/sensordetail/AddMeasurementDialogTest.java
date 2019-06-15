@@ -12,14 +12,12 @@ import org.junit.runner.RunWith;
 
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.main.MainActivity;
-import eu.waziup.app.ui.sensor.SensorFragment;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -40,7 +38,7 @@ public class AddMeasurementDialogTest {
 
         // for inflating the fragment - with mock data
         mDetailSensorFragment = DetailSensorFragment.newInstance(new Sensor("IST-AFRICA-2018_Sensor6", "",
-                "waziup", "public"), SensorFragment.TAG);
+                "waziup", "public"), DevicesFragment.TAG);
 
         rule.getActivity()
                 .getSupportFragmentManager()

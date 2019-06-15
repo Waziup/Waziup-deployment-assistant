@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import javax.inject.Inject;
 
@@ -12,15 +12,15 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by KidusMT.
  */
 
-public class SensorPresenter<V extends SensorMvpView> extends BasePresenter<V>
-        implements SensorMvpPresenter<V> {
+public class DevicesPresenter<V extends DevicesMvpView> extends BasePresenter<V>
+        implements DevicesMvpPresenter<V> {
 
-    private static final String TAG = "SensorPresenter";
+    private static final String TAG = "DevicesPresenter";
 
     @Inject
-    public SensorPresenter(DataManager dataManager,
-                           SchedulerProvider schedulerProvider,
-                           CompositeDisposable compositeDisposable) {
+    public DevicesPresenter(DataManager dataManager,
+                            SchedulerProvider schedulerProvider,
+                            CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

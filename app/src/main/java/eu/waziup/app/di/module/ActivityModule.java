@@ -10,7 +10,9 @@ import dagger.Module;
 import dagger.Provides;
 import eu.waziup.app.di.ActivityContext;
 import eu.waziup.app.di.PerActivity;
-import eu.waziup.app.ui.base.MvpPresenter;
+import eu.waziup.app.ui.device.DevicesAdapter;
+import eu.waziup.app.ui.device.DevicesMvpPresenter;
+import eu.waziup.app.ui.device.DevicesPresenter;
 import eu.waziup.app.ui.login.LoginMvpPresenter;
 import eu.waziup.app.ui.login.LoginMvpView;
 import eu.waziup.app.ui.login.LoginPresenter;
@@ -39,10 +41,7 @@ import eu.waziup.app.ui.notificationdetail.NotificationDetailPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpPresenter;
 import eu.waziup.app.ui.register.RegisterSensorMvpView;
 import eu.waziup.app.ui.register.RegisterSensorPresenter;
-import eu.waziup.app.ui.sensor.SensorAdapter;
-import eu.waziup.app.ui.sensor.SensorMvpPresenter;
-import eu.waziup.app.ui.sensor.SensorMvpView;
-import eu.waziup.app.ui.sensor.SensorPresenter;
+import eu.waziup.app.ui.device.DevicesMvpView;
 import eu.waziup.app.ui.sensordetail.DetailSensorMvpPresenter;
 import eu.waziup.app.ui.sensordetail.DetailSensorMvpView;
 import eu.waziup.app.ui.sensordetail.DetailSensorPresenter;
@@ -90,8 +89,8 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    SensorMvpPresenter<SensorMvpView> provideSensorPresenter(
-            SensorPresenter<SensorMvpView> presenter) {
+    DevicesMvpPresenter<DevicesMvpView> provideSensorPresenter(
+            DevicesPresenter<DevicesMvpView> presenter) {
         return presenter;
     }
 
@@ -160,8 +159,8 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    SensorAdapter provideSensorAdapter() {
-        return new SensorAdapter(new ArrayList<>());
+    DevicesAdapter provideSensorAdapter() {
+        return new DevicesAdapter(new ArrayList<>());
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.sensor;
+package eu.waziup.app.ui.device;
 
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
@@ -8,7 +8,7 @@ import eu.waziup.app.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface SensorMvpPresenter<V extends SensorMvpView> extends MvpPresenter<V> {
+public interface DevicesMvpPresenter<V extends DevicesMvpView> extends MvpPresenter<V> {
 
     void onLogOutClicked();
     void loadSensors();
