@@ -4,6 +4,7 @@ package eu.waziup.app.data.network;
 import java.util.List;
 
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
@@ -25,9 +26,9 @@ public interface ApiHelper {
 
     Single<String> serverLogin(LoginRequest.ServerLoginRequest loginRequest);
 
-    Single<List<Sensor>> fetchSensors();
+    Single<List<Device>> fetchSensors();
 
-    Single<List<Sensor>> fetchSensors(int limit, int offset);
+    Single<List<Device>> fetchSensors(int limit, int offset);
 
     Single<ResponseBody> deleteMeasurement(String sensor_id, String measurement_id);
 
