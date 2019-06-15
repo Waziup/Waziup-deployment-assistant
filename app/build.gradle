@@ -23,7 +23,6 @@ android {
             buildConfigField("String", "MAPBOX_TOKEN", "\"pk.eyJ1Ijoia2lkdXNtdCIsImEiOiJjam9rc2s5c2kwMmcwM3BxYmwwb3p1OTZuIn0.z2_v79Kx2QWk3PuPKyRzbA\"")
             buildConfigField("String", "API_KEY", "\"ABCXYZ123TEST\"")
         }
-
         release {
             minifyEnabled true
             shrinkResources true
