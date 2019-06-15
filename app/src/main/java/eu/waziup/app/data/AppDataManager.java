@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 import eu.waziup.app.data.network.ApiHeader;
 import eu.waziup.app.data.network.ApiHelper;
 import eu.waziup.app.data.network.model.LoginRequest;
+import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
@@ -48,12 +49,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<List<Sensor>> fetchSensors() {
+    public Single<List<Device>> fetchSensors() {
         return mApiHelper.fetchSensors();
     }
 
     @Override
-    public Single<List<Sensor>> fetchSensors(int limit, int offset) {
+    public Single<List<Device>> fetchSensors(int limit, int offset) {
         return mApiHelper.fetchSensors(limit, offset);
     }
 
