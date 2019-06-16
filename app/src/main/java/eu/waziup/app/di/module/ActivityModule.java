@@ -23,9 +23,9 @@ import eu.waziup.app.ui.main.MainPresenter;
 import eu.waziup.app.ui.map.MapMvpPresenter;
 import eu.waziup.app.ui.map.MapMvpView;
 import eu.waziup.app.ui.map.MapPresenter;
-import eu.waziup.app.ui.measurementdetail.MeasurementDetailMvpPresenter;
-import eu.waziup.app.ui.measurementdetail.MeasurementDetailMvpView;
-import eu.waziup.app.ui.measurementdetail.MeasurementDetailPresenter;
+import eu.waziup.app.ui.sensordetail.SensorDetailMvpPresenter;
+import eu.waziup.app.ui.sensordetail.SensorDetailMvpView;
+import eu.waziup.app.ui.sensordetail.SensorDetailPresenter;
 import eu.waziup.app.ui.measurementedit.EditMeasurementMvpPresenter;
 import eu.waziup.app.ui.measurementedit.EditMeasurementMvpView;
 import eu.waziup.app.ui.measurementedit.EditMeasurementPresenter;
@@ -152,8 +152,8 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    MeasurementDetailMvpPresenter<MeasurementDetailMvpView> provideMeasurementDetailPresenter(
-            MeasurementDetailPresenter<MeasurementDetailMvpView> presenter) {
+    SensorDetailMvpPresenter<SensorDetailMvpView> provideMeasurementDetailPresenter(
+            SensorDetailPresenter<SensorDetailMvpView> presenter) {
         return presenter;
     }
 

@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.measurementdetail;
+package eu.waziup.app.ui.sensordetail;
 
 import javax.inject.Inject;
 
@@ -11,15 +11,15 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by KidusMT.
  */
 
-public class MeasurementDetailPresenter<V extends MeasurementDetailMvpView> extends BasePresenter<V>
-        implements MeasurementDetailMvpPresenter<V> {
+public class SensorDetailPresenter<V extends SensorDetailMvpView> extends BasePresenter<V>
+        implements SensorDetailMvpPresenter<V> {
 
     private static final String TAG = "QRScanPresenter";
 
     @Inject
-    public MeasurementDetailPresenter(DataManager dataManager,
-                                      SchedulerProvider schedulerProvider,
-                                      CompositeDisposable compositeDisposable) {
+    public SensorDetailPresenter(DataManager dataManager,
+                                 SchedulerProvider schedulerProvider,
+                                 CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

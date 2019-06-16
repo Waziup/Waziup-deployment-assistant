@@ -2,7 +2,7 @@
   "client_id": "dashboard",
   "redirect_uri": "net.openid.appauthdemo:/oauth2redirect",
   "authorization_scope": "openid email profile",
-  "discovery_uri": "",
+  "discovery_uri": "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth",
   "authorization_endpoint_uri": "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth",
   "token_endpoint_uri": "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/token",
   "registration_endpoint_uri": "",

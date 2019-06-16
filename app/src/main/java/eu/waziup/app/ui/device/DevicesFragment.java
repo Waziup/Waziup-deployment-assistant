@@ -27,7 +27,7 @@ import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.measurementdetail.MeasurementDetailDialog;
+import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 
 public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
@@ -176,7 +176,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
     @Override
     public void onItemClicked(Measurement measurement) {
-        MeasurementDetailDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
+        SensorDetailDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
     }
 
     @Override

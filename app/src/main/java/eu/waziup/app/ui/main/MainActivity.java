@@ -352,18 +352,18 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         }
 
         mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
-            if (ex != null) {// todo it has to logout the user if the there is an exception happing in here
+            if (ex != null) {// todo it has to logout the user if the there is an exception happening in here
                 Log.e(TAG, "Token refresh failed when fetching user info");
 //                signOut();// todo will be removed and replaced with another method
-                runOnUiThread(this::logout);
+//                runOnUiThread(this::logout);
                 return;
             }
 
             // todo find a solution for the discoveryDocument thing later
-//            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-//            if (discoveryDoc == null) {
-//                throw new IllegalStateException("no available discovery doc");
-//            }
+            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+            if (discoveryDoc == null) {
+                throw new IllegalStateException("no available discovery doc");
+            }
 
             //============================ for clearing the state ==================================
             AuthState currentState = mStateManager.getCurrent();
@@ -376,6 +376,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             //======================================================================================
 
             //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token
+            //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout
             Uri endSessionEndpoint = Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout");
 
             String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);

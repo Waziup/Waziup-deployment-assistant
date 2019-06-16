@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.measurementdetail;
+package eu.waziup.app.ui.sensordetail;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,12 +21,11 @@ import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseDialog;
 
 import static eu.waziup.app.utils.AppConstants.MEASUREMENT_DETAIL_KEY;
-import static eu.waziup.app.utils.AppConstants.MEASUREMENT_SENSOR_KEY;
 
-public class MeasurementDetailDialog extends BaseDialog implements MeasurementDetailMvpView {
+public class SensorDetailDialog extends BaseDialog implements SensorDetailMvpView {
 
     @Inject
-    MeasurementDetailMvpPresenter<MeasurementDetailMvpView> mPresenter;
+    SensorDetailMvpPresenter<SensorDetailMvpView> mPresenter;
 
     private Measurement measurement;
 
@@ -42,8 +41,8 @@ public class MeasurementDetailDialog extends BaseDialog implements MeasurementDe
     @BindView(R.id.card_measurement_kind)
     TextView mMeasurementKind;
 
-    public static MeasurementDetailDialog newInstance(Measurement msrmnt) {
-        MeasurementDetailDialog fragment = new MeasurementDetailDialog();
+    public static SensorDetailDialog newInstance(Measurement msrmnt) {
+        SensorDetailDialog fragment = new SensorDetailDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(MEASUREMENT_DETAIL_KEY, msrmnt);
         fragment.setArguments(bundle);

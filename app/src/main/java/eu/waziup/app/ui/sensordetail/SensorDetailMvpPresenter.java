@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.measurementdetail;
+package eu.waziup.app.ui.sensordetail;
 
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
@@ -8,7 +8,7 @@ import eu.waziup.app.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface MeasurementDetailMvpPresenter<V extends MeasurementDetailMvpView> extends MvpPresenter<V> {
+public interface SensorDetailMvpPresenter<V extends SensorDetailMvpView> extends MvpPresenter<V> {
 
     void onCancelClicked();
 }
