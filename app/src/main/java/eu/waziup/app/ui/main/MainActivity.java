@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -28,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +46,8 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -58,9 +60,9 @@ import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
 import eu.waziup.app.data.network.model.logout.LogoutRequest;
 import eu.waziup.app.data.network.model.logout.LogoutService;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.custom.RoundedImageView;
+import eu.waziup.app.ui.device.DevicesCommunicator;
 import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.devicesdetail.DetailDevicesFragment;
 import eu.waziup.app.ui.login.LoginActivity;
@@ -68,7 +70,6 @@ import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
-import eu.waziup.app.ui.device.DevicesCommunicator;
 import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.Configuration;
@@ -77,14 +78,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
-    private static final String AUTH_STATE = "AUTH_STATE";
+    private static final String KEY_AUTH_STATE = "authState";
 
     private static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
 
     // AUTHORIZATION VARIABLES
     private static final String KEY_USER_INFO = "userInfo";
     public static String CURRENT_TAG = DevicesFragment.TAG;
-    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
+
+    //    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
+    private JSONObject mUserInfoJson;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
     @BindView(R.id.main_toolbar)
@@ -102,10 +106,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private TextView mNameTextView;
     private TextView mEmailTextView;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Handler mHandler;
     private AuthorizationService mAuthService;
     private AuthStateManager mStateManager;
     private Configuration mConfiguration;
+
+    private AuthState mAuthState;
 
 
     public static Intent getStartIntent(Context context) {
@@ -121,6 +126,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             return new AuthorizationServiceDiscovery(new JSONObject(discoveryJson));
         } catch (JSONException | AuthorizationServiceDiscovery.MissingArgumentException ex) {
             throw new IllegalStateException("Malformed JSON in discovery doc");
+            // todo find a way for handling this malformed JSON
         }
     }
 
@@ -129,8 +135,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
-
-        Log.e(TAG, "---> mainActivity");
 
         mStateManager = AuthStateManager.getInstance(this);
         mConfiguration = Configuration.getInstance(this);
@@ -142,15 +146,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         setContentView(R.layout.activity_main);
 
+        // for fetching the user information from the savedInstanceState
+//        if (savedInstanceState != null) {
+//            try {
+//                mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
+//            } catch (JSONException ex) {
+//                Log.e(TAG, "Failed to parse saved user info JSON, discarding", ex);
+//                // todo implement a way for fetching the user information again from the documentation api
+//            }
+//        }
+
+
         if (savedInstanceState != null) {
-            try {
-                mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
-            } catch (JSONException ex) {
-                Log.e(TAG, "Failed to parse saved user info JSON, discarding", ex);
+            if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
+                try {
+                    mAuthState = AuthState.jsonDeserialize(
+                            savedInstanceState.getString(KEY_AUTH_STATE));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Malformed authorization JSON saved", ex);
+                }
+            }
+
+            if (savedInstanceState.containsKey(KEY_USER_INFO)) {
+                try {
+                    mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
+//                    mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
+                }
             }
         }
 
-        mHandler = new Handler();
+
 
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
@@ -171,20 +198,96 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        if (mStateManager != null && mStateManager.getCurrent() != null) {
+            state.putString(KEY_AUTH_STATE, mAuthState.jsonSerializeString());
+        }
+
+        if (mUserInfoJson != null) {
+            state.putString(KEY_USER_INFO, mUserInfoJson.toString());
+        }
+    }
+
+    private void refreshUi() {
+
+        AuthState mAuthState = mStateManager.getCurrent();
+        if (mAuthState!=null && mAuthState.isAuthorized()) {
+//            refreshTokenInfoView.setText((mAuthState.getRefreshToken() == null)
+//                    ? R.string.no_refresh_token_returned
+//                    : R.string.refresh_token_returned);
+
+//            idTokenInfoView.setText((mAuthState.getIdToken()) == null
+//                    ? R.string.no_id_token_returned
+//                    : R.string.id_token_returned);
+
+            if (mAuthState.getAccessToken() == null) {
+//                accessTokenInfoView.setText(R.string.no_access_token_returned);
+            } else {
+                Long expiresAt = mAuthState.getAccessTokenExpirationTime();
+                String expiryStr;
+                if (expiresAt == null) {
+//                    expiryStr = getResources().getString(R.string.unknown_expiry);
+                    expiryStr = "Unknown expire date";
+                } else {
+                    expiryStr = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL)
+                            .format(new Date(expiresAt));
+                }
+                String tokenInfo = String.format(
+                        "access token expires at %s",
+                        expiryStr);
+                Toast.makeText(this, tokenInfo, Toast.LENGTH_SHORT).show();
+//                accessTokenInfoView.setText(tokenInfo);
+            }
+        }
+
+
+        AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+        if (!mAuthState.isAuthorized()
+                || discoveryDoc == null
+                || discoveryDoc.getUserinfoEndpoint() == null) {
+//            viewProfileButton.setVisibility(View.GONE);
+            // todo find a way for displaying or handling this error
+        } else {
+//            viewProfileButton.setVisibility(View.VISIBLE);
+//            viewProfileButton.setOnClickListener((View.OnClickListener) view ->
+        }
+
+//        if (mUserInfoJson == null) {
+//            userInfoCard.setVisibility(View.INVISIBLE);
+//        } else {
+//            try {
+//                String name = "???";
+//                if (mUserInfoJson.has("name")) {
+//                    name = mUserInfoJson.getString("name");
+//                }
+//                final TextView userHeader = ((TextView) findViewById(R.id.userinfo_name));
+//                userHeader.setText(name);
+//
+//                if (mUserInfoJson.has("picture")) {
+//                    int profilePictureSize =
+//                            getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
+//
+//                    Picasso.with(TokenActivity.this)
+//                            .load(Uri.parse(mUserInfoJson.getString("picture")))
+//                            .resize(profilePictureSize, profilePictureSize)
+//                            .into(new UserProfilePictureTarget());
+//                }
+//
+//                ((TextView) findViewById(R.id.userinfo_json)).setText(mUserInfoJson.toString(2));
+//
+//                userInfoCard.setVisibility(View.VISIBLE);
+//            } catch (JSONException ex) {
+//                Log.e(TAG, "Failed to read userinfo JSON", ex);
+//            }
+//        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
         Log.e(TAG, "isAuthorized=> " + mStateManager.getCurrent().isAuthorized());
-
-        if (mStateManager.getCurrent().isAuthorized()) {
-            // todo handle this later -> ############
-            AuthState state = mStateManager.getCurrent();
-
-            Log.e(TAG, String.valueOf(state.getAccessToken()));
-            Log.e(TAG, String.valueOf(state.getIdToken()));
-            Log.e(TAG, String.valueOf(state.getRefreshToken()));
-            return;
-        }
 
         // the stored AuthState is incomplete, so check if we are currently receiving the result of
         // the authorization flow from the browser.
@@ -267,8 +370,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
         if (ex != null) {
             Log.e(TAG, "Token refresh failed when fetching user info");
-            mUserInfoJson.set(null);
-            Toast.makeText(this, mUserInfoJson.toString(), Toast.LENGTH_SHORT).show();
+//            mUserInfoJson.set(null);
+            mUserInfoJson = null;
+            Toast.makeText(this, String.valueOf(mUserInfoJson), Toast.LENGTH_SHORT).show();
 //            runOnUiThread(this::displayAuthorized);
             return;
         }
@@ -524,12 +628,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         .commit();
 
         };
-
-        // If mPendingRunnable is not null, then add to the message queue
-        if (mPendingRunnable != null) {
-            mHandler.post(mPendingRunnable);
-        }
-
 
         // Set action bar title
         setTitle(menuItem.getTitle());
