@@ -59,11 +59,11 @@ public interface ApiCall {
 
     @DELETE(ApiEndPoint.SENSOR_DELETE)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Single<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
+    Single<ResponseBody> deleteMeasurement(@Path("device_id") String sensorId, @Path("sensor_id") String measurementId);
 
     @GET(ApiEndPoint.SENSOR_LIST)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Single<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
+    Single<List<Measurement>> getMeasurement(@Path("device_id") String sensorId);
 
     @GET(ApiEndPoint.USERS)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
