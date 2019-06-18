@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,6 +129,8 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     }
 
     private List<Device> filter(List<Device> devices, String predicate){
+
+        new Stream<List<Device>>(() -> devices.stream().filter(device -> device.getOwner().equals(predicate)).collect(Collectors.toList()))
 
         return devices.stream().filter(device -> device.getOwner().equals(predicate)).collect(Collectors.toList());
     }
