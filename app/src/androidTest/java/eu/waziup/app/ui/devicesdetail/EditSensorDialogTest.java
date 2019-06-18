@@ -31,7 +31,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class EditMeasurementDialogTest {
+public class EditSensorDialogTest {
 
     DetailDevicesFragment mDetailDevicesFragment;
 

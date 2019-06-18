@@ -7,7 +7,7 @@ import eu.waziup.app.ui.device.DevicesAdapter;
 import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.devicesdetail.DetailDevicesFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
-import eu.waziup.app.ui.sensoredit.EditMeasurementDialog;
+import eu.waziup.app.ui.sensoredit.EditSensorDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.notificationdetail.NotificationDetailFragment;
 import eu.waziup.app.ui.devicesdetail.MeasurementAdapter;
@@ -46,7 +46,7 @@ public interface ActivityComponent {
 
     void inject(ErrorNetworkFragment fragment);
 
-    void inject(EditMeasurementDialog dialog);
+    void inject(EditSensorDialog dialog);
 
     void inject(SensorDetailDialog dialog);
 }

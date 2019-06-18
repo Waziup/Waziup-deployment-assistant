@@ -11,15 +11,15 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by KidusMT.
  */
 
-public class EditMeasurementPresenter<V extends EditMeasurementMvpView> extends BasePresenter<V>
-        implements EditMeasurementMvpPresenter<V> {
+public class EditSensorPresenter<V extends EditSensorMvpView> extends BasePresenter<V>
+        implements EditSensorMvpPresenter<V> {
 
     private static final String TAG = "QRScanPresenter";
 
     @Inject
-    public EditMeasurementPresenter(DataManager dataManager,
-                                    SchedulerProvider schedulerProvider,
-                                    CompositeDisposable compositeDisposable) {
+    public EditSensorPresenter(DataManager dataManager,
+                               SchedulerProvider schedulerProvider,
+                               CompositeDisposable compositeDisposable) {
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 

@@ -33,7 +33,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
-import eu.waziup.app.ui.sensoredit.EditMeasurementDialog;
+import eu.waziup.app.ui.sensoredit.EditSensorDialog;
 import eu.waziup.app.ui.device.DevicesCommunicator;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;
@@ -249,7 +249,7 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
 
     @Override
     public void showCreateMeasurementsDialog() {
-//        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), new Measurement(), mPresenter);
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Measurement(), mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
@@ -273,7 +273,7 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
 
     @Override
     public void onItemEditClicked(Measurement measurement) {
-        EditMeasurementDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
+        EditSensorDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
     }
 
     @Override

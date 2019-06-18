@@ -220,7 +220,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     public void showCreateMeasurementsDialog() {
-//        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), new Measurement(), mPresenter);
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Measurement(), mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
@@ -249,7 +249,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     public void onItemEditClicked(Measurement measurement) {
-//        EditMeasurementDialog dialog = new EditMeasurementDialog(getBaseActivity(), measurement, mPresenter);
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), measurement, mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }

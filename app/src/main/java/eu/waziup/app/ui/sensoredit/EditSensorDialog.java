@@ -22,10 +22,10 @@ import eu.waziup.app.ui.base.BaseDialog;
 
 import static eu.waziup.app.utils.AppConstants.MEASUREMENT_SENSOR_KEY;
 
-public class EditMeasurementDialog extends BaseDialog implements EditMeasurementMvpView {
+public class EditSensorDialog extends BaseDialog implements EditSensorMvpView {
 
     @Inject
-    EditMeasurementMvpPresenter<EditMeasurementMvpView> mPresenter;
+    EditSensorMvpPresenter<EditSensorMvpView> mPresenter;
 
     @BindView(R.id.dialog_measurement_id)
     TextView mId;
@@ -44,8 +44,8 @@ public class EditMeasurementDialog extends BaseDialog implements EditMeasurement
 
     private Measurement measurement;
 
-    public static EditMeasurementDialog newInstance(Measurement msrmnt) {
-        EditMeasurementDialog fragment = new EditMeasurementDialog();
+    public static EditSensorDialog newInstance(Measurement msrmnt) {
+        EditSensorDialog fragment = new EditSensorDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(MEASUREMENT_SENSOR_KEY, msrmnt);
         fragment.setArguments(bundle);

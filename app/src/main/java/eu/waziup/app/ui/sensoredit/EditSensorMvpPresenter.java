@@ -8,7 +8,7 @@ import eu.waziup.app.ui.base.MvpPresenter;
  */
 
 @PerActivity
-public interface EditMeasurementMvpPresenter<V extends EditMeasurementMvpView> extends MvpPresenter<V> {
+public interface EditSensorMvpPresenter<V extends EditSensorMvpView> extends MvpPresenter<V> {
 
     void onSubmitClicked();
 

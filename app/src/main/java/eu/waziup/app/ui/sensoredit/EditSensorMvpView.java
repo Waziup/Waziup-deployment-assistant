@@ -6,7 +6,7 @@ import eu.waziup.app.ui.base.MvpView;
  * Created by KidusMT.
  */
 
-public interface EditMeasurementMvpView extends MvpView {
+public interface EditSensorMvpView extends MvpView {
 
     void closeDialog();
 }
