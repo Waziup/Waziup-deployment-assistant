@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -123,6 +124,11 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private List<Device> filter(List<Device> devices, String predicate){
+
+        return devices.stream().filter(device -> device.getOwner().equals(predicate)).collect(Collectors.toList());
     }
 
     @Override

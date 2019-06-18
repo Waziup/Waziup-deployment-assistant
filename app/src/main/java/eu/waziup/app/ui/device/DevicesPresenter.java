@@ -44,6 +44,9 @@ public class DevicesPresenter<V extends DevicesMvpView> extends BasePresenter<V>
                                 if (!isViewAttached())
                                     return;
 
+                                if (sensors!=null){
+
+                                }
                                 getMvpView().showSensors(sensors);
 
                             }, throwable -> {

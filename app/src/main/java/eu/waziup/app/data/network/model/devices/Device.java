@@ -20,6 +20,9 @@ public class Device implements Serializable {
     @SerializedName("domain")
     @Expose
     private String domain;
+    @SerializedName("owner")
+    @Expose
+    private String owner;
     @SerializedName("visibility")
     @Expose
     private String visibility;
@@ -35,6 +38,14 @@ public class Device implements Serializable {
     @SerializedName("actuators")
     @Expose
     private List<Actuator> actuators = null;
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public Boolean getDeployed() {
         return deployed;
