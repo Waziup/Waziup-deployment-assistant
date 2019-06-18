@@ -10,16 +10,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -30,32 +29,25 @@ import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
-import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
+import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 
 public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
 
+    public static final String TAG = "DevicesFragment";
     @Inject
     DevicesMvpPresenter<DevicesMvpView> mPresenter;
-
     @Inject
     DevicesAdapter mAdapter;
-
     @Inject
     LinearLayoutManager mLayoutManager;
-
     @BindView(R.id.sensor_recycler)
     RecyclerView mRecyclerView;
-
     @BindView(R.id.sensor_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
-
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
-
     DevicesCommunicator communicator;
-
-    public static final String TAG = "DevicesFragment";
 
     public static DevicesFragment newInstance() {
         Bundle args = new Bundle();
@@ -128,22 +120,30 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private List<Device> filter(List<Device> devices, String predicate){
+    private List<Device> filterByOwner(List<Device> devices, String predicate) {
+        List<Device> filteredList = new ArrayList<>();
 
-        new Stream<List<Device>>(() -> devices.stream().filter(device -> device.getOwner().equals(predicate)).collect(Collectors.toList()))
+        for (Device device : devices) {
+            if (device.getOwner().equals(predicate))
+                filteredList.add(device);
+        }
 
-        return devices.stream().filter(device -> device.getOwner().equals(predicate)).collect(Collectors.toList());
+        return filteredList;
     }
 
     @Override
     public void showSensors(List<Device> devices) {
+
         if (devices != null) {
+            // filtering the devices with the owner name
+            List<Device> filteredDeviceList = filterByOwner(devices, "");
+            Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
             if (devices.size() > 0) {
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(devices);
+                mAdapter.addItems(filteredDeviceList);
             } else {
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
                     tvNoSensors.setVisibility(View.VISIBLE);

@@ -6,7 +6,10 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Device implements Serializable {
+import me.aflak.filter_annotation.Filterable;
+
+@Filterable
+public class Device {//implements Serializable {
 
     @SerializedName("deployed")
     @Expose
