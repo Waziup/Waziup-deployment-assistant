@@ -33,7 +33,7 @@ import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.map.MapFragment;
-import eu.waziup.app.ui.measurementedit.EditMeasurementDialog;
+import eu.waziup.app.ui.sensoredit.EditMeasurementDialog;
 import eu.waziup.app.ui.device.DevicesCommunicator;
 
 import static eu.waziup.app.utils.AppConstants.DETAIL_SENSOR_KEY;

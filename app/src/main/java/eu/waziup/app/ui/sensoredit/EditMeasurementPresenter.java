@@ -1,11 +1,9 @@
-package eu.waziup.app.ui.measurementedit;
+package eu.waziup.app.ui.sensoredit;
 
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
-import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.ui.base.BasePresenter;
-import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 

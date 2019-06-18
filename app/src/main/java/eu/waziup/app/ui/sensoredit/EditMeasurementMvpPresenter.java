@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.measurementedit;
+package eu.waziup.app.ui.sensoredit;
 
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;

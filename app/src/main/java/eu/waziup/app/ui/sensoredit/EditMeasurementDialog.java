@@ -1,4 +1,4 @@
-package eu.waziup.app.ui.measurementedit;
+package eu.waziup.app.ui.sensoredit;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
