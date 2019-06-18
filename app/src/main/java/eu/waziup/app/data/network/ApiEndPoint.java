@@ -3,14 +3,23 @@ package eu.waziup.app.data.network;
 
 public final class ApiEndPoint {
 
+    // AUTH
     public final static String LOGIN = "auth/token";
-    public final static String SENSOR = "sensors";
+
+    // DEVICES
     public final static String DEVICES = "devices";
+    public static final String DEVICES_DELETE = "devices/{device_id}";
+
+    // NOTIFICATION
     public final static String NOTIFICATION = "notifications";
+
+    // USER
     public final static String USERS = "users";
 
-    public final static String MEASUREMENT_DELETE = "sensors/{sensor_id}/measurements/{measurement_id}";
-    public final static String MEASUREMENT_LIST = "sensors/{sensor_id}/measurements";
+    // SENSOR
+    public final static String SENSOR_LIST = "devices/{device_id}/sensors";
+    public final static String SENSOR_DELETE = "devices/{device_id}/sensors/{sensor_id}";
+    public static final String SENSOR_UNDER_DEVICES = "devices/{device_id}/sensors";
 
     private ApiEndPoint() {
         // This class is not publicly instantiable

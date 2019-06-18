@@ -15,7 +15,6 @@ import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.data.network.model.user.User;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -58,11 +57,11 @@ public interface ApiCall {
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
     Single<String> login(@Body LoginRequest.ServerLoginRequest request);
 
-    @DELETE(ApiEndPoint.MEASUREMENT_DELETE)
+    @DELETE(ApiEndPoint.SENSOR_DELETE)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<ResponseBody> deleteMeasurement(@Path("sensor_id") String sensorId, @Path("measurement_id") String measurementId);
 
-    @GET(ApiEndPoint.MEASUREMENT_LIST)
+    @GET(ApiEndPoint.SENSOR_LIST)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<Measurement>> getMeasurement(@Path("sensor_id") String sensorId);
 
