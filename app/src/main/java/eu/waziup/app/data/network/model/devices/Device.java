@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import me.aflak.filter_annotation.Filterable;
 
 @Filterable
-public class Device {//implements Serializable {
+public class Device implements Serializable {
 
     @SerializedName("deployed")
     @Expose
