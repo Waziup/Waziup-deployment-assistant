@@ -61,7 +61,7 @@ public class EditSensorDialogTest {
         //passing mock measurement data to mock sensor data
         mSensor.setMeasurements(measurements);
         // for inflating the fragment - with mock data
-        mDetailDevicesFragment = DetailDevicesFragment.newInstance(mSensor, DevicesFragment.TAG);
+//        mDetailDevicesFragment = DetailDevicesFragment.newInstance(mSensor, DevicesFragment.TAG);
 
         // inflating NotificationDetailFragment
         rule.getActivity()
