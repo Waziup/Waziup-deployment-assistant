@@ -31,6 +31,7 @@ import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
+import eu.waziup.app.utils.CommonUtils;
 
 public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
 
@@ -120,6 +121,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    // method for filtering the devices list with the name of the owner
     private List<Device> filterByOwner(List<Device> devices, String predicate) {
         List<Device> filteredList = new ArrayList<>();
 
@@ -136,8 +138,9 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
         if (devices != null) {
             // filtering the devices with the owner name
-            List<Device> filteredDeviceList = filterByOwner(devices, "");
+            List<Device> filteredDeviceList = filterByOwner(devices, "mikiyasbelhu");//
             Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
+            CommonUtils.toast(String.format("--->Contains: %d", filteredDeviceList.size()));
             if (devices.size() > 0) {
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
