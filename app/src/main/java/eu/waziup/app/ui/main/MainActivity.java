@@ -221,6 +221,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 //                    ? R.string.no_id_token_returned
 //                    : R.string.id_token_returned);
 
+            mPresenter.updateUserInfo();
+
             if (mAuthState.getAccessToken() == null) {
 //                accessTokenInfoView.setText(R.string.no_access_token_returned);
             } else {

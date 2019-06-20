@@ -2,12 +2,16 @@ package eu.waziup.app.ui.main;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
 import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.user.User;
 import eu.waziup.app.ui.base.BasePresenter;
+import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.rx.SchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -96,5 +100,51 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
         if (email != null && !TextUtils.isEmpty(email)) {
             getDataManager().setCurrentUserEmail(email);
         }
+    }
+
+    private User filterByUsername(List<User> users, String predicate) {
+        List<User> filteredList = new ArrayList<>();
+
+        for (User user : users) {
+            if (user.getUsername().equals(predicate))
+                filteredList.add(user);
+        }
+
+        // todo get the first user found in the list
+        if (filteredList.size() > 0) {
+            return filteredList.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    public void fetchUserInfo(String username) {
+        // the username is used as a filtering name
+        getCompositeDisposable().add(getDataManager()
+                .getUsers()
+                .subscribeOn(getSchedulerProvider().io())
+                .observeOn(getSchedulerProvider().ui())
+                .subscribe(users -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+
+                    // filtering the users and updating the user information
+                    User foundUser = filterByUsername(users, username);
+                    if (foundUser != null)
+                        updateUserInfo(String.format("%s %s", foundUser.getFirstName(), foundUser.getFirstName()),
+                                foundUser.getFirstName(), foundUser.getFirstName(), foundUser.getLastName(), foundUser.getEmail());
+
+                }, throwable -> {
+
+                    if (!isViewAttached()) {
+                        return;
+                    }
+                    getMvpView().hideLoading();
+                    getMvpView().onError(CommonUtils.getErrorMessage(throwable));
+                }));
     }
 }
