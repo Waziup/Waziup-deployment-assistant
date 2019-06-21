@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationService;
@@ -27,10 +28,12 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.internal.Utils;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.login.IdentityProvider;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
+import okhttp3.internal.Util;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
@@ -64,6 +67,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             final AuthorizationServiceConfiguration.RetrieveConfigurationCallback retrieveCallback =
                     (serviceConfiguration, ex) -> {
                         if (ex != null) {
+                            Toast.makeText(this, "ex != null", Toast.LENGTH_SHORT).show();
                             Log.w(TAG, "Failed to retrieve configuration for " + idp.name, ex);
                         } else {
                             Log.d(TAG, "configuration retrieved for " + idp.name
@@ -71,7 +75,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             if (idp.getClientId() == null) {
                                 // Do dynamic client registration if no client_id
                                 makeRegistrationRequest(serviceConfiguration, idp);
+                                Toast.makeText(this, "idp.getClientId() == null", Toast.LENGTH_SHORT).show();
                             } else {
+                                Toast.makeText(this, "idp.getClientId() != null", Toast.LENGTH_SHORT).show();
                                 makeAuthRequest(serviceConfiguration, idp);
                             }
                         }
@@ -100,6 +106,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
             idp.retrieveConfig(LoginActivity.this, retrieveCallback);
 
+            Log.e(TAG, "retrieving the document is called");
 //            idpButtonContainer.addView(idpButton);
         }
 
