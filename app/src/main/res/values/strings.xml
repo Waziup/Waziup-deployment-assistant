@@ -96,4 +96,8 @@
     <string name="keycloak_auth_logout_scheme" translatable="false">net.openid.appauthdemo</string>
     <string name="keycloak_auth_redirect_uri" translatable="false">net.openid.appauthdemo:/oauth2Callback</string>
     <string name="keycloak_auth_logout_uri" translatable="false">"net.openid.appauthdemo:/oauth2Callback"</string>
+    <string name="exchange_notification">Exchanging code for token</string>
+    <string name="authorization_failed">Authorization failed</string>
+    <string name="exchange_complete">Exchange completed successfully</string>
+    <string name="refresh_failed">Token refresh failed</string>
 </resources>

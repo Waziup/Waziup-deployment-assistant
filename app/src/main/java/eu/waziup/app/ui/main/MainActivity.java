@@ -41,6 +41,10 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.ClientAuthentication;
+import net.openid.appauth.ClientSecretBasic;
+import net.openid.appauth.NoClientAuthentication;
+import net.openid.appauth.TokenRequest;
 import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
@@ -177,6 +181,26 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
         }
 
+        if (mAuthState == null) {
+            AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+            AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+            mAuthState = new AuthState(response, ex);
+
+            if (response != null) {
+                Log.d(TAG, "Received AuthorizationResponse.");
+                showSnackBar(getString(R.string.exchange_notification));
+                String clientSecret = getClientSecretFromIntent(getIntent());
+                if (clientSecret != null) {
+                    exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
+                } else {
+                    exchangeAuthorizationCode(response);
+                }
+            } else {
+                Log.i(TAG, "Authorization failed: " + ex);
+                showSnackBar(getString(R.string.authorization_failed));
+            }
+        }
+
 
 
         getActivityComponent().inject(this);
@@ -195,6 +219,37 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 .commit();
 
 
+    }
+
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
+                                           ClientAuthentication clientAuth) {
+        performTokenRequest(authorizationResponse.createTokenExchangeRequest(), clientAuth);
+    }
+
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
+        performTokenRequest(authorizationResponse.createTokenExchangeRequest());
+    }
+
+    private void performTokenRequest(TokenRequest request, ClientAuthentication clientAuth) {
+        mAuthService.performTokenRequest(
+                request,
+                clientAuth,
+                (tokenResponse, ex) -> receivedTokenResponse(tokenResponse, ex));
+    }
+
+    private void receivedTokenResponse(
+            @Nullable TokenResponse tokenResponse,
+            @Nullable AuthorizationException authException) {
+        Log.d(TAG, "Token request complete");
+        mAuthState.update(tokenResponse, authException);
+        showSnackBar((tokenResponse != null)
+                ? getString(R.string.exchange_complete)
+                : getString(R.string.refresh_failed));
+        refreshUi();
+    }
+
+    private void performTokenRequest(TokenRequest request) {
+        performTokenRequest(request, NoClientAuthentication.INSTANCE);
     }
 
     @Override
@@ -221,7 +276,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 //                    ? R.string.no_id_token_returned
 //                    : R.string.id_token_returned);
 
-            mPresenter.updateUserInfo();
+//            mPresenter.updateUserInfo();
+            // todo fetch userInformation here when the user is Authorized User
 
             if (mAuthState.getAccessToken() == null) {
 //                accessTokenInfoView.setText(R.string.no_access_token_returned);
@@ -317,14 +373,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     }
 
-    @MainThread
-    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
-//        displayLoading("Exchanging authorization code");
-        Log.e(TAG, String.format("----->Token %s", authorizationResponse.accessToken));
-        mAuthService.performTokenRequest(
-                authorizationResponse.createTokenExchangeRequest(),
-                this::handleCodeExchangeResponse);
-    }
 
     @WorkerThread
     private void handleCodeExchangeResponse(@Nullable TokenResponse tokenResponse,
