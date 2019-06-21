@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         serviceConfig.discoveryDoc,
                         idp.getClientSecret()),
                 mAuthService.createCustomTabsIntentBuilder()
-                        .setToolbarColor(getColorCompat(R.color.colorAccent))
+                        .setToolbarColor(getColorCompat(R.color.colorPrimaryDark))
                         .build());
     }
 
