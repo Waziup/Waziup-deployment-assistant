@@ -34,15 +34,6 @@ public final class AppConstants {
     public static final String AUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/auth";
     public static final String TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 
-    public static final String AUTH_CLIENT_ID = "dashboard";
-    public static final String AUTH_REDIRECT_URI = "net.openid.appauthdemo:/oauth2redirect";
-    public static final String AUTH_SCOPE = "openid email profile";
-    public static final String AUTH_DISCOVERY_URI = "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth";
-    public static final String AUTH_AUTHORIZATION_ENDPOINT = "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth";
-    public static final String AUTH_TOKEN_ENDPOINT = "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/token";
-    public static final String AUTH_REGISTRATION_ENDPOINT = "https://keycloak.waziup.io/auth/realms/waziup/clients-registrations/openid-connect";
-    public static final String AUTH_USER_INFO_ENDPOINT = "https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/userinfo";
-    public static final boolean AUTH_HTTPS_REQUIRED = true;
 
     private AppConstants() {
         // This utility class is not publicly instantiable

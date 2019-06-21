@@ -32,12 +32,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import eu.waziup.app.R;
+import eu.waziup.app.utils.AppConstants;
+import eu.waziup.app.utils.AppConstants.*;
+public class IdentityProvider {
 
 /**
  * An abstraction of identity providers, containing all necessary info for the demo app.
- */
-class IdentityProvider {
-
     /**
      * Value used to indicate that a configured property is not specified or required.
      */
@@ -45,14 +45,14 @@ class IdentityProvider {
 
     public static final IdentityProvider KEYCLOAK = new IdentityProvider(
             "Keycloak",
-            R.bool.keycloak_enabled,
-            R.string.keycloak_discovery_uri,
+            R.bool.AUTH_HTTPS_REQUIRED,
+            R.string.auth_discovery_uri,
             NOT_SPECIFIED, // auth endpoint is discovered
             NOT_SPECIFIED, // token endpoint is discovered
             NOT_SPECIFIED, // dynamic registration not supported
-            R.string.keycloak_client_id,
-            R.string.keycloak_auth_redirect_uri,
-            R.string.keycloak_scope_string,
+            R.string.auth_client_id,
+            R.string.auth_redirect_uri,
+            R.string.auth_scope,
             R.drawable.btn_google,
             R.string.keycloak_name,
             android.R.color.white);

@@ -100,4 +100,17 @@
     <string name="authorization_failed">Authorization failed</string>
     <string name="exchange_complete">Exchange completed successfully</string>
     <string name="refresh_failed">Token refresh failed</string>
+
+    <!--AUTHORIZATION-->
+    <bool name="AUTH_HTTPS_REQUIRED">true</bool>
+
+    <string name="keycloak_name">Keycloak</string>
+    <string name="auth_client_id">dashboard</string>
+    <string name="auth_redirect_uri">net.openid.appauthdemo:/oauth2redirect</string>
+    <string name="auth_scope">openid email profile</string>
+    <string name="auth_discovery_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth</string>
+    <string name="auth_authorization_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth</string>
+    <string name="auth_token_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/token</string>
+    <string name="auth_registration_uri">https://keycloak.waziup.io/auth/realms/waziup/clients-registrations/openid-connect</string>
+    <string name="auth_user_info_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/userinfo</string>
 </resources>

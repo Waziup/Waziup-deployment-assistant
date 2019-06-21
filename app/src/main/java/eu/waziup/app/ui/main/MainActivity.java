@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.MainThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
@@ -41,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.ClientAuthentication;
@@ -231,6 +233,22 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 .commit();
 
 
+    }
+
+    public static PendingIntent createPostAuthorizationIntent(
+            @NonNull Context context,
+            @NonNull AuthorizationRequest request,
+            @Nullable net.openid.appauth.AuthorizationServiceDiscovery discoveryDoc,
+            @Nullable String clientSecret) {
+        Intent intent = new Intent(context, MainActivity.class);
+        if (discoveryDoc != null) {
+            intent.putExtra(EXTRA_AUTH_SERVICE_DISCOVERY, discoveryDoc.docJson.toString());
+        }
+        if (clientSecret != null) {
+            intent.putExtra(EXTRA_CLIENT_SECRET, clientSecret);
+        }
+
+        return PendingIntent.getActivity(context, request.hashCode(), intent, 0);
     }
 
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
