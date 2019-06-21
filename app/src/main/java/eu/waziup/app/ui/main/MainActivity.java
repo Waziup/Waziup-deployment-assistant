@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -50,6 +52,13 @@ import net.openid.appauth.TokenResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
@@ -85,6 +94,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private static final String KEY_AUTH_STATE = "authState";
 
     private static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
+    private static final String EXTRA_CLIENT_SECRET = "clientSecret";
 
     // AUTHORIZATION VARIABLES
     private static final String KEY_USER_INFO = "userInfo";
@@ -92,6 +102,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     //    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private JSONObject mUserInfoJson;
+
+    private static final int BUFFER_SIZE = 1024;
 
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
@@ -252,6 +264,82 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         performTokenRequest(request, NoClientAuthentication.INSTANCE);
     }
 
+    private void fetchUserInfo() {
+        if (mAuthState.getAuthorizationServiceConfiguration() == null) {
+            Log.e(TAG, "Cannot make userInfo request without service configuration");
+        }
+
+        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
+            @Override
+            public void execute(String accessToken, String idToken, AuthorizationException ex) {
+                if (ex != null) {
+                    Log.e(TAG, "Token refresh failed when fetching user info");
+                    return;
+                }
+
+                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+                if (discoveryDoc == null) {
+                    throw new IllegalStateException("no available discovery doc");
+                }
+
+                URL userInfoEndpoint;
+                try {
+                    userInfoEndpoint = new URL(discoveryDoc.getUserinfoEndpoint().toString());
+                } catch (MalformedURLException urlEx) {
+                    Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+                    return;
+                }
+
+                InputStream userInfoResponse = null;
+                try {
+                    HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                    conn.setInstanceFollowRedirects(false);
+                    userInfoResponse = conn.getInputStream();
+                    String response = readStream(userInfoResponse);
+                    updateUserInfo(new JSONObject(response));
+                } catch (IOException ioEx) {
+                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+                } catch (JSONException jsonEx) {
+                    Log.e(TAG, "Failed to parse userinfo response");
+                } finally {
+                    if (userInfoResponse != null) {
+                        try {
+                            userInfoResponse.close();
+                        } catch (IOException ioEx) {
+                            Log.e(TAG, "Failed to close userinfo response stream", ioEx);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    static String getClientSecretFromIntent(Intent intent) {
+        if (!intent.hasExtra(EXTRA_CLIENT_SECRET)) {
+            return null;
+        }
+        return intent.getStringExtra(EXTRA_CLIENT_SECRET);
+    }
+
+    private void updateUserInfo(final JSONObject jsonObject) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            mUserInfoJson = jsonObject;
+            refreshUi();
+        });
+    }
+
+    private static String readStream(InputStream stream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        char[] buffer = new char[BUFFER_SIZE];
+        StringBuilder sb = new StringBuilder();
+        int readCount;
+        while ((readCount = br.read(buffer)) != -1) {
+            sb.append(buffer, 0, readCount);
+        }
+        return sb.toString();
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
@@ -371,114 +459,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 //            displayNotAuthorized("No authorization state retained - reauthorization required");
         }
 
-    }
-
-
-    @WorkerThread
-    private void handleCodeExchangeResponse(@Nullable TokenResponse tokenResponse,
-                                            @Nullable AuthorizationException authException) {
-
-        mStateManager.updateAfterTokenResponse(tokenResponse, authException);
-        if (!mStateManager.getCurrent().isAuthorized()) {
-            final String message = "Authorization Code exchange failed"
-                    + ((authException != null) ? authException.error : "");
-
-            if (authException != null) {
-                Log.e(TAG, "error--> " + String.valueOf(authException.error));
-                Log.e(TAG, "errorDescription--> " + String.valueOf(authException.errorDescription));
-                Log.e(TAG, "errorUri--> " + String.valueOf(authException.errorUri));
-                Log.e(TAG, "code--> " + String.valueOf(authException.code));
-            }
-
-            // WrongThread inference is incorrect for lambdas
-            //noinspection WrongThread
-            // todo handle this
-            Log.e(TAG, message);
-
-//            runOnUiThread(this::signOut);
-            runOnUiThread(this::logout);// todo check is and findOut if it didn't work
-        } else {
-            // todo handle this
-            Toast.makeText(this, "fetching user information", Toast.LENGTH_SHORT).show();
-//            runOnUiThread(this::fetchUserInfo);
-        }
-
-    }
-
-    @MainThread
-    private void fetchUserInfo() {
-//        displayLoading("Fetching user info");
-        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, this::fetchUserInfo);
-    }
-
-
-    @SuppressLint("StaticFieldLeak")
-    @MainThread
-    private void fetchUserInfo(String accessToken, String idToken, AuthorizationException ex) {
-
-        Log.e(TAG, String.format("token-idToken-> %s", idToken));
-        Log.e(TAG, String.format("token-accessToken-> %s", accessToken));
-        if (ex != null) {
-            Log.e(TAG, "Token refresh failed when fetching user info");
-//            mUserInfoJson.set(null);
-            mUserInfoJson = null;
-            Toast.makeText(this, String.valueOf(mUserInfoJson), Toast.LENGTH_SHORT).show();
-//            runOnUiThread(this::displayAuthorized);
-            return;
-        }
-        //todo this has to be fixed
-
-//        AuthorizationServiceDiscovery discovery =
-//                mStateManager.getCurrent()
-//                        .getAuthorizationServiceConfiguration()
-//                        .discoveryDoc;
-
-//        URL userInfoEndpoint;
-//        try {
-//            userInfoEndpoint =
-//                    mConfiguration.getUserInfoEndpointUri() != null
-//                            ? new URL(mConfiguration.getUserInfoEndpointUri().toString())
-//                            : new URL(discovery.getUserinfoEndpoint().toString());
-//        } catch (MalformedURLException urlEx) {
-//            Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
-//            mUserInfoJson.set(null);
-////            runOnUiThread(this::displayAuthorized);
-//            return;
-//        }
-
-//        new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-////String name, String preferredName, String givenName, String familyName, String email
-////                try {
-////                    HttpURLConnection conn =
-////                            (HttpURLConnection) userInfoEndpoint.openConnection();
-////                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-////                    conn.setInstanceFollowRedirects(false);
-////                    String response = Okio.buffer(Okio.source(conn.getInputStream()))
-////                            .readString(Charset.forName("UTF-8"));
-////                    mUserInfoJson.set(new JSONObject(response));
-////                    Log.e(TAG, "mUserInfoJson: " + mUserInfoJson);
-////                    //String name, String preferredName, String givenName, String familyName, String email
-////                    mPresenter.updateUserInfo(mUserInfoJson.get().get("name").toString(), mUserInfoJson.get().get("preferredName").toString(),
-////                            mUserInfoJson.get().get("givenName").toString(), mUserInfoJson.get().get("familyName").toString(),
-////                            mUserInfoJson.get().get("email").toString());
-////                } catch (IOException ioEx) {
-////                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-//////                    CommonUtils.toast("Fetching user info failed");
-////                } catch (JSONException jsonEx) {
-////                    Log.e(TAG, "Failed to parse userinfo response");
-//////                    CommonUtils.toast("Failed to parse user info");
-////                }
-//
-//                return null;
-//            }
-//        }.execute();
-
-//        mExecutor.submit(() -> {
-
-//            runOnUiThread(this::displayAuthorized);
-//        });
     }
 
     @MainThread
