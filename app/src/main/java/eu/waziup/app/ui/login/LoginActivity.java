@@ -98,6 +98,8 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     Gravity.CENTER));
             idpButton.addView(label);
 
+            idp.retrieveConfig(LoginActivity.this, retrieveCallback);
+
 //            idpButtonContainer.addView(idpButton);
         }
 
