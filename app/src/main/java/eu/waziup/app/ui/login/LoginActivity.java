@@ -83,33 +83,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         }
                     };
 
-            FrameLayout idpButton = new FrameLayout(this);
-            idpButton.setBackgroundResource(idp.buttonImageRes);
-            idpButton.setContentDescription(
-                    getResources().getString(idp.buttonContentDescriptionRes));
-            idpButton.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            idpButton.setOnClickListener(view -> {
-                Log.d(TAG, "initiating auth for " + idp.name);
-                idp.retrieveConfig(LoginActivity.this, retrieveCallback);
-            });
-
-            TextView label = new TextView(this);
-            label.setText(idp.name);
-            label.setTextColor(getColorCompat(idp.buttonTextColorRes));
-            label.setLayoutParams(new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER));
-            idpButton.addView(label);
-
+            // calls the retrieveConfig method for retrieving user info from openid
             idp.retrieveConfig(LoginActivity.this, retrieveCallback);
-
-            Log.e(TAG, "retrieving the document is called");
-//            idpButtonContainer.addView(idpButton);
         }
-
     }
 
     private void makeAuthRequest(
