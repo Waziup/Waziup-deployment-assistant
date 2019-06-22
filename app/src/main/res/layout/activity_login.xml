@@ -9,7 +9,6 @@
     tools:context=".ui.login.LoginActivity">
 
     <ImageView
-        android:background="@drawable/bg_circle"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="50dp"
@@ -58,6 +57,8 @@
     </RelativeLayout>
 
     <TextView
+        android:padding="5dp"
+        android:background="@drawable/bg_white_boarder_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="WAZIUP: IOT AND BIG DATA PLATFORM"
