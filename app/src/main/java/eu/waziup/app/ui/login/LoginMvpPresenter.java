@@ -1,6 +1,5 @@
 package eu.waziup.app.ui.login;
 
-import eu.waziup.app.data.DataManager;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
 
@@ -11,15 +10,6 @@ import eu.waziup.app.ui.base.MvpPresenter;
 @PerActivity
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
 
-    void onServerLoginClick(String username, String password);
 
-    void onSaveUserInfo(String username, String email, String profilePic);
 
-    void onSaveName(String username);
-
-    void onSavePicture(String pic);
-
-    void updateUserInfo(String s, DataManager.LoggedInMode mode);
-
-    void updateToken(String token);
 }

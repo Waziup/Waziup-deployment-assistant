@@ -68,7 +68,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             final AuthorizationServiceConfiguration.RetrieveConfigurationCallback retrieveCallback =
                     (serviceConfiguration, ex) -> {
                         if (ex != null) {
-                            Toast.makeText(this, "ex != null", Toast.LENGTH_SHORT).show();
+                            // todo has to make sure if the problem is only related with internet connection
+                            showSnackBar("No internet connection, please try again.");
+//                            Toast.makeText(this, "ex != null", Toast.LENGTH_SHORT).show();
                             Log.w(TAG, "Failed to retrieve configuration for " + idp.name, ex);
                         } else {
                             Log.d(TAG, "configuration retrieved for " + idp.name
@@ -76,9 +78,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             if (idp.getClientId() == null) {
                                 // Do dynamic client registration if no client_id
                                 makeRegistrationRequest(serviceConfiguration, idp);
-                                Toast.makeText(this, "idp.getClientId() == null", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(this, "idp.getClientId() != null", Toast.LENGTH_SHORT).show();
                                 makeAuthRequest(serviceConfiguration, idp);
                             }
                         }

@@ -10,7 +10,7 @@ public interface DataManager extends PreferencesHelper, ApiHelper {
 
     void setUserAsLoggedOut();
 
-    void updateUserInfo(String accessToken, LoggedInMode loggedInMode);
+    void setLoggedInMode();
 
     void updateUserInfo(String accessToken, String name, String picture, LoggedInMode loggedInMode);
 
