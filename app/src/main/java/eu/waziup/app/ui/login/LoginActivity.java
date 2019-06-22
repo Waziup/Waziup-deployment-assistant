@@ -159,11 +159,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     }
 
-    @OnClick(R.id.start_auth)
-    void startAuth() {
-
-    }
-
     @Override
     public void openSensorActivity() {
         hideLoading();
