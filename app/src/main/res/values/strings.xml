@@ -109,6 +109,7 @@
     <string name="auth_client_id">dashboard</string>
     <string name="auth_redirect_uri">net.openid.appauthdemo:/oauth2redirect</string>
     <string name="auth_scope">openid email profile</string>
+
     <!--http://keycloakhost:keycloakport/auth/realms/demo/.well-known/openid-configuration-->
     <string name="auth_discovery_uri">https://keycloak.waziup.io/auth/realms/waziup/.well-known/openid-configuration</string>
     <string name="auth_authorization_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/auth</string>

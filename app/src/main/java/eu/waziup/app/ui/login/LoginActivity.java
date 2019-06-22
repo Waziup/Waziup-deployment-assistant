@@ -54,10 +54,16 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         mPresenter.onAttach(LoginActivity.this);
 
         mAuthService = new AuthorizationService(this);
-        List<IdentityProvider> providers = IdentityProvider.getEnabledProviders(this);
 
         setUp();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        List<IdentityProvider> providers = IdentityProvider.getEnabledProviders(this);
         for (final IdentityProvider idp : providers) {
             final AuthorizationServiceConfiguration.RetrieveConfigurationCallback retrieveCallback =
                     (serviceConfiguration, ex) -> {
