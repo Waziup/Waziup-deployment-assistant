@@ -116,8 +116,5 @@
     <string name="auth_registration_uri">https://keycloak.waziup.io/auth/realms/waziup/clients-registrations/openid-connect</string>
     <string name="auth_user_info_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/userinfo</string>
 
-    <!--<string name="keycloak_auth_redirect_scheme" translatable="false">com.test.demo</string>-->
-    <!--<string name="keycloak_auth_logout_scheme" translatable="false">com.test.logout</string>-->
-    <!--<string name="keycloak_auth_redirect_uri" translatable="false">com.test.demo:/oauth2Callback</string>-->
-    <!--<string name="keycloak_auth_logout_uri" translatable="false">"com.test.logout:/oauth2Callback"</string>-->
+    <string name="splash_loading_label">Loading&#8230;</string>
 </resources>
