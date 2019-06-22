@@ -73,7 +73,6 @@ public interface ApiCall {
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
     Single<List<User>> fetchUserInfo();
 
-
     class Factory {
 
         private static final int NETWORK_CALL_TIMEOUT = 60;

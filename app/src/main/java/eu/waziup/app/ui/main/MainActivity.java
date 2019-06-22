@@ -4,26 +4,21 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -33,18 +28,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
@@ -68,13 +59,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
@@ -91,9 +80,7 @@ import eu.waziup.app.ui.map.MapCommunicator;
 import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
-import eu.waziup.app.utils.AuthStateManager;
 import eu.waziup.app.utils.CommonUtils;
-import eu.waziup.app.utils.Configuration;
 
 public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
@@ -106,10 +93,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     // AUTHORIZATION VARIABLES
     private static final String KEY_USER_INFO = "userInfo";
-    public static String CURRENT_TAG = DevicesFragment.TAG;
-
     private static final int BUFFER_SIZE = 1024;
-
+    public static String CURRENT_TAG = DevicesFragment.TAG;
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
     @BindView(R.id.main_toolbar)
@@ -150,6 +135,40 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         }
     }
 
+    public static PendingIntent createPostAuthorizationIntent(
+            @NonNull Context context,
+            @NonNull AuthorizationRequest request,
+            @Nullable net.openid.appauth.AuthorizationServiceDiscovery discoveryDoc,
+            @Nullable String clientSecret) {
+        Intent intent = new Intent(context, MainActivity.class);
+        if (discoveryDoc != null) {
+            intent.putExtra(EXTRA_AUTH_SERVICE_DISCOVERY, discoveryDoc.docJson.toString());
+        }
+        if (clientSecret != null) {
+            intent.putExtra(EXTRA_CLIENT_SECRET, clientSecret);
+        }
+
+        return PendingIntent.getActivity(context, request.hashCode(), intent, 0);
+    }
+
+    static String getClientSecretFromIntent(Intent intent) {
+        if (!intent.hasExtra(EXTRA_CLIENT_SECRET)) {
+            return null;
+        }
+        return intent.getStringExtra(EXTRA_CLIENT_SECRET);
+    }
+
+    private static String readStream(InputStream stream) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        char[] buffer = new char[BUFFER_SIZE];
+        StringBuilder sb = new StringBuilder();
+        int readCount;
+        while ((readCount = br.read(buffer)) != -1) {
+            sb.append(buffer, 0, readCount);
+        }
+        return sb.toString();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,6 +202,23 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
         }
 
+        setUp();
+
+        fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
+
+        // todo check the saved instance state before opening the sensorFragment
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
+                .commit();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         if (mAuthState == null) {
             AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
             AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
@@ -200,39 +236,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             } else {
                 Log.i(TAG, "Authorization failed: " + ex);
                 showSnackBar(getString(R.string.authorization_failed));
+                logout();
             }
         }
 
         refreshUi();
-
-        setUp();
-
-        fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
-
-        // todo check the saved instance state before opening the sensorFragment
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
-                .commit();
-
-
-    }
-
-    public static PendingIntent createPostAuthorizationIntent(
-            @NonNull Context context,
-            @NonNull AuthorizationRequest request,
-            @Nullable net.openid.appauth.AuthorizationServiceDiscovery discoveryDoc,
-            @Nullable String clientSecret) {
-        Intent intent = new Intent(context, MainActivity.class);
-        if (discoveryDoc != null) {
-            intent.putExtra(EXTRA_AUTH_SERVICE_DISCOVERY, discoveryDoc.docJson.toString());
-        }
-        if (clientSecret != null) {
-            intent.putExtra(EXTRA_CLIENT_SECRET, clientSecret);
-        }
-
-        return PendingIntent.getActivity(context, request.hashCode(), intent, 0);
     }
 
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
@@ -248,7 +256,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         mAuthService.performTokenRequest(
                 request,
                 clientAuth,
-                (tokenResponse, ex) -> receivedTokenResponse(tokenResponse, ex));
+                this::receivedTokenResponse);//(tokenResponse, ex) -> receivedTokenResponse(tokenResponse, ex)
     }
 
     private void receivedTokenResponse(
@@ -259,7 +267,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         showSnackBar((tokenResponse != null)
                 ? getString(R.string.exchange_complete)
                 : getString(R.string.refresh_failed));
+
+        // for updating the access token
+        if (tokenResponse != null)
+            mPresenter.updateAccessToken(tokenResponse.accessToken);
+        // for updating the UI
         refreshUi();
+
     }
 
     private void performTokenRequest(TokenRequest request) {
@@ -271,57 +285,47 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             Log.e(TAG, "Cannot make userInfo request without service configuration");
         }
 
-        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
-            @Override
-            public void execute(String accessToken, String idToken, AuthorizationException ex) {
-                if (ex != null) {
-                    Log.e(TAG, "Token refresh failed when fetching user info");
-                    return;
-                }
+        mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+            if (ex != null) {
+                Log.e(TAG, "Token refresh failed when fetching user info");
+                return;
+            }
 
-                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-                if (discoveryDoc == null) {
-                    throw new IllegalStateException("no available discovery doc");
-                }
+            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+            if (discoveryDoc == null) {
+                throw new IllegalStateException("no available discovery doc");
+            }
 
-                URL userInfoEndpoint;
-                try {
-                    userInfoEndpoint = new URL(discoveryDoc.getUserinfoEndpoint().toString());
-                } catch (MalformedURLException urlEx) {
-                    Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
-                    return;
-                }
+            URL userInfoEndpoint;
+            try {
+                userInfoEndpoint = new URL(discoveryDoc.getUserinfoEndpoint().toString());
+            } catch (MalformedURLException urlEx) {
+                Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
+                return;
+            }
 
-                InputStream userInfoResponse = null;
-                try {
-                    HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
-                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-                    conn.setInstanceFollowRedirects(false);
-                    userInfoResponse = conn.getInputStream();
-                    String response = readStream(userInfoResponse);
-                    updateUserInfo(new JSONObject(response));
-                } catch (IOException ioEx) {
-                    Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-                } catch (JSONException jsonEx) {
-                    Log.e(TAG, "Failed to parse userinfo response");
-                } finally {
-                    if (userInfoResponse != null) {
-                        try {
-                            userInfoResponse.close();
-                        } catch (IOException ioEx) {
-                            Log.e(TAG, "Failed to close userinfo response stream", ioEx);
-                        }
+            InputStream userInfoResponse = null;
+            try {
+                HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
+                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                conn.setInstanceFollowRedirects(false);
+                userInfoResponse = conn.getInputStream();
+                String response = readStream(userInfoResponse);
+                updateUserInfo(new JSONObject(response));
+            } catch (IOException ioEx) {
+                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
+            } catch (JSONException jsonEx) {
+                Log.e(TAG, "Failed to parse userinfo response");
+            } finally {
+                if (userInfoResponse != null) {
+                    try {
+                        userInfoResponse.close();
+                    } catch (IOException ioEx) {
+                        Log.e(TAG, "Failed to close userinfo response stream", ioEx);
                     }
                 }
             }
         });
-    }
-
-    static String getClientSecretFromIntent(Intent intent) {
-        if (!intent.hasExtra(EXTRA_CLIENT_SECRET)) {
-            return null;
-        }
-        return intent.getStringExtra(EXTRA_CLIENT_SECRET);
     }
 
     private void updateUserInfo(final JSONObject jsonObject) {
@@ -329,17 +333,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             mUserInfoJson = jsonObject;
             refreshUi();
         });
-    }
-
-    private static String readStream(InputStream stream) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        char[] buffer = new char[BUFFER_SIZE];
-        StringBuilder sb = new StringBuilder();
-        int readCount;
-        while ((readCount = br.read(buffer)) != -1) {
-            sb.append(buffer, 0, readCount);
-        }
-        return sb.toString();
     }
 
     @Override
@@ -354,6 +347,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void refreshUi() {
 
         if (mAuthState.isAuthorized()) {
@@ -367,10 +361,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
 //            mPresenter.updateUserInfo();
             // todo fetch userInformation here when the user is Authorized User
-
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    fetchUserInfo();
+                    return null;
+                }
+            }.execute();
             if (mAuthState.getAccessToken() == null) {
 //                accessTokenInfoView.setText(R.string.no_access_token_returned);
                 Toast.makeText(this, "no access token returned", Toast.LENGTH_SHORT).show();
+
             } else {
                 Long expiresAt = mAuthState.getAccessTokenExpirationTime();
                 String expiryStr;
@@ -427,6 +428,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
 //                ((TextView) findViewById(R.id.userinfo_json)).setText(mUserInfoJson.toString(2));
                 Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
+//                if (mUserInfoJson)
+                mPresenter.updateUserInfo(
+                        (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
+                        (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
+                        (mUserInfoJson.has("given_name")) ? mUserInfoJson.get("given_name").toString() : "",
+                        (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
+                        (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
 
 //                userInfoCard.setVisibility(View.VISIBLE);
             } catch (JSONException ex) {
@@ -435,71 +443,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-//        Log.e(TAG, "isAuthorized=> " + mStateManager.getCurrent().isAuthorized());
-//
-//        // the stored AuthState is incomplete, so check if we are currently receiving the result of
-//        // the authorization flow from the browser.
-//        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
-//        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
-//
-//        if (response != null || ex != null) {
-//            mStateManager.updateAfterAuthorization(response, ex);
-//        }
-//
-//        if (response != null && response.authorizationCode != null) {
-//            // authorization code exchange is required
-//            mStateManager.updateAfterAuthorization(response, ex);
-//            exchangeAuthorizationCode(response);
-//        } else if (ex != null) {
-////            signOut();
-//            runOnUiThread(this::logout);
-//            // todo display something to the user telling them what goes wrong.
-////            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
-//        } else {
-////            signOut();
-//            runOnUiThread(this::logout);
-////            displayNotAuthorized("No authorization state retained - reauthorization required");
-//        }
-
-    }
-
     private void logout() {
 
         if (mAuthState.getAuthorizationServiceConfiguration() == null) {
             Log.e(TAG, "Cannot make userInfo request without service configuration");
         }
 
-        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
-            @Override
-            public void execute(String accessToken, String idToken, AuthorizationException ex) {
-                if (ex != null) {
-                    Log.e(TAG, "Token refresh failed when fetching user info");
-                    return;
-                }
-
-                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-                if (discoveryDoc == null) {
-                    throw new IllegalStateException("no available discovery doc");
-                }
-
-                Uri endSessionEndpoint = Uri.parse(discoveryDoc.getEndSessionEndpoint().toString());
-
-                String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
-                LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
-                        Uri.parse(logoutUri));
-
-                LogoutService logoutService = new LogoutService(MainActivity.this);
-                logoutService.performLogoutRequest(
-                        logoutRequest,
-                        PendingIntent.getActivity(
-                                MainActivity.this, logoutRequest.hashCode(),
-                                new Intent(MainActivity.this, LoginActivity.class), 0)
-                );
+        mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+            if (ex != null) {
+                Log.e(TAG, "Token refresh failed when fetching user info");
+                return;
             }
+
+            mPresenter.updateAccessToken(accessToken);
+
+            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+            if (discoveryDoc == null) {
+                throw new IllegalStateException("no available discovery doc");
+            }
+
+            Uri endSessionEndpoint = Uri.parse(discoveryDoc.getEndSessionEndpoint().toString());
+
+            String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+            LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
+                    Uri.parse(logoutUri));
+
+            LogoutService logoutService = new LogoutService(MainActivity.this);
+            logoutService.performLogoutRequest(
+                    logoutRequest,
+                    PendingIntent.getActivity(
+                            MainActivity.this, logoutRequest.hashCode(),
+                            new Intent(MainActivity.this, LoginActivity.class), 0)
+            );
         });
     }
 
@@ -845,13 +820,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
         }
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            mDrawer.openDrawer(GravityCompat.START);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

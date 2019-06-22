@@ -82,7 +82,8 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 
     @Override
     public void updateAccessToken(String accessToken) {
-
+        getDataManager().updateApiHeader(accessToken);
+        getDataManager().updateUserToken(accessToken);
     }
 
     @Override
@@ -147,4 +148,5 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
                     getMvpView().onError(CommonUtils.getErrorMessage(throwable));
                 }));
     }
+
 }
