@@ -92,16 +92,17 @@
     <string name="dialog_no_record">no record</string>
     <string name="retry">Retry</string>
 
+    <!--AUTHORIZATION-->
     <string name="keycloak_auth_redirect_scheme" translatable="false">net.openid.appauthdemo</string>
-    <string name="keycloak_auth_logout_scheme" translatable="false">net.openid.appauthdemo</string>
+    <string name="keycloak_auth_logout_scheme" translatable="false">net.openid.logout</string>
     <string name="keycloak_auth_redirect_uri" translatable="false">net.openid.appauthdemo:/oauth2Callback</string>
-    <string name="keycloak_auth_logout_uri" translatable="false">"net.openid.appauthdemo:/oauth2Callback"</string>
+    <string name="keycloak_auth_logout_uri" translatable="false">"net.openid.logout:/oauth2Callback"</string>
+
     <string name="exchange_notification">Exchanging code for token</string>
     <string name="authorization_failed">Authorization failed</string>
     <string name="exchange_complete">Exchange completed successfully</string>
     <string name="refresh_failed">Token refresh failed</string>
 
-    <!--AUTHORIZATION-->
     <bool name="AUTH_HTTPS_REQUIRED">true</bool>
 
     <string name="keycloak_name">Keycloak</string>
@@ -114,4 +115,9 @@
     <string name="auth_token_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/token</string>
     <string name="auth_registration_uri">https://keycloak.waziup.io/auth/realms/waziup/clients-registrations/openid-connect</string>
     <string name="auth_user_info_uri">https://keycloak.waziup.io/auth/realms/waziup/protocol/openid-connect/userinfo</string>
+
+    <!--<string name="keycloak_auth_redirect_scheme" translatable="false">com.test.demo</string>-->
+    <!--<string name="keycloak_auth_logout_scheme" translatable="false">com.test.logout</string>-->
+    <!--<string name="keycloak_auth_redirect_uri" translatable="false">com.test.demo:/oauth2Callback</string>-->
+    <!--<string name="keycloak_auth_logout_uri" translatable="false">"com.test.logout:/oauth2Callback"</string>-->
 </resources>

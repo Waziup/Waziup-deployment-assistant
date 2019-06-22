@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         Log.d(TAG, "Making registration request to " + serviceConfig.registrationEndpoint);
         mAuthService.performRegistrationRequest(
                 registrationRequest,
-                (AuthorizationService.RegistrationResponseCallback) (registrationResponse, ex) -> {
+                (registrationResponse, ex) -> {
                     Log.d(TAG, "Registration request complete");
                     if (registrationResponse != null) {
                         idp.setClientId(registrationResponse.clientId);
@@ -170,21 +170,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         } else {
             return getResources().getColor(color);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     @Override
