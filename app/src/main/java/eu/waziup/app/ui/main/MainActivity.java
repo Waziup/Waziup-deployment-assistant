@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,6 +23,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -32,12 +35,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
@@ -69,6 +74,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.Utils;
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
@@ -102,9 +108,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private static final String KEY_USER_INFO = "userInfo";
     public static String CURRENT_TAG = DevicesFragment.TAG;
 
-    //    private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
-    private JSONObject mUserInfoJson;
-
     private static final int BUFFER_SIZE = 1024;
 
     @Inject
@@ -124,12 +127,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private TextView mNameTextView;
     private TextView mEmailTextView;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    // keycloak auth variables
     private AuthorizationService mAuthService;
-    private AuthStateManager mStateManager;
-    private Configuration mConfiguration;
-
     private AuthState mAuthState;
-
+    private JSONObject mUserInfoJson;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
@@ -154,26 +156,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         Mapbox.getInstance(this, BuildConfig.MAPBOX_TOKEN);
         AndroidThreeTen.init(this);
 
-        mStateManager = AuthStateManager.getInstance(this);
-        mConfiguration = Configuration.getInstance(this);
-
-        Configuration config = Configuration.getInstance(this);
-        mAuthService = new AuthorizationService(this, new AppAuthConfiguration.Builder()
-                .setConnectionBuilder(config.getConnectionBuilder())
-                .build());
-
         setContentView(R.layout.activity_main);
 
-        // for fetching the user information from the savedInstanceState
-//        if (savedInstanceState != null) {
-//            try {
-//                mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
-//            } catch (JSONException ex) {
-//                Log.e(TAG, "Failed to parse saved user info JSON, discarding", ex);
-//                // todo implement a way for fetching the user information again from the documentation api
-//            }
-//        }
+        getActivityComponent().inject(this);
+        setUnBinder(ButterKnife.bind(this));
+        mPresenter.onAttach(MainActivity.this);
 
+        mAuthService = new AuthorizationService(this);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
@@ -188,7 +177,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             if (savedInstanceState.containsKey(KEY_USER_INFO)) {
                 try {
                     mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
-//                    mUserInfoJson.set(new JSONObject(savedInstanceState.getString(KEY_USER_INFO)));
                 } catch (JSONException ex) {
                     Log.e(TAG, "Failed to parse saved user info JSON", ex);
                 }
@@ -215,11 +203,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
         }
 
-
-
-        getActivityComponent().inject(this);
-        setUnBinder(ButterKnife.bind(this));
-        mPresenter.onAttach(MainActivity.this);
+        refreshUi();
 
         setUp();
 
@@ -361,7 +345,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        if (mStateManager != null && mStateManager.getCurrent() != null) {
+        if (mAuthState != null) {
             state.putString(KEY_AUTH_STATE, mAuthState.jsonSerializeString());
         }
 
@@ -372,8 +356,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     private void refreshUi() {
 
-        AuthState mAuthState = mStateManager.getCurrent();
-        if (mAuthState!=null && mAuthState.isAuthorized()) {
+        if (mAuthState.isAuthorized()) {
 //            refreshTokenInfoView.setText((mAuthState.getRefreshToken() == null)
 //                    ? R.string.no_refresh_token_returned
 //                    : R.string.refresh_token_returned);
@@ -387,6 +370,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
             if (mAuthState.getAccessToken() == null) {
 //                accessTokenInfoView.setText(R.string.no_access_token_returned);
+                Toast.makeText(this, "no access token returned", Toast.LENGTH_SHORT).show();
             } else {
                 Long expiresAt = mAuthState.getAccessTokenExpirationTime();
                 String expiryStr;
@@ -412,136 +396,110 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 || discoveryDoc.getUserinfoEndpoint() == null) {
 //            viewProfileButton.setVisibility(View.GONE);
             // todo find a way for displaying or handling this error
+            CommonUtils.toast("user not authorized and discoveryDoc is null");
         } else {
 //            viewProfileButton.setVisibility(View.VISIBLE);
 //            viewProfileButton.setOnClickListener((View.OnClickListener) view ->
+            CommonUtils.toast("user is authorized and discovery url is not null");
         }
 
-//        if (mUserInfoJson == null) {
+        if (mUserInfoJson == null) {
 //            userInfoCard.setVisibility(View.INVISIBLE);
-//        } else {
-//            try {
-//                String name = "???";
-//                if (mUserInfoJson.has("name")) {
-//                    name = mUserInfoJson.getString("name");
-//                }
+            CommonUtils.toast("user infoJson is null");
+        } else {
+            try {
+                String name = "???";
+                if (mUserInfoJson.has("name")) {
+                    name = mUserInfoJson.getString("name");
+                }
 //                final TextView userHeader = ((TextView) findViewById(R.id.userinfo_name));
 //                userHeader.setText(name);
-//
-//                if (mUserInfoJson.has("picture")) {
-//                    int profilePictureSize =
-//                            getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
-//
-//                    Picasso.with(TokenActivity.this)
-//                            .load(Uri.parse(mUserInfoJson.getString("picture")))
-//                            .resize(profilePictureSize, profilePictureSize)
-//                            .into(new UserProfilePictureTarget());
-//                }
-//
+
+                if (mUserInfoJson.has("picture")) {
+                    int profilePictureSize =
+                            getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
+
+                    Picasso.get()
+                            .load(Uri.parse(mUserInfoJson.getString("picture")))
+                            .resize(profilePictureSize, profilePictureSize)
+                            .into(mProfileView);
+                }
+
 //                ((TextView) findViewById(R.id.userinfo_json)).setText(mUserInfoJson.toString(2));
-//
+                Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
+
 //                userInfoCard.setVisibility(View.VISIBLE);
-//            } catch (JSONException ex) {
-//                Log.e(TAG, "Failed to read userinfo JSON", ex);
-//            }
-//        }
+            } catch (JSONException ex) {
+                Log.e(TAG, "Failed to read userinfo JSON", ex);
+            }
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        Log.e(TAG, "isAuthorized=> " + mStateManager.getCurrent().isAuthorized());
+//        Log.e(TAG, "isAuthorized=> " + mStateManager.getCurrent().isAuthorized());
+//
+//        // the stored AuthState is incomplete, so check if we are currently receiving the result of
+//        // the authorization flow from the browser.
+//        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+//        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+//
+//        if (response != null || ex != null) {
+//            mStateManager.updateAfterAuthorization(response, ex);
+//        }
+//
+//        if (response != null && response.authorizationCode != null) {
+//            // authorization code exchange is required
+//            mStateManager.updateAfterAuthorization(response, ex);
+//            exchangeAuthorizationCode(response);
+//        } else if (ex != null) {
+////            signOut();
+//            runOnUiThread(this::logout);
+//            // todo display something to the user telling them what goes wrong.
+////            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
+//        } else {
+////            signOut();
+//            runOnUiThread(this::logout);
+////            displayNotAuthorized("No authorization state retained - reauthorization required");
+//        }
 
-        // the stored AuthState is incomplete, so check if we are currently receiving the result of
-        // the authorization flow from the browser.
-        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
-        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
-
-        if (response != null || ex != null) {
-            mStateManager.updateAfterAuthorization(response, ex);
-        }
-
-        if (response != null && response.authorizationCode != null) {
-            // authorization code exchange is required
-            mStateManager.updateAfterAuthorization(response, ex);
-            exchangeAuthorizationCode(response);
-        } else if (ex != null) {
-//            signOut();
-            runOnUiThread(this::logout);
-            // todo display something to the user telling them what goes wrong.
-//            displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
-        } else {
-//            signOut();
-            runOnUiThread(this::logout);
-//            displayNotAuthorized("No authorization state retained - reauthorization required");
-        }
-
-    }
-
-    @MainThread
-    private void signOut() {
-        // discard the authorization and token state, but retain the configuration and
-        // dynamic client registration (if applicable), to save from retrieving them again.
-        AuthState currentState = mStateManager.getCurrent();
-        AuthState clearedState =
-                new AuthState(currentState.getAuthorizationServiceConfiguration());
-        if (currentState.getLastRegistrationResponse() != null) {
-            clearedState.update(currentState.getLastRegistrationResponse());
-        }
-        mStateManager.replace(clearedState);
-
-        Intent mainIntent = new Intent(this, LoginActivity.class);
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
-        finish();
     }
 
     private void logout() {
-        // todo handle mAuthState NullPointerException here
-        if (mStateManager.getCurrent().getAuthorizationServiceConfiguration() == null) {
+
+        if (mAuthState.getAuthorizationServiceConfiguration() == null) {
             Log.e(TAG, "Cannot make userInfo request without service configuration");
         }
 
-        mStateManager.getCurrent().performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
-            if (ex != null) {// todo it has to logout the user if the there is an exception happening in here
-                Log.e(TAG, "Token refresh failed when fetching user info");
-//                signOut();// todo will be removed and replaced with another method
-//                runOnUiThread(this::logout);
-                return;
+        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
+            @Override
+            public void execute(String accessToken, String idToken, AuthorizationException ex) {
+                if (ex != null) {
+                    Log.e(TAG, "Token refresh failed when fetching user info");
+                    return;
+                }
+
+                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
+                if (discoveryDoc == null) {
+                    throw new IllegalStateException("no available discovery doc");
+                }
+
+                Uri endSessionEndpoint = Uri.parse(discoveryDoc.getEndSessionEndpoint().toString());
+
+                String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+                LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
+                        Uri.parse(logoutUri));
+
+                LogoutService logoutService = new LogoutService(MainActivity.this);
+                logoutService.performLogoutRequest(
+                        logoutRequest,
+                        PendingIntent.getActivity(
+                                MainActivity.this, logoutRequest.hashCode(),
+                                new Intent(MainActivity.this, LoginActivity.class), 0)
+                );
             }
-
-            // todo find a solution for the discoveryDocument thing later
-            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
-            if (discoveryDoc == null) {
-                throw new IllegalStateException("no available discovery doc");
-            }
-
-            //============================ for clearing the state ==================================
-            AuthState currentState = mStateManager.getCurrent();
-            AuthState clearedState =
-                    new AuthState(currentState.getAuthorizationServiceConfiguration());
-            if (currentState.getLastRegistrationResponse() != null) {
-                clearedState.update(currentState.getLastRegistrationResponse());
-            }
-            mStateManager.replace(clearedState);
-            //======================================================================================
-
-            //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/token
-            //https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout
-            Uri endSessionEndpoint = Uri.parse("https://keycloak.staging.waziup.io/auth/realms/waziup/protocol/openid-connect/logout");
-
-            String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
-            LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint,
-                    Uri.parse(logoutUri));
-
-            LogoutService logoutService = new LogoutService(MainActivity.this);
-            logoutService.performLogoutRequest(
-                    logoutRequest,
-                    PendingIntent.getActivity(
-                            MainActivity.this, logoutRequest.hashCode(),
-                            new Intent(MainActivity.this, LoginActivity.class), 0)
-            );
         });
     }
 
