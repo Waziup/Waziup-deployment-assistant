@@ -369,6 +369,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
 //            mPresenter.updateUserInfo();
             // todo fetch userInformation here when the user is Authorized User and when there is an internet question.
+            // todo check if the userInformation before fetching it again from the discovery documentation
             if (ConnectivityUtil.isConnected(this)){
                 new AsyncTask<Void, Void, Void>() {
                     @Override
