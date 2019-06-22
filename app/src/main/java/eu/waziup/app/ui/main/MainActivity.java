@@ -81,6 +81,7 @@ import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
+import eu.waziup.app.utils.ConnectivityUtil;
 
 public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
@@ -220,6 +221,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         super.onStart();
 
         if (mAuthState == null) {
+            // this comes from the loginActivity when the user login
             AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
             AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
             mAuthState = new AuthState(response, ex);
@@ -284,6 +286,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         performTokenRequest(request, NoClientAuthentication.INSTANCE);
     }
 
+    // to be executed only when there is an internet connection.
     private void fetchUserInfo() {
         if (mAuthState.getAuthorizationServiceConfiguration() == null) {
             Log.e(TAG, "Cannot make userInfo request without service configuration");
@@ -297,6 +300,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
             AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
             if (discoveryDoc == null) {
+                // is it necessary to throw Exception inside the app intentionally?
                 throw new IllegalStateException("no available discovery doc");
             }
 
@@ -364,14 +368,17 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 //                    : R.string.id_token_returned);
 
 //            mPresenter.updateUserInfo();
-            // todo fetch userInformation here when the user is Authorized User
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    fetchUserInfo();
-                    return null;
-                }
-            }.execute();
+            // todo fetch userInformation here when the user is Authorized User and when there is an internet question.
+            if (ConnectivityUtil.isConnected(this)){
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        fetchUserInfo();
+                        return null;
+                    }
+                }.execute();
+            }
+
             if (mAuthState.getAccessToken() == null) {
 //                accessTokenInfoView.setText(R.string.no_access_token_returned);
                 Toast.makeText(this, "no access token returned", Toast.LENGTH_SHORT).show();
@@ -390,36 +397,27 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         "access token expires at %s",
                         expiryStr);
                 Toast.makeText(this, tokenInfo, Toast.LENGTH_SHORT).show();
-//                accessTokenInfoView.setText(tokenInfo);
             }
         }
 
 
+        // if the user is not authorized user
         AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
         if (!mAuthState.isAuthorized()
                 || discoveryDoc == null
                 || discoveryDoc.getUserinfoEndpoint() == null) {
-//            viewProfileButton.setVisibility(View.GONE);
             // todo find a way for displaying or handling this error
-            CommonUtils.toast("user not authorized and discoveryDoc is null");
+            showSnackBar("user not authorized and discoveryDoc is null");
         } else {
-//            viewProfileButton.setVisibility(View.VISIBLE);
-//            viewProfileButton.setOnClickListener((View.OnClickListener) view ->
-            CommonUtils.toast("user is authorized and discovery url is not null");
+            showSnackBar("user is authorized and discovery url is not null");
         }
 
         if (mUserInfoJson == null) {
-//            userInfoCard.setVisibility(View.INVISIBLE);
             CommonUtils.toast("user infoJson is null");
         } else {
             try {
-                String name = "???";
-                if (mUserInfoJson.has("name")) {
-                    name = mUserInfoJson.getString("name");
-                }
-//                final TextView userHeader = ((TextView) findViewById(R.id.userinfo_name));
-//                userHeader.setText(name);
 
+                // if the mUserInfoJson has an attribute called -> picture
                 if (mUserInfoJson.has("picture")) {
                     int profilePictureSize =
                             getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
@@ -430,9 +428,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                             .into(mProfileView);
                 }
 
-//                ((TextView) findViewById(R.id.userinfo_json)).setText(mUserInfoJson.toString(2));
                 Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
-//                if (mUserInfoJson)
+
+                // updates the user information
                 mPresenter.updateUserInfo(
                         (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
                         (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
@@ -440,7 +438,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
                         (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
 
-//                userInfoCard.setVisibility(View.VISIBLE);
             } catch (JSONException ex) {
                 Log.e(TAG, "Failed to read userinfo JSON", ex);
             }

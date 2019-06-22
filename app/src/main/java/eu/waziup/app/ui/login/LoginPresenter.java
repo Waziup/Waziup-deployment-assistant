@@ -36,6 +36,6 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
     @Override
     public void onAttach(V mvpView) {
         super.onAttach(mvpView);
-        onDecideNextActivity();
+//        onDecideNextActivity();
     }
 }
