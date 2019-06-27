@@ -359,13 +359,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private void refreshUi() {
 
         if (mAuthState.isAuthorized()) {
-//            refreshTokenInfoView.setText((mAuthState.getRefreshToken() == null)
-//                    ? R.string.no_refresh_token_returned
-//                    : R.string.refresh_token_returned);
-
-//            idTokenInfoView.setText((mAuthState.getIdToken()) == null
-//                    ? R.string.no_id_token_returned
-//                    : R.string.id_token_returned);
 
 //            mPresenter.updateUserInfo();
             // todo fetch userInformation here when the user is Authorized User and when there is an internet question.
@@ -378,6 +371,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         return null;
                     }
                 }.execute();
+            } else {
+                showSnackBar("No internet connection. Please retry.");
             }
 
             if (mAuthState.getAccessToken() == null) {

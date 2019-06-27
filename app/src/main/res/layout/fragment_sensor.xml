@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
-    android:clickable="true"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:fitsSystemWindows="true"
     tools:context=".ui.device.DevicesFragment">
 
@@ -15,42 +15,36 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/textScrollView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
 
-            <RelativeLayout
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sensor_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/card_sensor" />
+
+            <TextView
+                android:id="@+id/tv_no_sensor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp">
+                android:layout_centerInParent="true"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="@string/no_sensors_list_found"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
+        </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/sensor_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="3dp"
-                    android:scrollbars="vertical"
-                    tools:listitem="@layout/card_sensor" />
-
-                <TextView
-                    android:id="@+id/tv_no_sensor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="5dp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/roboto_light"
-                    android:text="@string/no_sensors_list_found"
-                    android:textAlignment="center"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
