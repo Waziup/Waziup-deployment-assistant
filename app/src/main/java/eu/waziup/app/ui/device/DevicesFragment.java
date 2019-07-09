@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import net.openid.appauth.AuthState;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +51,10 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
     DevicesCommunicator communicator;
+    static AuthState mAuthState;
 
-    public static DevicesFragment newInstance() {
+    public static DevicesFragment newInstance(AuthState mAState) {
+        mAuthState = mAState;
         Bundle args = new Bundle();
         DevicesFragment fragment = new DevicesFragment();
         fragment.setArguments(args);

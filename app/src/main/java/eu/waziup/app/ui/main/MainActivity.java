@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
+                .replace(R.id.flContent, DevicesFragment.newInstance(mAuthState), DevicesFragment.TAG)
                 .commit();
 
     }
@@ -735,7 +735,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
+                        .replace(R.id.flContent, DevicesFragment.newInstance(mAuthState), DevicesFragment.TAG)
                         .commit();
             }
         }
