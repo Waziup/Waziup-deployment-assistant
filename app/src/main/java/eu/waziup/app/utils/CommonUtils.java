@@ -19,6 +19,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,6 +38,8 @@ import eu.waziup.app.data.network.model.ApiError;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.HttpException;
+
+import static eu.waziup.app.utils.AppConstants.EXTRA_CLIENT_SECRET;
 
 /**
  * Created by KidusMT.
@@ -67,6 +70,13 @@ public final class CommonUtils {
         }
 
 
+    }
+
+    public static String getClientSecretFromIntent(Intent intent) {
+        if (!intent.hasExtra(EXTRA_CLIENT_SECRET)) {
+            return null;
+        }
+        return intent.getStringExtra(EXTRA_CLIENT_SECRET);
     }
 
     @SuppressLint("all")

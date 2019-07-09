@@ -82,17 +82,17 @@ import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.ConnectivityUtil;
 
+import static eu.waziup.app.utils.AppConstants.EXTRA_AUTH_SERVICE_DISCOVERY;
+import static eu.waziup.app.utils.AppConstants.EXTRA_CLIENT_SECRET;
+import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
+import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
+
 public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
-    private static final String KEY_AUTH_STATE = "authState";
-
-    private static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
-    private static final String EXTRA_CLIENT_SECRET = "clientSecret";
 
     // AUTHORIZATION VARIABLES
-    private static final String KEY_USER_INFO = "userInfo";
     private static final int BUFFER_SIZE = 1024;
     public static String CURRENT_TAG = DevicesFragment.TAG;
     @Inject
@@ -151,12 +151,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         return PendingIntent.getActivity(context, request.hashCode(), intent, 0);
     }
 
-    static String getClientSecretFromIntent(Intent intent) {
-        if (!intent.hasExtra(EXTRA_CLIENT_SECRET)) {
-            return null;
-        }
-        return intent.getStringExtra(EXTRA_CLIENT_SECRET);
-    }
+
 
     private static String readStream(InputStream stream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
@@ -228,7 +223,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         if (response != null) {
             Log.d(TAG, "Received AuthorizationResponse.");
             showSnackBar(getString(R.string.exchange_notification));
-            String clientSecret = getClientSecretFromIntent(getIntent());
+            String clientSecret = CommonUtils.getClientSecretFromIntent(getIntent());
             if (clientSecret != null) {
                 exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
             } else {

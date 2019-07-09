@@ -24,6 +24,11 @@ public final class AppConstants {
 
     public static final String MEASUREMENT_SENSOR_KEY = "MEASUREMENT_SENSOR_KEY";
 
+    public static final String EXTRA_AUTH_SERVICE_DISCOVERY = "authServiceDiscovery";
+    public static final String EXTRA_CLIENT_SECRET = "clientSecret";
+
+    public static final String KEY_AUTH_STATE = "authState";
+    public static final String KEY_USER_INFO = "userInfo";
     public static final String MEASUREMENT_DETAIL_KEY = "MEASUREMENT_DETAIL_KEY";
 
     //556484818818-lmptgg0pseli19di9h4h7k4t941oifdd.apps.googleusercontent.com - new

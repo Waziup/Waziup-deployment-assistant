@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +39,13 @@ import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.utils.CommonUtils;
 
+import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
+import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
+
 public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
 
     public static final String TAG = "DevicesFragment";
+    static AuthState mAuthState;
     @Inject
     DevicesMvpPresenter<DevicesMvpView> mPresenter;
     @Inject
@@ -51,7 +59,8 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
     DevicesCommunicator communicator;
-    static AuthState mAuthState;
+    private JSONObject mUserInfoJson;
+    private AuthorizationService mAuthService;
 
     public static DevicesFragment newInstance(AuthState mAState) {
         mAuthState = mAState;
@@ -59,6 +68,12 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         DevicesFragment fragment = new DevicesFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // todo check if the user is authorized if not start Authorization from mainActivity
     }
 
     @Nullable
@@ -73,6 +88,27 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
             mPresenter.onAttach(this);
             mAdapter.setCallback(this);
             mAdapter.setMeasurementCallback(this);
+        }
+
+        mAuthService = new AuthorizationService(getBaseActivity());
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
+                try {
+                    mAuthState = AuthState.jsonDeserialize(
+                            savedInstanceState.getString(KEY_AUTH_STATE));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Malformed authorization JSON saved", ex);
+                }
+            }
+
+            if (savedInstanceState.containsKey(KEY_USER_INFO)) {
+                try {
+                    mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
+                }
+            }
         }
 
         setUp(view);
