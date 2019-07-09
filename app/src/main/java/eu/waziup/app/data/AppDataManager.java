@@ -49,8 +49,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<List<Device>> fetchSensors() {
-        return mApiHelper.fetchSensors();
+    public Single<List<Device>> fetchSensors(String username) {
+        return mApiHelper.fetchSensors(username);
     }
 
     @Override

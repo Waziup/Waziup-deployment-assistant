@@ -38,4 +38,9 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         super.onAttach(mvpView);
 //        onDecideNextActivity();
     }
+
+    @Override
+    public void onSaveUserInfo() {
+
+    }
 }

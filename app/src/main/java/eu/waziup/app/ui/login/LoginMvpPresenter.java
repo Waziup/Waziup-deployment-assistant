@@ -10,6 +10,6 @@ import eu.waziup.app.ui.base.MvpPresenter;
 @PerActivity
 public interface LoginMvpPresenter<V extends LoginMvpView> extends MvpPresenter<V> {
 
-
+    void onSaveUserInfo();
 
 }

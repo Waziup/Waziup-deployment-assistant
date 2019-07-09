@@ -26,7 +26,7 @@ public interface ApiHelper {
 
     Single<String> serverLogin(LoginRequest.ServerLoginRequest loginRequest);
 
-    Single<List<Device>> fetchSensors();
+    Single<List<Device>> fetchSensors(String username);
 
     Single<List<Device>> fetchSensors(int limit, int offset);
 

@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -220,29 +219,29 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     protected void onStart() {
         super.onStart();
 
-        if (mAuthState == null) {
-            // this comes from the loginActivity when the user login
-            AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
-            AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
-            mAuthState = new AuthState(response, ex);
+//        if (mAuthState == null) {
+        // this comes from the loginActivity when the user login
+        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+        mAuthState = new AuthState(response, ex);//todo why do I need this part
 
-            if (response != null) {
-                Log.d(TAG, "Received AuthorizationResponse.");
-                showSnackBar(getString(R.string.exchange_notification));
-                String clientSecret = getClientSecretFromIntent(getIntent());
-                if (clientSecret != null) {
-                    exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
-                } else {
-                    exchangeAuthorizationCode(response);
-                }
+        if (response != null) {
+            Log.d(TAG, "Received AuthorizationResponse.");
+            showSnackBar(getString(R.string.exchange_notification));
+            String clientSecret = getClientSecretFromIntent(getIntent());
+            if (clientSecret != null) {
+                exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
             } else {
-                Log.i(TAG, "Authorization failed: " + ex);
-                showSnackBar(getString(R.string.authorization_failed));
-                logout();
+                exchangeAuthorizationCode(response);
             }
+        } else {
+            Log.i(TAG, "Authorization failed: " + ex);
+            showSnackBar(getString(R.string.authorization_failed));
+            logout();
         }
+//        }
 
-        refreshUi();
+//        refreshUi();
     }
 
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
@@ -271,7 +270,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 : getString(R.string.refresh_failed));
 
         // for updating the access token
-        if (tokenResponse != null){
+        if (tokenResponse != null) {
             mPresenter.updateAccessToken(tokenResponse.accessToken);
             //setting the user loggedIn mode for
             mPresenter.setLoggedInMode();
@@ -339,7 +338,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private void updateUserInfo(final JSONObject jsonObject) {
         new Handler(Looper.getMainLooper()).post(() -> {
             mUserInfoJson = jsonObject;
-            refreshUi();
+//            refreshUi();
         });
     }
 
@@ -363,27 +362,25 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 //            mPresenter.updateUserInfo();
             // todo fetch userInformation here when the user is Authorized User and when there is an internet question.
             // todo check if the userInformation before fetching it again from the discovery documentation
-            if (ConnectivityUtil.isConnected(this)){
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        fetchUserInfo();
-                        return null;
-                    }
-                }.execute();
-            } else {
-                showSnackBar("No internet connection. Please retry.");
-            }
+//            if (ConnectivityUtil.isConnected(this)) {
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        fetchUserInfo();
+//                        return null;
+//                    }
+//                }.execute();
+//            } else {
+//                showSnackBar("No internet connection. Please retry.");
+//                return;
+//            }
 
             if (mAuthState.getAccessToken() == null) {
-//                accessTokenInfoView.setText(R.string.no_access_token_returned);
-                Toast.makeText(this, "no access token returned", Toast.LENGTH_SHORT).show();
-
+                CommonUtils.toast("no access token returned");
             } else {
                 Long expiresAt = mAuthState.getAccessTokenExpirationTime();
                 String expiryStr;
                 if (expiresAt == null) {
-//                    expiryStr = getResources().getString(R.string.unknown_expiry);
                     expiryStr = "Unknown expire date";
                 } else {
                     expiryStr = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL)
@@ -392,7 +389,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 String tokenInfo = String.format(
                         "access token expires at %s",
                         expiryStr);
-                Toast.makeText(this, tokenInfo, Toast.LENGTH_SHORT).show();
+                CommonUtils.toast(tokenInfo);
             }
         }
 
@@ -404,38 +401,42 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 || discoveryDoc.getUserinfoEndpoint() == null) {
             // todo find a way for displaying or handling this error
             showSnackBar("user not authorized and discoveryDoc is null");
-        } else {
-            showSnackBar("user is authorized and discovery url is not null");
-        }
+//        } else {
+////            showSnackBar("user is authorized and discovery url is not null");
+//        }
 
-        if (mUserInfoJson == null) {
-            CommonUtils.toast("user infoJson is null");
-        } else {
-            try {
+//        I can write anything in here for the next todo get back here later
+            if (mUserInfoJson == null) {
+                CommonUtils.toast("user infoJson is null");
+            } else {
+//            I can write some thign in the abck fo the wall an I anwa nt be cau
+//        }
+                try {
 
-                // if the mUserInfoJson has an attribute called -> picture
-                if (mUserInfoJson.has("picture")) {
-                    int profilePictureSize =
-                            getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
+                    // if the mUserInfoJson has an attribute called -> picture
+                    if (mUserInfoJson.has("picture")) {
+                        int profilePictureSize =
+                                getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
 
-                    Picasso.get()
-                            .load(Uri.parse(mUserInfoJson.getString("picture")))
-                            .resize(profilePictureSize, profilePictureSize)
-                            .into(mProfileView);
+                        Picasso.get()
+                                .load(Uri.parse(mUserInfoJson.getString("picture")))
+                                .resize(profilePictureSize, profilePictureSize)
+                                .into(mProfileView);
+                    }
+
+                    Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
+
+                    // updates the user information
+                    mPresenter.updateUserInfo(
+                            (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
+                            (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
+                            (mUserInfoJson.has("given_name")) ? mUserInfoJson.get("given_name").toString() : "",
+                            (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
+                            (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
+
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failed to read userinfo JSON", ex);
                 }
-
-                Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
-
-                // updates the user information
-                mPresenter.updateUserInfo(
-                        (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
-                        (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
-                        (mUserInfoJson.has("given_name")) ? mUserInfoJson.get("given_name").toString() : "",
-                        (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
-                        (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
-
-            } catch (JSONException ex) {
-                Log.e(TAG, "Failed to read userinfo JSON", ex);
             }
         }
     }

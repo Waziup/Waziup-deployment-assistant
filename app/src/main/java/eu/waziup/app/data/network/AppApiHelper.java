@@ -50,8 +50,8 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Single<List<Device>> fetchSensors() {
-        return mApiCall.getSensors();
+    public Single<List<Device>> fetchSensors(String username) {
+        return mApiCall.getSensors(String.format("owner==%s",username));
     }
 
     @Override

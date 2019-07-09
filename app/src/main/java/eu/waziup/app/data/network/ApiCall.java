@@ -39,7 +39,7 @@ public interface ApiCall {
 
     @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Single<List<Device>> getSensors();
+    Single<List<Device>> getSensors(@Query("q") String username);
 
     @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
