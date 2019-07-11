@@ -18,7 +18,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
+import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.ClientAuthentication;
+import net.openid.appauth.ClientSecretBasic;
+import net.openid.appauth.NoClientAuthentication;
+import net.openid.appauth.TokenRequest;
+import net.openid.appauth.TokenResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,39 +48,43 @@ import eu.waziup.app.utils.CommonUtils;
 
 import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
 import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
+import static eu.waziup.app.utils.CommonUtils.getClientSecretFromIntent;
 
 public class DevicesFragment extends BaseFragment implements DevicesMvpView, DevicesAdapter.Callback, DevicesAdapter.MeasurementCallback {
 
     public static final String TAG = "DevicesFragment";
-    static AuthState mAuthState;
     @Inject
     DevicesMvpPresenter<DevicesMvpView> mPresenter;
+
     @Inject
     DevicesAdapter mAdapter;
+
+    @Inject
+    AuthorizationService mAuthService;
+
     @Inject
     LinearLayoutManager mLayoutManager;
+
     @BindView(R.id.sensor_recycler)
     RecyclerView mRecyclerView;
+
     @BindView(R.id.sensor_swipe_to_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+
     @BindView(R.id.tv_no_sensor)
     TextView tvNoSensors;
+
     DevicesCommunicator communicator;
     private JSONObject mUserInfoJson;
-    private AuthorizationService mAuthService;
 
-    public static DevicesFragment newInstance(AuthState mAState) {
-        mAuthState = mAState;
+
+    private AuthState mAuthState;
+
+    public static DevicesFragment newInstance() {
         Bundle args = new Bundle();
         DevicesFragment fragment = new DevicesFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // todo check if the user is authorized if not start Authorization from mainActivity
     }
 
     @Nullable
@@ -90,26 +101,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
             mAdapter.setMeasurementCallback(this);
         }
 
-        mAuthService = new AuthorizationService(getBaseActivity());
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
-                try {
-                    mAuthState = AuthState.jsonDeserialize(
-                            savedInstanceState.getString(KEY_AUTH_STATE));
-                } catch (JSONException ex) {
-                    Log.e(TAG, "Malformed authorization JSON saved", ex);
-                }
-            }
-
-            if (savedInstanceState.containsKey(KEY_USER_INFO)) {
-                try {
-                    mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
-                } catch (JSONException ex) {
-                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
-                }
-            }
-        }
+        handleAuthorization(savedInstanceState);
 
         setUp(view);
 
@@ -142,6 +134,93 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         super.onAttach(context);
         loadPage();
         communicator = (DevicesCommunicator) context;
+    }
+
+    public void handleAuthorization(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
+                try {
+                    mAuthState = AuthState.jsonDeserialize(
+                            savedInstanceState.getString(KEY_AUTH_STATE));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Malformed authorization JSON saved", ex);
+                }
+            }
+
+            if (savedInstanceState.containsKey(KEY_USER_INFO)) {
+                try {
+                    mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
+                }
+            }
+        }
+
+        if (mAuthState == null) {
+            AuthorizationResponse response = AuthorizationResponse.fromIntent(getBaseActivity().getIntent());
+            AuthorizationException ex = AuthorizationException.fromIntent(getBaseActivity().getIntent());
+            mAuthState = new AuthState(response, ex);
+
+            if (response != null) {
+                Log.d(TAG, "Received AuthorizationResponse.");
+//                getBaseActivity().showSnackbar(R.string.exchange_notification);
+                String clientSecret = getClientSecretFromIntent(getBaseActivity().getIntent());
+                if (clientSecret != null) {
+                    exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
+                } else {
+                    exchangeAuthorizationCode(response);
+                }
+            } else {
+                Log.i(TAG, "Authorization failed: " + ex);
+//                showSnackbar(R.string.authorization_failed);
+                CommonUtils.toast(getString(R.string.authorization_failed));
+            }
+        }
+    }
+
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
+                                           ClientAuthentication clientAuth) {
+        performTokenRequest(authorizationResponse.createTokenExchangeRequest(), clientAuth);
+    }
+
+    private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse) {
+        performTokenRequest(authorizationResponse.createTokenExchangeRequest());
+    }
+
+    private void performTokenRequest(TokenRequest request, ClientAuthentication clientAuth) {
+        mAuthService.performTokenRequest(
+                request,
+                clientAuth,
+                this::receivedTokenResponse);//(tokenResponse, ex) -> receivedTokenResponse(tokenResponse, ex)
+    }
+
+    private void receivedTokenResponse(
+            @Nullable TokenResponse tokenResponse,
+            @Nullable AuthorizationException authException) {
+        Log.d(TAG, "Token request complete");
+        mAuthState.update(tokenResponse, authException);
+//        showSnackBar((tokenResponse != null)
+//                ? getString(R.string.exchange_complete)
+//                : getString(R.string.refresh_failed));
+        // replacement for the --> showSnackBar()
+        CommonUtils.toast((tokenResponse != null)
+                ? getString(R.string.exchange_complete)
+                : getString(R.string.refresh_failed));
+
+        // for updating the access token
+        if (tokenResponse != null) {//todo get back here later
+//            mPresenter.updateAccessToken(tokenResponse.accessToken);
+            //setting the user loggedIn mode for
+//            mPresenter.setLoggedInMode();
+        }
+
+        // for updating the UI
+//        refreshUi();
+
+    }
+
+    private void performTokenRequest(TokenRequest request) {
+        performTokenRequest(request, NoClientAuthentication.INSTANCE);
     }
 
     @Override
