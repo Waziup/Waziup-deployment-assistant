@@ -36,7 +36,8 @@ public class DevicesPresenter<V extends DevicesMvpView> extends BasePresenter<V>
 //        if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
         if (getMvpView().isNetworkConnected()) {
             getMvpView().showLoading();
-            getCompositeDisposable().add(getDataManager().fetchSensors(getDataManager().getCurrentUserName())//fetchSensors(1000, 0)
+            getCompositeDisposable().add(getDataManager()
+                    .fetchSensors("cdupont")//getDataManager().getCurrentUserName())//fetchSensors(1000, 0)
                     .subscribeOn(getSchedulerProvider().io())
                     .observeOn(getSchedulerProvider().ui())
                     .subscribe(

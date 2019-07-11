@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         return new Intent(context, MainActivity.class);
     }
 
-    static AuthorizationServiceDiscovery getDiscoveryDocFromIntent(Intent intent) {
+    public static AuthorizationServiceDiscovery getDiscoveryDocFromIntent(Intent intent) {
         if (!intent.hasExtra(EXTRA_AUTH_SERVICE_DISCOVERY)) {
             return null;
         }

@@ -38,11 +38,11 @@ public interface ApiCall {
     String HEADER_PARAM_SEPARATOR = ":";
 
     @GET(ApiEndPoint.DEVICES)
-    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
     Single<List<Device>> getSensors(@Query("q") String username);
 
     @GET(ApiEndPoint.DEVICES)
-    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
+    @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
     Single<List<Device>> getSensors(@Query("limit") int limit, @Query("offset") int skip);
 
     @GET(ApiEndPoint.NOTIFICATION)

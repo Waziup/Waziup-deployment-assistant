@@ -39,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
+import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
 import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
@@ -46,6 +47,7 @@ import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.utils.CommonUtils;
 
+import static eu.waziup.app.ui.main.MainActivity.getDiscoveryDocFromIntent;
 import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
 import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
 import static eu.waziup.app.utils.CommonUtils.getClientSecretFromIntent;
@@ -227,6 +229,21 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     protected void setUp(View view) {
         setUpRecyclerView();
         mPresenter.loadSensors();
+//        mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+//            if (ex != null) {
+//                Log.e(TAG, "Token refresh failed when fetching user info");
+//                return;
+//            }
+//
+//            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getBaseActivity().getIntent());
+//            if (discoveryDoc == null) {
+//                // is it necessary to throw Exception inside the app intentionally?
+//                throw new IllegalStateException("no available discovery doc");
+//            }
+//
+//
+//        });
+
         if (getBaseActivity().getSupportActionBar() != null)
             getBaseActivity().getSupportActionBar().setTitle(R.string.devices);
 
@@ -257,16 +274,18 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
         if (devices != null) {
             // filtering the devices with the owner name
-            List<Device> filteredDeviceList = filterByOwner(devices, "mikiyasbelhu");//
-            Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
-            CommonUtils.toast(String.format("--->Contains: %d", filteredDeviceList.size()));
+//            List<Device> filteredDeviceList = filterByOwner(devices, "mikiyasbelhu");//
+//            Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
+//            CommonUtils.toast(String.format("--->Contains: %d", filteredDeviceList.size()));
             if (devices.size() > 0) {
+                Log.e(TAG, "===devices.size() > 0");
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(filteredDeviceList);
+                mAdapter.addItems(devices);
             } else {
+                Log.e(TAG, "===else");
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
                     tvNoSensors.setVisibility(View.VISIBLE);
                     tvNoSensors.setText(R.string.no_sensors_list_found);
