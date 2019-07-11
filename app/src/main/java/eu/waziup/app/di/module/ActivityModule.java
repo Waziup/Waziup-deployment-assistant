@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 
+import net.openid.appauth.AuthorizationService;
+
 import java.util.ArrayList;
 
 import dagger.Module;
@@ -173,6 +175,12 @@ public class ActivityModule {
     @PerActivity
     MeasurementAdapter provideMeasurementAdapter() {
         return new MeasurementAdapter(new ArrayList<>());
+    }
+
+    @Provides
+    @PerActivity
+    AuthorizationService provideAuthorizationService(Context context) {
+        return new AuthorizationService(context);
     }
 
     @Provides

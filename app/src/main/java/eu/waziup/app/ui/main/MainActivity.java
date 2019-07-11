@@ -95,16 +95,22 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     // AUTHORIZATION VARIABLES
     private static final int BUFFER_SIZE = 1024;
     public static String CURRENT_TAG = DevicesFragment.TAG;
+
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
+
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
+
     @BindView(R.id.drawer_view)
     DrawerLayout mDrawer;
+
     @BindView(R.id.flContent)
     FrameLayout frameLayout;
+
     @BindView(R.id.navigation_view)
     NavigationView nvDrawer;
+
     @BindView(R.id.fab_sensor)
     FloatingActionButton fabSensor;
 
@@ -445,6 +451,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
             if (ex != null) {
                 Log.e(TAG, "Token refresh failed when fetching user info");
+                // todo remove the
                 return;
             }
 
