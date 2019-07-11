@@ -837,6 +837,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        hideLoading();
         if (mAuthService != null) {
             mAuthService.dispose();
         }
