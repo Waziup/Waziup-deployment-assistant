@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import dagger.Module;
 import dagger.Provides;
+import eu.waziup.app.DaApp;
 import eu.waziup.app.di.ActivityContext;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.device.DevicesAdapter;
@@ -179,8 +180,8 @@ public class ActivityModule {
 
     @Provides
     @PerActivity
-    AuthorizationService provideAuthorizationService(Context context) {
-        return new AuthorizationService(context);
+    AuthorizationService provideAuthorizationService() {
+        return new AuthorizationService(DaApp.getContext());
     }
 
     @Provides

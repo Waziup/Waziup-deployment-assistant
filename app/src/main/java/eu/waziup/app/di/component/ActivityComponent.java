@@ -1,5 +1,7 @@
 package eu.waziup.app.di.component;
 
+import net.openid.appauth.AuthorizationService;
+
 import dagger.Component;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.di.module.ActivityModule;
@@ -49,4 +51,6 @@ public interface ActivityComponent {
     void inject(EditSensorDialog dialog);
 
     void inject(SensorDetailDialog dialog);
+
+    void inject(AuthorizationService authorizationService);
 }
