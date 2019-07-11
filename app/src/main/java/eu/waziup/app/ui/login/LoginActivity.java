@@ -35,7 +35,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
-    private AuthorizationService mAuthService;
+
+    @Inject
+    AuthorizationService mAuthService;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LoginActivity.class);
@@ -52,8 +54,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         setUnBinder(ButterKnife.bind(this));
 
         mPresenter.onAttach(LoginActivity.this);
-
-        mAuthService = new AuthorizationService(this);
 
         setUp();
 

@@ -99,6 +99,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     @Inject
     MainMvpPresenter<MainMvpView> mPresenter;
 
+    @Inject
+    AuthorizationService mAuthService;
+
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
 
@@ -120,7 +123,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private ActionBarDrawerToggle mDrawerToggle;
 
     // keycloak auth variables
-    private AuthorizationService mAuthService;
     private AuthState mAuthState;
     private JSONObject mUserInfoJson;
 
@@ -181,8 +183,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.onAttach(MainActivity.this);
-
-        mAuthService = new AuthorizationService(this);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
