@@ -46,6 +46,7 @@ import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.utils.CommonUtils;
+import io.reactivex.exceptions.OnErrorNotImplementedException;
 
 import static eu.waziup.app.ui.main.MainActivity.getDiscoveryDocFromIntent;
 import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
