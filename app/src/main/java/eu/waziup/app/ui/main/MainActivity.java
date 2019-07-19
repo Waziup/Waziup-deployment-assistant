@@ -24,7 +24,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -268,7 +267,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private void receivedTokenResponse(
             @Nullable TokenResponse tokenResponse,
             @Nullable AuthorizationException authException) {
-        Log.d(TAG, "Token request complete");
+        Timber.d("Token request complete");
         mAuthState.update(tokenResponse, authException);
         showSnackBar((tokenResponse != null)
                 ? getString(R.string.exchange_complete)
@@ -293,12 +292,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     // to be executed only when there is an internet connection.
     private void fetchUserInfo() {
         if (mAuthState.getAuthorizationServiceConfiguration() == null) {
-            Log.e(TAG, "Cannot make userInfo request without service configuration");
+            Timber.e("Cannot make userInfo request without service configuration");
         }
 
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
             if (ex != null) {
-                Log.e(TAG, "Token refresh failed when fetching user info");
+                Timber.e("Token refresh failed when fetching user info");
                 return;
             }
 
@@ -309,34 +308,37 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
 
             URL userInfoEndpoint;
-            try {
-                userInfoEndpoint = new URL(discoveryDoc.getUserinfoEndpoint().toString());
-            } catch (MalformedURLException urlEx) {
-                Log.e(TAG, "Failed to construct user info endpoint URL", urlEx);
-                return;
-            }
+            if (discoveryDoc.getUserinfoEndpoint() != null) {
+                try {
+                    userInfoEndpoint = new URL(discoveryDoc.getUserinfoEndpoint().toString());
+                } catch (MalformedURLException urlEx) {
+                    Timber.e(urlEx, "Failed to construct user info endpoint URL");
+                    return;
+                }
 
-            InputStream userInfoResponse = null;
-            try {
-                HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
-                conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-                conn.setInstanceFollowRedirects(false);
-                userInfoResponse = conn.getInputStream();
-                String response = readStream(userInfoResponse);
-                updateUserInfo(new JSONObject(response));
-            } catch (IOException ioEx) {
-                Log.e(TAG, "Network error when querying userinfo endpoint", ioEx);
-            } catch (JSONException jsonEx) {
-                Log.e(TAG, "Failed to parse userinfo response");
-            } finally {
-                if (userInfoResponse != null) {
-                    try {
-                        userInfoResponse.close();
-                    } catch (IOException ioEx) {
-                        Log.e(TAG, "Failed to close userinfo response stream", ioEx);
+                InputStream userInfoResponse = null;
+                try {
+                    HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
+                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                    conn.setInstanceFollowRedirects(false);
+                    userInfoResponse = conn.getInputStream();
+                    String response = readStream(userInfoResponse);
+                    updateUserInfo(new JSONObject(response));
+                } catch (IOException ioEx) {
+                    Timber.e(ioEx, "Network error when querying userinfo endpoint");
+                } catch (JSONException jsonEx) {
+                    Timber.e("Failed to parse userinfo response");
+                } finally {
+                    if (userInfoResponse != null) {
+                        try {
+                            userInfoResponse.close();
+                        } catch (IOException ioEx) {
+                            Timber.e(ioEx, "Failed to close userInfo response stream");
+                        }
                     }
                 }
             }
+
         });
     }
 
@@ -429,7 +431,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                                 .into(mProfileView);
                     }
 
-                    Log.e(TAG, String.valueOf(mUserInfoJson.toString()));
+                    Timber.e(mUserInfoJson.toString());
 
                     // updates the user information
                     mPresenter.updateUserInfo(
@@ -440,7 +442,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                             (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
 
                 } catch (JSONException ex) {
-                    Log.e(TAG, "Failed to read userinfo JSON", ex);
+                    Timber.e(ex, "Failed to read userinfo JSON");
                 }
             }
         }
@@ -449,12 +451,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private void logout() {
 
         if (mAuthState.getAuthorizationServiceConfiguration() == null) {
-            Log.e(TAG, "Cannot make userInfo request without service configuration");
+            Timber.e("Cannot make userInfo request without service configuration");
         }
 
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
             if (ex != null) {
-                Log.e(TAG, "Token refresh failed when fetching user info");
+                Timber.e("Token refresh failed when fetching user info");
                 // todo remove the
                 return;
             }
@@ -614,11 +616,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         .commit();
         };
 
-        // If mPendingRunnable is not null, then add to the message queue
-        if (mPendingRunnable != null) {
-            mHandler.post(mPendingRunnable);
-        }
-
+        mHandler.post(mPendingRunnable);
 
         // Set action bar title
         setTitle(menuItem.getTitle());
