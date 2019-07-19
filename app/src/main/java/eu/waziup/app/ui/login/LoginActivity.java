@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;
 
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationService;
@@ -17,17 +15,17 @@ import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.RegistrationRequest;
 import net.openid.appauth.ResponseTypeValues;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.login.IdentityProvider;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
+import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
@@ -55,14 +53,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         mPresenter.onAttach(LoginActivity.this);
 
-        setUp();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
         List<IdentityProvider> providers = IdentityProvider.getEnabledProviders(this);
         for (final IdentityProvider idp : providers) {
             final AuthorizationServiceConfiguration.RetrieveConfigurationCallback retrieveCallback =
@@ -70,23 +60,30 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         if (ex != null) {
                             // todo has to make sure if the problem is only related with internet connection
                             showSnackBar("No internet connection, please try again.");
-//                            Toast.makeText(this, "ex != null", Toast.LENGTH_SHORT).show();
-                            Log.w(TAG, "Failed to retrieve configuration for " + idp.name, ex);
+                            Timber.tag(TAG).w(ex, "Failed to retrieve configuration for %s", idp.name);
                         } else {
-                            Log.d(TAG, "configuration retrieved for " + idp.name
-                                    + ", proceeding");
-                            if (idp.getClientId() == null) {
-                                // Do dynamic client registration if no client_id
-                                makeRegistrationRequest(serviceConfiguration, idp);
-                            } else {
-                                makeAuthRequest(serviceConfiguration, idp);
-                            }
+                            Timber.d("configuration retrieved for %s, proceeding", idp.name);
+                            if (serviceConfiguration != null)
+                                if (idp.getClientId() == null) {
+                                    // Do dynamic client registration if no client_id
+                                    makeRegistrationRequest(serviceConfiguration, idp);
+                                } else {
+                                    makeAuthRequest(serviceConfiguration, idp);
+                                }
                         }
                     };
 
             // calls the retrieveConfig method for retrieving user info from openid
             idp.retrieveConfig(LoginActivity.this, retrieveCallback);
         }
+
+        setUp();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void makeAuthRequest(
@@ -101,7 +98,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .setScope(idp.getScope())
                 .build();
 
-        Log.d(TAG, "Making auth request to " + serviceConfig.authorizationEndpoint);
+        Timber.d("Making auth request to %s", serviceConfig.authorizationEndpoint);
         mAuthService.performAuthorizationRequest(
                 authRequest,
                 MainActivity.createPostAuthorizationIntent(
@@ -120,19 +117,19 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         final RegistrationRequest registrationRequest = new RegistrationRequest.Builder(
                 serviceConfig,
-                Arrays.asList(idp.getRedirectUri()))
+                Collections.singletonList(idp.getRedirectUri()))
                 .setTokenEndpointAuthenticationMethod(ClientSecretBasic.NAME)
                 .build();
 
-        Log.d(TAG, "Making registration request to " + serviceConfig.registrationEndpoint);
+        Timber.d("Making registration request to %s", serviceConfig.registrationEndpoint);
         mAuthService.performRegistrationRequest(
                 registrationRequest,
                 (registrationResponse, ex) -> {
-                    Log.d(TAG, "Registration request complete");
+                    Timber.d("Registration request complete");
                     if (registrationResponse != null) {
                         idp.setClientId(registrationResponse.clientId);
                         idp.setClientSecret(registrationResponse.clientSecret);
-                        Log.d(TAG, "Registration request complete successfully");
+                        Timber.d("Registration request complete successfully");
                         // Continue with the authentication
                         makeAuthRequest(registrationResponse.request.configuration, idp);
                     }

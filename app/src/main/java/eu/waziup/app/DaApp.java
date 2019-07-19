@@ -64,5 +64,4 @@ public class DaApp extends Application {
         MultiDex.install(this);
     }
 
-
 }
