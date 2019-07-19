@@ -80,7 +80,7 @@ import eu.waziup.app.ui.map.MapFragment;
 import eu.waziup.app.ui.notification.NotificationFragment;
 import eu.waziup.app.ui.register.RegisterSensorFragment;
 import eu.waziup.app.utils.CommonUtils;
-import eu.waziup.app.utils.ConnectivityUtil;
+import timber.log.Timber;
 
 import static eu.waziup.app.utils.AppConstants.EXTRA_AUTH_SERVICE_DISCOVERY;
 import static eu.waziup.app.utils.AppConstants.EXTRA_CLIENT_SECRET;
@@ -90,7 +90,6 @@ import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
 public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    private static final String SHARED_PREFERENCES_NAME = "AuthStatePreference";
 
     // AUTHORIZATION VARIABLES
     private static final int BUFFER_SIZE = 1024;
@@ -126,6 +125,8 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private AuthState mAuthState;
     private JSONObject mUserInfoJson;
 
+    private Handler mHandler;
+
     public static Intent getStartIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
@@ -160,7 +161,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
 
-
     private static String readStream(InputStream stream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
         char[] buffer = new char[BUFFER_SIZE];
@@ -184,13 +184,16 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         setUnBinder(ButterKnife.bind(this));
         mPresenter.onAttach(MainActivity.this);
 
+        mHandler = new Handler();
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
                 try {
                     mAuthState = AuthState.jsonDeserialize(
-                            savedInstanceState.getString(KEY_AUTH_STATE));
+                            //todo find other default value later
+                            savedInstanceState.getString(KEY_AUTH_STATE, ""));
                 } catch (JSONException ex) {
-                    Log.e(TAG, "Malformed authorization JSON saved", ex);
+                    Timber.e(ex, "Malformed authorization JSON saved");
                 }
             }
 
@@ -198,7 +201,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 try {
                     mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
                 } catch (JSONException ex) {
-                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
+                    Timber.e(ex, "Failed to parse saved user info JSON");
                 }
             }
         }
@@ -216,6 +219,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     }
 
+    @SuppressLint("ThrowableNotAtBeginning")
     @Override
     protected void onStart() {
         super.onStart();
@@ -227,7 +231,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         mAuthState = new AuthState(response, ex);//todo why do I need this part
 
         if (response != null) {
-            Log.d(TAG, "Received AuthorizationResponse.");
+            Timber.d("Received AuthorizationResponse.");
             showSnackBar(getString(R.string.exchange_notification));
             String clientSecret = CommonUtils.getClientSecretFromIntent(getIntent());
             if (clientSecret != null) {
@@ -236,7 +240,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 exchangeAuthorizationCode(response);
             }
         } else {
-            Log.i(TAG, "Authorization failed: " + ex);
+            Timber.i("Authorization failed: %s", ex);
             showSnackBar(getString(R.string.authorization_failed));
             logout();
         }
@@ -518,6 +522,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
+                    // todo get back here later
 //                    menuItem.setChecked(true);
                     selectDrawerItem(menuItem);
                     return true;
@@ -607,8 +612,13 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.flContent, finalFragment, CURRENT_TAG)
                         .commit();
-
         };
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
+
 
         // Set action bar title
         setTitle(menuItem.getTitle());
@@ -630,7 +640,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     @Override
     public void onBackPressed() {
-        Log.e("--->", "onBackPressed");
+        Timber.e("onBackPressed");
         if (mDrawer.isDrawerOpen(GravityCompat.START)) {
             mDrawer.closeDrawers();
             return;
@@ -645,79 +655,19 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                     .setNegativeButton(getString(R.string.yes), (dialog, which) -> super.onBackPressed())
                     .show();
         } else {
-            if (fragment != null) {
-                Log.e("---->backPressed", "fragment != null");
-                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .remove(fragment)
-                        .commitNow();
+            Timber.e(String.valueOf(fragment.getTag()));
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commitNow();
 
-                unlockDrawer();
-
-//                    if (TextUtils.equals(parent, MapFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, MapFragment.newInstance(), MapFragment.TAG)
-//                                .commit();
-//                    } else if (TextUtils.equals(parent, DevicesFragment.TAG)) {
-//                        getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
-//                                .commit();
-//                    }
-            }
+            unlockDrawer();
         }
-
-//        if (getSupportFragmentManager().getFragments().size() > 1) {
-//            Log.e("---->backPressed", "> 1");
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//
-//            // this is like popping out the top fragment on the fragment stack list
-//
-//            }
-//
-//            unlockDrawer();
-//        } else {
-//
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            Fragment fragment = fragmentManager.findFragmentByTag(getSupportFragmentManager()
-//                    .getFragments().get(getSupportFragmentManager().getFragments().size() - 1).getTag());
-//            if (fragment != null) {
-//                Log.e("==>backPressed", String.valueOf(fragment.getTag()));
-//            }
-//
-////            Log.e("---->backPressed", "<= 1");
-////            Log.e("---->back Size", String.valueOf(getSupportFragmentManager().getFragments().size()));
-////            Fragment f = getSupportFragmentManager().findFragmentById(R.id.layout_container);
-////            if(f instanceof DevicesFragment){
-//
-//            if (getSupportFragmentManager().getFragments().size() <= 1) {
-////                DevicesFragment sensorFragment = (DevicesFragment) getSupportFragmentManager().findFragmentByTag(DevicesFragment.TAG);
-//                if (Objects.equals(getSupportFragmentManager().getFragments().get(0).getTag(), DevicesFragment.TAG)) {// && sensorFragment.isVisible()) {
-//                    Log.e("---->backPressed", String.valueOf(getSupportFragmentManager().getFragments().get(0).getTag()));
-//
-//                }
-//            } else {
-//                Log.e("---->backPressed", "else");
-//                // if the opened fragment is beside the sensorFragment which is the home fragment
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-//                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
-//                        .commit();
-//            }
-//        }
-        // todo check for the significance of this statement
     }
 
     @Override
     public void onFragmentDetached(String tag, String parent) {
-        Log.e("--->", "onFragmentDetached");
+        Timber.e("onFragmentDetached");
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
