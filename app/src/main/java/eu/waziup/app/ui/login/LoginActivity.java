@@ -76,14 +76,6 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             // calls the retrieveConfig method for retrieving user info from openid
             idp.retrieveConfig(LoginActivity.this, retrieveCallback);
         }
-
-        setUp();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void makeAuthRequest(
@@ -158,7 +150,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
     }
 
     @Override
-    public void setUp() {
+    protected void setUp() {
 
     }
 
