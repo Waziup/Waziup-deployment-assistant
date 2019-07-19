@@ -165,10 +165,4 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
     }
 
-    @Override
-    public void openSensorActivity() {
-        hideLoading();
-        startActivity(MainActivity.getStartIntent(LoginActivity.this));
-        finish();
-    }
 }

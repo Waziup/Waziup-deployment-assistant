@@ -26,17 +26,9 @@ public class LoginPresenter<V extends LoginMvpView> extends BasePresenter<V>
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
-    public void onDecideNextActivity() {
-        if (getDataManager().getCurrentUserLoggedInMode()
-                != DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType()) {
-            getMvpView().openSensorActivity();
-        }
-    }
-
     @Override
     public void onAttach(V mvpView) {
         super.onAttach(mvpView);
-//        onDecideNextActivity();
     }
 
     @Override
