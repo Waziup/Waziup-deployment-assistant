@@ -218,36 +218,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
     }
 
-    @SuppressLint("ThrowableNotAtBeginning")
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-//        if (mAuthState == null) {
-        // this comes from the loginActivity when the user login
-        AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
-        AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
-        mAuthState = new AuthState(response, ex);//todo why do I need this part
-
-        if (response != null) {
-            Timber.d("Received AuthorizationResponse.");
-            showSnackBar(getString(R.string.exchange_notification));
-            String clientSecret = CommonUtils.getClientSecretFromIntent(getIntent());
-            if (clientSecret != null) {
-                exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
-            } else {
-                exchangeAuthorizationCode(response);
-            }
-        } else {
-            Timber.i("Authorization failed: %s", ex);
-            showSnackBar(getString(R.string.authorization_failed));
-            logout();
-        }
-//        }
-
-//        refreshUi();
-    }
-
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
                                            ClientAuthentication clientAuth) {
         performTokenRequest(authorizationResponse.createTokenExchangeRequest(), clientAuth);
