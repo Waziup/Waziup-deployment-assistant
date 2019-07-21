@@ -40,7 +40,6 @@ import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.ClientAuthentication;
-import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.NoClientAuthentication;
 import net.openid.appauth.TokenRequest;
 import net.openid.appauth.TokenResponse;
@@ -55,8 +54,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -207,15 +204,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         setUp();
 
-        fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
-
-        // todo check the saved instance state before opening the sensorFragment
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
-                .commit();
-
     }
 
     private void exchangeAuthorizationCode(AuthorizationResponse authorizationResponse,
@@ -273,7 +261,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
             AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
             if (discoveryDoc == null) {
-                // is it necessary to throw Exception inside the app intentionally?
                 throw new IllegalStateException("no available discovery doc");
             }
 
@@ -297,7 +284,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                 } catch (IOException ioEx) {
                     Timber.e(ioEx, "Network error when querying userinfo endpoint");
                 } catch (JSONException jsonEx) {
-                    Timber.e("Failed to parse userinfo response");
+                    Timber.e("Failed to parse userInfo response");
                 } finally {
                     if (userInfoResponse != null) {
                         try {
@@ -315,7 +302,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     private void updateUserInfo(final JSONObject jsonObject) {
         new Handler(Looper.getMainLooper()).post(() -> {
             mUserInfoJson = jsonObject;
-//            refreshUi();
+            refreshUi();
         });
     }
 
@@ -331,42 +318,24 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
+    @SuppressLint({"StaticFieldLeak", "RestrictedApi"})
     private void refreshUi() {
 
         if (mAuthState.isAuthorized()) {
 
-//            mPresenter.updateUserInfo();
-            // todo fetch userInformation here when the user is Authorized User and when there is an internet question.
-            // todo check if the userInformation before fetching it again from the discovery documentation
-//            if (ConnectivityUtil.isConnected(this)) {
-//                new AsyncTask<Void, Void, Void>() {
-//                    @Override
-//                    protected Void doInBackground(Void... params) {
-//                        fetchUserInfo();
-//                        return null;
-//                    }
-//                }.execute();
-//            } else {
-//                showSnackBar("No internet connection. Please retry.");
-//                return;
-//            }
-
             if (mAuthState.getAccessToken() == null) {
-                CommonUtils.toast("no access token returned");
+
+                fabSensor.setVisibility(View.GONE);
             } else {
-                Long expiresAt = mAuthState.getAccessTokenExpirationTime();
-                String expiryStr;
-                if (expiresAt == null) {
-                    expiryStr = "Unknown expire date";
-                } else {
-                    expiryStr = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL)
-                            .format(new Date(expiresAt));
-                }
-                String tokenInfo = String.format(
-                        "access token expires at %s",
-                        expiryStr);
-                CommonUtils.toast(tokenInfo);
+                // user is authorized and has access token to do whatever he wishes to do since he is eligible
+                fabSensor.setVisibility(View.VISIBLE);
+                fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
+                        .commit();
             }
         }
 
@@ -376,45 +345,11 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         if (!mAuthState.isAuthorized()
                 || discoveryDoc == null
                 || discoveryDoc.getUserinfoEndpoint() == null) {
-            // todo find a way for displaying or handling this error
-            showSnackBar("user not authorized and discoveryDoc is null");
-//        } else {
-////            showSnackBar("user is authorized and discovery url is not null");
-//        }
 
-//        I can write anything in here for the next todo get back here later
-            if (mUserInfoJson == null) {
-                CommonUtils.toast("user infoJson is null");
-            } else {
-//            I can write some thign in the abck fo the wall an I anwa nt be cau
-//        }
-                try {
+            // todo something has to be inserted in here
 
-                    // if the mUserInfoJson has an attribute called -> picture
-                    if (mUserInfoJson.has("picture")) {
-                        int profilePictureSize =
-                                getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
-
-                        Picasso.get()
-                                .load(Uri.parse(mUserInfoJson.getString("picture")))
-                                .resize(profilePictureSize, profilePictureSize)
-                                .into(mProfileView);
-                    }
-
-                    Timber.e(mUserInfoJson.toString());
-
-                    // updates the user information
-                    mPresenter.updateUserInfo(
-                            (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
-                            (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
-                            (mUserInfoJson.has("given_name")) ? mUserInfoJson.get("given_name").toString() : "",
-                            (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
-                            (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
-
-                } catch (JSONException ex) {
-                    Timber.e(ex, "Failed to read userinfo JSON");
-                }
-            }
+        } else {
+            fetchUserInfo();
         }
     }
 
