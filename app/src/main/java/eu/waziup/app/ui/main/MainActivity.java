@@ -354,20 +354,15 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         if (mAuthState.isAuthorized()) {
 
-            if (mAuthState.getAccessToken() == null) {
+            // user is authorized and has access token to do whatever he wishes to do since he is eligible
+            fabSensor.setVisibility(View.VISIBLE);
+            fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
 
-                fabSensor.setVisibility(View.GONE);
-            } else {
-                // user is authorized and has access token to do whatever he wishes to do since he is eligible
-                fabSensor.setVisibility(View.VISIBLE);
-                fabSensor.setOnClickListener(view -> mPresenter.onFabClicked());
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
-                        .commit();
-            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.flContent, DevicesFragment.newInstance(), DevicesFragment.TAG)
+                    .commit();
         }
 
         // if the user is not authorized user
