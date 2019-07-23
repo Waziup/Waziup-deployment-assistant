@@ -47,6 +47,7 @@ public class DevicesPresenter<V extends DevicesMvpView> extends BasePresenter<V>
                     .observeOn(getSchedulerProvider().ui())
                     .subscribe(
                             devices -> {
+                                Log.e("------>", "==========");
                                 if (!isViewAttached())
                                     return;
                                 getMvpView().showSensors(devices);

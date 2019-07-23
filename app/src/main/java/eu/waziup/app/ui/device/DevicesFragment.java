@@ -46,7 +46,7 @@ import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
 import eu.waziup.app.ui.sensordetail.SensorDetailDialog;
 import eu.waziup.app.utils.CommonUtils;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
+import timber.log.Timber;
 
 import static eu.waziup.app.ui.main.MainActivity.getDiscoveryDocFromIntent;
 import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
@@ -125,7 +125,21 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         });
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            mPresenter.loadSensors();
+            mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+                if (ex != null) {
+                    Timber.e("Token refresh failed when fetching user info");
+                    return;
+                }
+
+                AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getBaseActivity().getIntent());
+                if (discoveryDoc == null) {
+                    // is it necessary to throw Exception inside the app intentionally?
+                    throw new IllegalStateException("no available discovery doc");
+                }
+
+                mPresenter.loadSensors();
+
+            });
             mSwipeRefreshLayout.setRefreshing(false);
         });
 
@@ -139,14 +153,14 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         communicator = (DevicesCommunicator) context;
     }
 
-    public void handleAuthorization(Bundle savedInstanceState){
+    public void handleAuthorization(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
                 try {
                     mAuthState = AuthState.jsonDeserialize(
                             savedInstanceState.getString(KEY_AUTH_STATE));
                 } catch (JSONException ex) {
-                    Log.e(TAG, "Malformed authorization JSON saved", ex);
+                    Timber.e(ex, "Malformed authorization JSON saved");
                 }
             }
 
@@ -154,7 +168,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
                 try {
                     mUserInfoJson = new JSONObject(savedInstanceState.getString(KEY_USER_INFO));
                 } catch (JSONException ex) {
-                    Log.e(TAG, "Failed to parse saved user info JSON", ex);
+                    Timber.e(ex, "Failed to parse saved user info JSON");
                 }
             }
         }
@@ -165,7 +179,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
             mAuthState = new AuthState(response, ex);
 
             if (response != null) {
-                Log.d(TAG, "Received AuthorizationResponse.");
+                Timber.d("Received AuthorizationResponse.");
 //                getBaseActivity().showSnackbar(R.string.exchange_notification);
                 String clientSecret = getClientSecretFromIntent(getBaseActivity().getIntent());
                 if (clientSecret != null) {
@@ -174,8 +188,8 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
                     exchangeAuthorizationCode(response);
                 }
             } else {
-                Log.i(TAG, "Authorization failed: " + ex);
-//                showSnackbar(R.string.authorization_failed);
+                Timber.i("Authorization failed: " + ex);
+//                showSnackBar(R.string.authorization_failed);
                 CommonUtils.toast(getString(R.string.authorization_failed));
             }
         }
@@ -200,7 +214,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     private void receivedTokenResponse(
             @Nullable TokenResponse tokenResponse,
             @Nullable AuthorizationException authException) {
-        Log.d(TAG, "Token request complete");
+        Timber.d("Token request complete");
         mAuthState.update(tokenResponse, authException);
 //        showSnackBar((tokenResponse != null)
 //                ? getString(R.string.exchange_complete)
@@ -208,7 +222,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         // replacement for the --> showSnackBar()
         CommonUtils.toast((tokenResponse != null)
                 ? getString(R.string.exchange_complete)
-                : getString(R.string.refresh_failed));
+                : getBaseActivity().getString(R.string.refresh_failed));
 
         // for updating the access token
         if (tokenResponse != null) {//todo get back here later
@@ -229,21 +243,23 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     @Override
     protected void setUp(View view) {
         setUpRecyclerView();
-        mPresenter.loadSensors();
-//        mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
-//            if (ex != null) {
-//                Log.e(TAG, "Token refresh failed when fetching user info");
-//                return;
-//            }
-//
-//            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getBaseActivity().getIntent());
-//            if (discoveryDoc == null) {
-//                // is it necessary to throw Exception inside the app intentionally?
-//                throw new IllegalStateException("no available discovery doc");
-//            }
-//
-//
-//        });
+        mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+            if (ex != null) {
+                Timber.e("Token refresh failed when fetching user info");
+                return;
+            }
+
+
+            mPresenter.loadSensors();
+
+            AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getBaseActivity().getIntent());
+            if (discoveryDoc == null) {
+                // is it necessary to throw Exception inside the app intentionally?
+                throw new IllegalStateException("no available discovery doc");
+            }
+
+
+        });
 
         if (getBaseActivity().getSupportActionBar() != null)
             getBaseActivity().getSupportActionBar().setTitle(R.string.devices);
@@ -272,14 +288,15 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
     @Override
     public void showSensors(List<Device> devices) {
-
         if (devices != null) {
+//            Toast.makeText(getBaseActivity(), , Toast.LENGTH_SHORT).show();
+
             // filtering the devices with the owner name
 //            List<Device> filteredDeviceList = filterByOwner(devices, "mikiyasbelhu");//
 //            Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
 //            CommonUtils.toast(String.format("--->Contains: %d", filteredDeviceList.size()));
             if (devices.size() > 0) {
-                Log.e(TAG, "===devices.size() > 0");
+                Timber.e("===devices.size() > 0");
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)

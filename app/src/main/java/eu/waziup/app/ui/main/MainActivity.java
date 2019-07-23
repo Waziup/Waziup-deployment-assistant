@@ -24,7 +24,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -220,7 +219,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                     exchangeAuthorizationCode(response);
                 }
             } else {
-                Timber.i("Authorization failed: "+ ex);
+                Timber.i("Authorization failed: " + ex);
                 showSnackBar(getString(R.string.authorization_failed));
                 // todo logout(); has to be called
             }
@@ -272,6 +271,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
     }
 
     // to be executed only when there is an internet connection.
+    @SuppressLint("StaticFieldLeak")
     private void fetchUserInfo() {
         if (mAuthState.getAuthorizationServiceConfiguration() == null) {
             Timber.e("Cannot make userInfo request without service configuration");
@@ -384,6 +384,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         if (mUserInfoJson == null) {
             showMessage("user infoJson is null");
+            // todo do something in here
         } else {
 
             try {
@@ -521,7 +522,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.cl_root_view, MapFragment.newInstance(), MapFragment.TAG)
                         .commit();
-
 
 //                fragmentClass = MapFragment.class;
 //                CURRENT_TAG = MapFragment.TAG;
