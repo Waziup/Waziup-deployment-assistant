@@ -24,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.ClientAuthentication;
+import net.openid.appauth.ClientSecretBasic;
 import net.openid.appauth.NoClientAuthentication;
 import net.openid.appauth.TokenRequest;
 import net.openid.appauth.TokenResponse;
@@ -82,6 +84,7 @@ import static eu.waziup.app.utils.AppConstants.EXTRA_AUTH_SERVICE_DISCOVERY;
 import static eu.waziup.app.utils.AppConstants.EXTRA_CLIENT_SECRET;
 import static eu.waziup.app.utils.AppConstants.KEY_AUTH_STATE;
 import static eu.waziup.app.utils.AppConstants.KEY_USER_INFO;
+import static eu.waziup.app.utils.CommonUtils.getClientSecretFromIntent;
 
 public class MainActivity extends BaseActivity implements MainMvpView, DevicesCommunicator, MapCommunicator {
 
@@ -202,6 +205,27 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
         }
 
+        if (mAuthState == null) {
+            AuthorizationResponse response = AuthorizationResponse.fromIntent(getIntent());
+            AuthorizationException ex = AuthorizationException.fromIntent(getIntent());
+            mAuthState = new AuthState(response, ex);
+
+            if (response != null) {
+                Timber.d("Received AuthorizationResponse.");
+                showSnackBar(getString(R.string.exchange_notification));
+                String clientSecret = getClientSecretFromIntent(getIntent());
+                if (clientSecret != null) {
+                    exchangeAuthorizationCode(response, new ClientSecretBasic(clientSecret));
+                } else {
+                    exchangeAuthorizationCode(response);
+                }
+            } else {
+                Timber.i("Authorization failed: "+ ex);
+                showSnackBar(getString(R.string.authorization_failed));
+                // todo logout(); has to be called
+            }
+        }
+
         setUp();
 
     }
@@ -273,27 +297,34 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                     return;
                 }
 
-                InputStream userInfoResponse = null;
-                try {
-                    HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
-                    conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-                    conn.setInstanceFollowRedirects(false);
-                    userInfoResponse = conn.getInputStream();
-                    String response = readStream(userInfoResponse);
-                    updateUserInfo(new JSONObject(response));
-                } catch (IOException ioEx) {
-                    Timber.e(ioEx, "Network error when querying userinfo endpoint");
-                } catch (JSONException jsonEx) {
-                    Timber.e("Failed to parse userInfo response");
-                } finally {
-                    if (userInfoResponse != null) {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        InputStream userInfoResponse = null;
                         try {
-                            userInfoResponse.close();
+                            HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
+                            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                            conn.setInstanceFollowRedirects(false);
+                            userInfoResponse = conn.getInputStream();
+                            String response = readStream(userInfoResponse);
+                            updateUserInfo(new JSONObject(response));
                         } catch (IOException ioEx) {
-                            Timber.e(ioEx, "Failed to close userInfo response stream");
+                            Timber.e(ioEx, "Network error when querying userinfo endpoint");
+                        } catch (JSONException jsonEx) {
+                            Timber.e("Failed to parse userInfo response");
+                        } finally {
+                            if (userInfoResponse != null) {
+                                try {
+                                    userInfoResponse.close();
+                                } catch (IOException ioEx) {
+                                    Timber.e(ioEx, "Failed to close userInfo response stream");
+                                }
+                            }
                         }
+                        return null;
                     }
-                }
+                }.execute();
+
             }
 
         });
@@ -339,7 +370,6 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             }
         }
 
-
         // if the user is not authorized user
         AuthorizationServiceDiscovery discoveryDoc = getDiscoveryDocFromIntent(getIntent());
         if (!mAuthState.isAuthorized()
@@ -350,6 +380,38 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
         } else {
             fetchUserInfo();
+        }
+
+        if (mUserInfoJson == null) {
+            showMessage("user infoJson is null");
+        } else {
+
+            try {
+
+                // if the mUserInfoJson has an attribute called -> picture
+                if (mUserInfoJson.has("picture")) {
+                    int profilePictureSize =
+                            getResources().getDimensionPixelSize(R.dimen.profile_pic_size);
+
+                    Picasso.get()
+                            .load(Uri.parse(mUserInfoJson.getString("picture")))
+                            .resize(profilePictureSize, profilePictureSize)
+                            .into(mProfileView);
+                }
+
+                Timber.e(mUserInfoJson.toString());
+
+                // updates the user information
+                mPresenter.updateUserInfo(
+                        (mUserInfoJson.has("name")) ? mUserInfoJson.get("name").toString() : "",
+                        (mUserInfoJson.has("preferred_username")) ? mUserInfoJson.get("preferred_username").toString() : "",
+                        (mUserInfoJson.has("given_name")) ? mUserInfoJson.get("given_name").toString() : "",
+                        (mUserInfoJson.has("family_name")) ? mUserInfoJson.get("family_name").toString() : "",
+                        (mUserInfoJson.has("email")) ? mUserInfoJson.get("email").toString() : "");
+
+            } catch (JSONException ext) {
+                Timber.e(ext, "Failed to read userInfo JSON");
+            }
         }
     }
 
