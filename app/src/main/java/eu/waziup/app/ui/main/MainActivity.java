@@ -24,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -302,6 +303,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                     protected Void doInBackground(Void... params) {
                         InputStream userInfoResponse = null;
                         try {
+                            Log.e("~~~~~", accessToken);
                             HttpURLConnection conn = (HttpURLConnection) userInfoEndpoint.openConnection();
                             conn.setRequestProperty("Authorization", "Bearer " + accessToken);
                             conn.setInstanceFollowRedirects(false);
@@ -373,8 +375,9 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
 
             // todo something has to be inserted in here
 
-        } else {
-            fetchUserInfo();
+//        } else {
+//            fetchUserInfo();
+            // if the user is not authorized then it shouldn't fetch instead tell the user to re-Authenticate
         }
 
         if (mUserInfoJson == null) {
@@ -395,6 +398,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
                             .into(mProfileView);
                 }
 
+                // prints the user info
                 Timber.e(mUserInfoJson.toString());
 
                 // updates the user information
