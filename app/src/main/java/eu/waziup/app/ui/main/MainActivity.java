@@ -259,11 +259,12 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         if (tokenResponse != null) {
             mPresenter.updateAccessToken(tokenResponse.accessToken);
             //setting the user loggedIn mode for
-            mPresenter.setLoggedInMode();
+            mPresenter.setLoggedInMode();// todo get back here later
+
+            // for updating the UI
+            refreshUi();
         }
 
-        // for updating the UI
-        refreshUi();
 
     }
 

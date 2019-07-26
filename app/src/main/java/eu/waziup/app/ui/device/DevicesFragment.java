@@ -125,7 +125,10 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         });
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.e("====>mAuthService ", String.valueOf(mAuthService));
             mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+                Log.e("====>accessToken ", String.valueOf(accessToken));
+                Log.e("====>idToken ", String.valueOf(idToken));
                 if (ex != null) {
                     Timber.e("Token refresh failed when fetching user info");
                     return;
@@ -244,6 +247,8 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
     protected void setUp(View view) {
         setUpRecyclerView();
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
+            Log.e("====>accessToken ", String.valueOf(accessToken));
+            Log.e("====>idToken ", String.valueOf(idToken));
             if (ex != null) {
                 Timber.e("Token refresh failed when fetching user info");
                 return;
