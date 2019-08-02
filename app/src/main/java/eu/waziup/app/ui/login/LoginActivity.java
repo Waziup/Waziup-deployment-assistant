@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                     (serviceConfiguration, ex) -> {
                         if (ex != null) {
                             // todo has to make sure if the problem is only related with internet connection
+                            // todo has to show the user with dialog
                             showSnackBar("No internet connection, please try again.");
                             Timber.tag(TAG).w(ex, "Failed to retrieve configuration for %s", idp.name);
                         } else {

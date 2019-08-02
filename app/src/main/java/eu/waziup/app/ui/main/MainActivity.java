@@ -189,8 +189,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
                 try {
                     mAuthState = AuthState.jsonDeserialize(
-                            //todo find other default value later
-                            savedInstanceState.getString(KEY_AUTH_STATE, ""));
+                            savedInstanceState.getString(KEY_AUTH_STATE, null));
                 } catch (JSONException ex) {
                     Timber.e(ex, "Malformed authorization JSON saved");
                 }
