@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationService;
@@ -21,10 +22,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import eu.waziup.app.DaApp;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.login.IdentityProvider;
 import eu.waziup.app.ui.base.BaseActivity;
 import eu.waziup.app.ui.main.MainActivity;
+import eu.waziup.app.utils.ConnectivityUtil;
 import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
@@ -60,8 +63,9 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                         if (ex != null) {
                             // todo has to make sure if the problem is only related with internet connection
                             // todo has to show the user with dialog
-                            showSnackBar("No internet connection, please try again.");
+//                            showSnackBar("No internet connection, please try again.");
                             Timber.tag(TAG).w(ex, "Failed to retrieve configuration for %s", idp.name);
+                            showNoInternetAlertDialog();
                         } else {
                             Timber.d("configuration retrieved for %s, proceeding", idp.name);
                             if (serviceConfiguration != null)
@@ -77,6 +81,26 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
             // calls the retrieveConfig method for retrieving user info from openid
             idp.retrieveConfig(LoginActivity.this, retrieveCallback);
         }
+    }
+
+    public void showNoInternetAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.no_internet_turn_on_title)
+                .setMessage(R.string.no_internet_turn_on)
+                .setPositiveButton(getString(R.string.dialog_retry), (dialog, id) -> {
+
+                    if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
+                        return;
+                    } else {
+                        showNoInternetAlertDialog();
+                    }
+
+                })
+                .setNegativeButton(getString(R.string.exit), (dialog, id) -> {
+                    dialog.dismiss();
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void makeAuthRequest(

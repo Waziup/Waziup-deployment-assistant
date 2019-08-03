@@ -189,7 +189,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
                 try {
                     mAuthState = AuthState.jsonDeserialize(
-                            savedInstanceState.getString(KEY_AUTH_STATE, null));
+                            savedInstanceState.getString(KEY_AUTH_STATE));
                 } catch (JSONException ex) {
                     Timber.e(ex, "Malformed authorization JSON saved");
                 }
@@ -424,7 +424,7 @@ public class MainActivity extends BaseActivity implements MainMvpView, DevicesCo
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
             if (ex != null) {
                 Timber.e("Token refresh failed when fetching user info");
-                // todo remove the
+                showSnackBar("Token refresh failed when fetching user info");
                 return;
             }
 

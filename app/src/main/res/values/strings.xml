@@ -41,6 +41,8 @@
     <string name="sensor_registration">Sensor Registration</string>
     <string name="no_measurements_list_found">No measurements list found.</string>
     <string name="cancel">CANCEL</string>
+    <string name="exit">EXIT</string>
+    <string name="dialog_retry">RETRY</string>
     <string name="submit">SUBMIT</string>
     <string name="edit_measurement">Edit Measurement</string>
     <string name="dialog_add_measurement">Add Measurement</string>
@@ -85,6 +87,8 @@
     <string name="map">Sensor\'s location</string>
     <string name="yes">Yes</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="no_internet_turn_on">You\'re offline. Please, check your internet connection.</string>
+    <string name="no_internet_turn_on_title">No Internet Connection</string>
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
     <string name="scan_sensor">Scan sensor</string>
