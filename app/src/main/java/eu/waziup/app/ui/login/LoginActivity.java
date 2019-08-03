@@ -56,6 +56,10 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
 
         mPresenter.onAttach(LoginActivity.this);
 
+        showNoInternetAlertDialog();
+    }
+
+    public void startAuth() {
         List<IdentityProvider> providers = IdentityProvider.getEnabledProviders(this);
         for (final IdentityProvider idp : providers) {
             final AuthorizationServiceConfiguration.RetrieveConfigurationCallback retrieveCallback =
@@ -65,7 +69,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                             // todo has to show the user with dialog
 //                            showSnackBar("No internet connection, please try again.");
                             Timber.tag(TAG).w(ex, "Failed to retrieve configuration for %s", idp.name);
-                            showNoInternetAlertDialog();
+
                         } else {
                             Timber.d("configuration retrieved for %s, proceeding", idp.name);
                             if (serviceConfiguration != null)
@@ -90,7 +94,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 .setPositiveButton(getString(R.string.dialog_retry), (dialog, id) -> {
 
                     if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
-                        return;
+                        startAuth();
                     } else {
                         showNoInternetAlertDialog();
                     }
@@ -98,6 +102,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
                 })
                 .setNegativeButton(getString(R.string.exit), (dialog, id) -> {
                     dialog.dismiss();
+                    finish();
                 });
         AlertDialog alert = builder.create();
         alert.show();
