@@ -32,7 +32,7 @@ import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity implements LoginMvpView {
 
-    public static final String TAG = "LoginActivity";
+    public static final String TAG = LoginActivity.class.getSimpleName();
 
     @Inject
     LoginMvpPresenter<LoginMvpView> mPresenter;
@@ -59,7 +59,7 @@ public class LoginActivity extends BaseActivity implements LoginMvpView {
         checkInternetBeforeProceeding();
     }
 
-    public void checkInternetBeforeProceeding(){
+    public void checkInternetBeforeProceeding() {
         if (ConnectivityUtil.isConnectedMobile(DaApp.getContext()) || ConnectivityUtil.isConnectedWifi(DaApp.getContext())) {
             startAuth();
         } else {
