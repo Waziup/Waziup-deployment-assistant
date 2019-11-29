@@ -4,7 +4,9 @@
 
 This repository contains the deployment assistant android application that is to guide the deployment team when installing devices. It also collects meta-data about the devices and gateway deployed.
 
-Documentation: http://www.waziup.io/documentation/
+[Documentation](http://www.waziup.io/documentation/)
+<br>
+[More about project](http://www.waziup.io/solutions/deployassist/)
 <br>
 
 ## Architecture Blueprint
@@ -14,8 +16,6 @@ Documentation: http://www.waziup.io/documentation/
 ## Project Structure
 ![Structure](https://janishar.github.io/images/mvp-app-pics/mvp-project-structure-diagram.png)
 <br>
-
-1. https://blog.mindorks.com/android-mvp-architecture-extension-with-interactors-and-repositories-bd4b51972339)
 
 #### The app has following packages:
 1. **data**: It contains all the data accessing and manipulating components.
@@ -43,7 +43,7 @@ Documentation: http://www.waziup.io/documentation/
   ```
   ./gradlew task-name
   ```
-for more information on how to build and run from command line check: https://developer.android.com/studio/build/building-cmdline
+for more information on how to build and run from command line check [google developer documentation](https://developer.android.com/studio/build/building-cmdline)
 
 ## Install with Docker
 
