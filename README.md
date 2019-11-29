@@ -4,9 +4,10 @@
 
 This repository contains the deployment assistant android application that is to guide the deployment team when installing devices. It also collects meta-data about the devices and gateway deployed.
 
-[WAZIUP Documentation](http://www.waziup.io/documentation/)
+**Waziup Documentations:**
+  [USERMANUAL](http://www.waziup.io/documentation/)
 <br>
-[More about project](http://www.waziup.io/solutions/deployassist/)
+  [OUR SOLUTIONS](http://www.waziup.io/solutions/deployassist/)
 <br>
 
 ## Architecture Blueprint
