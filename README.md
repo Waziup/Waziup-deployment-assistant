@@ -6,9 +6,9 @@ This repository contains the deployment assistant android application that is to
 
 **Waziup Documentations:**
 <br>
-  - [USERMANUAL](http://www.waziup.io/documentation/)
+  * [USERMANUAL](http://www.waziup.io/documentation/)
 <br>
-  - [OUR SOLUTIONS](http://www.waziup.io/solutions/deployassist/)
+  * [OUR SOLUTIONS](http://www.waziup.io/solutions/deployassist/)
 <br>
 
 ## Architecture Blueprint
