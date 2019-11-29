@@ -7,9 +7,10 @@ This repository contains the deployment assistant android application that is to
 **Waziup Documentations:**
 <br>
   * [USERMANUAL](http://www.waziup.io/documentation/)
-<br>
+  <br>
+  <br>
   * [OUR SOLUTIONS](http://www.waziup.io/solutions/deployassist/)
-<br>
+  <br>
 
 ## Architecture Blueprint
 ![Blueprint](https://janishar.github.io/images/mvp-app-pics/mvp-arch.png)
