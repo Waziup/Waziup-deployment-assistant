@@ -42,6 +42,10 @@ public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         sensorViewHolder.onBind(i);
     }
 
+    /**
+     * handled setting devices list to the adapter
+     * @param devices devices list to be set on the adapter
+     */
     public void addItems(List<Device> devices) {
         this.devices.clear();
         this.devices.addAll(devices);
@@ -61,10 +65,12 @@ public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         mMeasurementCallback = callback;
     }
 
+    // callback method interface for capturing the item click on the devices list
     public interface Callback {
         void onItemClicked(Device device);
     }
 
+    // callback method interface for capturing the item click on the measurement list
     public interface MeasurementCallback {
         void onItemClicked(Measurement measurement);
     }
@@ -162,6 +168,9 @@ public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         }
 
+        /**
+         * clear the views when there is no data found for the particular item or when clearing is required
+         */
         @Override
         protected void clear() {
             mSensorId.setText("");

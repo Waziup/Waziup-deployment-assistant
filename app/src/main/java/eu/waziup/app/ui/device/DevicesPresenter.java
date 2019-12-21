@@ -2,9 +2,6 @@ package eu.waziup.app.ui.device;
 
 import android.util.Log;
 
-import java.lang.annotation.Target;
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
@@ -50,7 +47,7 @@ public class DevicesPresenter<V extends DevicesMvpView> extends BasePresenter<V>
                                 Log.e("------>", "==========");
                                 if (!isViewAttached())
                                     return;
-                                getMvpView().showSensors(devices);
+                                getMvpView().showDevices(devices);
 
                             }, throwable -> {
                                 if (!isViewAttached())

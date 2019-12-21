@@ -339,7 +339,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
      * @param devices
      */
     @Override
-    public void showSensors(List<Device> devices) {
+    public void showDevices(List<Device> devices) {
         if (devices != null) {
 //            Toast.makeText(getBaseActivity(), , Toast.LENGTH_SHORT).show();
 

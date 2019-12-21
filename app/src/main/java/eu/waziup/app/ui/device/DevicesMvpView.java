@@ -11,7 +11,10 @@ import eu.waziup.app.ui.base.MvpView;
 
 public interface DevicesMvpView extends MvpView {
 
-    void showSensors(List<Device> deviceList);
+    // method interface for showing the devices list
+    void showDevices(List<Device> deviceList);
+    // method interface for loadingPage for refreshing the screen
     void loadPage();
+    // method interface for handling the network error and display the message
     void showNetworkErrorPage();
 }
