@@ -3,9 +3,11 @@ package eu.waziup.app.ui.device;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -83,6 +85,11 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
     private AuthState mAuthState;
 
+    /**
+     * a method for giving the instance of this this fragment for helping start the fragment from
+     * another activity class
+     * @return a DevicesFragment instance of this fragment
+     */
     public static DevicesFragment newInstance() {
         Bundle args = new Bundle();
         DevicesFragment fragment = new DevicesFragment();
@@ -108,6 +115,8 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
         setUp(view);
 
+        // handles the animation for hiding the floating action button in the screen to be automatically
+        // hidden and appear when scrolling
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -124,11 +133,9 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
             }
         });
 
+        // handle the api calling for refreshing the page when swiping down for refreshing the page
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.e("====>mAuthService ", String.valueOf(mAuthService));
             mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
-                Log.e("====>accessToken ", String.valueOf(accessToken));
-                Log.e("====>idToken ", String.valueOf(idToken));
                 if (ex != null) {
                     Timber.e("Token refresh failed when fetching user info");
                     return;
@@ -149,6 +156,11 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         return view;
     }
 
+    /**
+     * method being called when the fragment containing this screen starts. when being attached to
+     * the activity
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -156,6 +168,14 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         communicator = (DevicesCommunicator) context;
     }
 
+    /**
+     * method for handling the authorization when opening the screen
+     * checks if the user is already authenticated user from the saveInstanceState
+     * and starts the authorization process if the user hasn't been authenticated yet
+     * @param savedInstanceState Activities have the ability, under special circumstances, to
+     *                           restore themselves to a previous state using the data stored in
+     *                           this bundle.
+     */
     public void handleAuthorization(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_AUTH_STATE)) {
@@ -214,6 +234,11 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
                 this::receivedTokenResponse);//(tokenResponse, ex) -> receivedTokenResponse(tokenResponse, ex)
     }
 
+    /**
+     * handle the token response after token exchange happens
+     * @param tokenResponse if not null then it contains the token for authorization
+     * @param authException if not null then it contains the error message for why the authorization when wrong
+     */
     private void receivedTokenResponse(
             @Nullable TokenResponse tokenResponse,
             @Nullable AuthorizationException authException) {
@@ -239,16 +264,24 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
     }
 
+    /**
+     * performs token request for exchangingAuthorization to get a token
+     * @param request
+     */
     private void performTokenRequest(TokenRequest request) {
         performTokenRequest(request, NoClientAuthentication.INSTANCE);
     }
 
+    /**
+     * a method that setups important things on opening the screen. Things like:
+     *      - setting up the recyclerView
+     *      - checking the authentication: whether the token has expired and needs to refresh or not
+     * @param view since its a fragment view the application opens
+     */
     @Override
     protected void setUp(View view) {
         setUpRecyclerView();
         mAuthState.performActionWithFreshTokens(mAuthService, (accessToken, idToken, ex) -> {
-            Log.e("====>accessToken ", String.valueOf(accessToken));
-            Log.e("====>idToken ", String.valueOf(idToken));
             if (ex != null) {
                 Timber.e("Token refresh failed when fetching user info");
                 return;
@@ -273,13 +306,21 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         communicator.visibleFab();
     }
 
+    /**
+     * prepares the recyclerView list view on the screen without data
+     */
     private void setUpRecyclerView() {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    // method for filtering the devices list with the name of the owner
+    /**
+     * a method for filtering the devices list with a specific user when a user logs in
+     * @param devices the list of devices that need to be filtered
+     * @param predicate the name of the owner used on filtering
+     * @return a list devices which have been filtered with a specific owner name
+     */
     private List<Device> filterByOwner(List<Device> devices, String predicate) {
         List<Device> filteredList = new ArrayList<>();
 
@@ -291,6 +332,12 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         return filteredList;
     }
 
+    /**
+     * a method handling for showing the sensors list coming from the presenter
+     * checks if the list is empty, if so it shows "No devices list found." message and
+     * sets the lists in the adapter for display if there is even one
+     * @param devices
+     */
     @Override
     public void showSensors(List<Device> devices) {
         if (devices != null) {
@@ -301,14 +348,12 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 //            Log.e(TAG, String.format("--->Contains: %d", filteredDeviceList.size()));
 //            CommonUtils.toast(String.format("--->Contains: %d", filteredDeviceList.size()));
             if (devices.size() > 0) {
-                Timber.e("===devices.size() > 0");
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.VISIBLE)
                     tvNoSensors.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter.addItems(devices);
             } else {
-                Log.e(TAG, "===else");
                 if (tvNoSensors != null && tvNoSensors.getVisibility() == View.GONE) {
                     tvNoSensors.setVisibility(View.VISIBLE);
                     tvNoSensors.setText(R.string.no_sensors_list_found);
@@ -325,6 +370,10 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 //        mPresenter.loadSensors();
     }
 
+    /**
+     * opens a screen showing no  network right now and try again kind of message screen when
+     * the network is out and when its required to perform the action
+     */
     @Override
     public void showNetworkErrorPage() {
         getBaseActivity().getSupportFragmentManager()
@@ -334,6 +383,7 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
                 .commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.DONUT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Drawable drawable = item.getIcon();
@@ -343,11 +393,19 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
         return true;
     }
 
+    /**
+     * handle the item click on a device for opening the device detail screen
+     * @param device the selected device item object
+     */
     @Override
     public void onItemClicked(Device device) {
         communicator.onItemClicked(device);
     }
 
+    /**
+     * handles the item click listener for when the measurements on the horizontal view item
+     * @param measurement the selected measurement item object
+     */
     @Override
     public void onItemClicked(Measurement measurement) {
         SensorDetailDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");

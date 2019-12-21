@@ -24,8 +24,10 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -62,14 +64,12 @@ public final class CommonUtils {
             }
             progressDialog.setContentView(R.layout.progress_dialog);
             progressDialog.setIndeterminate(true);
-//        progressDialog.setCancelable(false);//todo cancel this when needed
+//        progressDialog.setCancelable(false);
 //        progressDialog.setCanceledOnTouchOutside(false);
             return progressDialog;
         } else {
             return null;
         }
-
-
     }
 
     public static String getClientSecretFromIntent(Intent intent) {
@@ -88,6 +88,7 @@ public final class CommonUtils {
         Toast.makeText(DaApp.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     public static void hideKeyboard(Activity activity) {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
@@ -136,21 +137,8 @@ public final class CommonUtils {
             } else {
 
                 return DaApp.getContext().getString(R.string.error_something_wrong_happend);
-//                ResponseBody responseBody = ((HttpException) throwable).response().errorBody();
-//                try {//should display the correct error message form the http protocol
-//                    if (responseBody != null) {
-//                        JSONObject jObjError = new JSONObject(responseBody.toString());
-//                        return jObjError.toString();
-//                    }
-//                } catch (JSONException e1) {
-//                    e1.printStackTrace();
-//                }
             }
         }
-        //todo find out if this is the right way of handling this condition
-//        else {
-//            return throwable.getMessage();
-//        }
         return "";
     }
 }
