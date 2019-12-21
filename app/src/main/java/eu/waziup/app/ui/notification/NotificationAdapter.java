@@ -118,12 +118,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 }
 
                 // measurement
-//                if (notification.getCondition().getMeasurements().size() > 0) {
-//                    for (int i = 0; i < notification.getCondition().getMeasurements().size(); i++) {
+//                if (notification.getCondition().getSensors().size() > 0) {
+//                    for (int i = 0; i < notification.getCondition().getSensors().size(); i++) {
 //                        mNotificationMeasurement.setText(String.valueOf(
-//                                (notification.getCondition().getMeasurements().size() == 1) ? notification.getCondition().getMeasurements().get(i)
-//                                        : (notification.getCondition().getMeasurements().size() == i) ? notification.getCondition().getMeasurements().get(i)
-//                                        : notification.getCondition().getMeasurements().get(i) + ", "));
+//                                (notification.getCondition().getSensors().size() == 1) ? notification.getCondition().getSensors().get(i)
+//                                        : (notification.getCondition().getSensors().size() == i) ? notification.getCondition().getSensors().get(i)
+//                                        : notification.getCondition().getSensors().get(i) + ", "));
 //                    }
 //                } else {
 //                    mNotificationMeasurement.setVisibility(View.GONE);

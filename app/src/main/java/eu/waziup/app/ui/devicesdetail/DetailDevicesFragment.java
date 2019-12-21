@@ -27,8 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
@@ -78,12 +77,11 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
 
     public static final String TAG = "DetailDevicesFragment";
 
-    Sensor mSensor;
+    Device mDevice;
 
     public static String parentFragment;
 
-    //    https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    public static DetailDevicesFragment newInstance(Device device, String fragmentPassed) {
+    public static DetailDevicesFragment newInstance(eu.waziup.app.data.network.model.devices.Device device, String fragmentPassed) {
         Bundle args = new Bundle();
         args.putSerializable(DETAIL_SENSOR_KEY, device);
         DetailDevicesFragment fragment = new DetailDevicesFragment();
@@ -91,15 +89,6 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
         parentFragment = fragmentPassed;
         return fragment;
     }
-
-//    NOT BEING USED
-//    public static NotificationDetailFragment newInstance(Sensor sensor) {
-//        Bundle args = new Bundle();
-//        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
-//        NotificationDetailFragment fragment = new NotificationDetailFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     private DevicesCommunicator communicator;
 
@@ -120,14 +109,14 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
         }
 
         if (getArguments() != null)
-            mSensor = (Sensor) getArguments().getSerializable(DETAIL_SENSOR_KEY);
+            mDevice = (Device) getArguments().getSerializable(DETAIL_SENSOR_KEY);
 
         setUp(view);
 
-        // map button on clickListener
+        // handle button click event for displaying the devices location on google map
         btnSensorLocation.setOnClickListener(view1 -> {
-            if (mSensor != null && mSensor.getLocation() != null)
-                openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
+            if (mDevice != null && mDevice.getLocation() != null)
+                openMapFragment(new LatLng(mDevice.getLocation().getLatitude(), mDevice.getLocation().getLongitude()));
         });
 
         return view;
@@ -142,29 +131,29 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     @Override
     protected void setUp(View view) {
         communicator.invisibleFab();
-        loadPage(mSensor);
+        loadPage(mDevice);
         setUpRecyclerView();
     }
 
     @OnClick(R.id.detail_sensor_add_measurement)
     void onAddMeasurementClicked() {
-        mPresenter.onAddMeasurementClicked();
+        mPresenter.onAddSensorsClicked();
     }
 
 //    @OnClick(R.id.btn_deploy)
 //    void onDeployClicked() {
-//        mPresenter.onDeploySensorClicked();
+//        mPresenter.onDeployDevicesClicked();
 //    }
 //
 //    @OnClick(R.id.btn_undeploy)
 //    void onUndeployClicked() {
-//        mPresenter.onUnDeploySensorClicked();
+//        mPresenter.onUnDeployDevicesClicked();
 //    }
 
     @OnClick(R.id.btn_locate_on_map)
     void onLocateOnMapClicked() {
-        if (mSensor != null && mSensor.getLocation() != null)
-            openMapFragment(new LatLng(mSensor.getLocation().getLatitude(), mSensor.getLocation().getLongitude()));
+        if (mDevice != null && mDevice.getLocation() != null)
+            openMapFragment(new LatLng(mDevice.getLocation().getLatitude(), mDevice.getLocation().getLongitude()));
     }
 
     private void setUpRecyclerView() {
@@ -185,14 +174,14 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     }
 
     @Override
-    public void showMeasurements(String sensorId, List<Measurement> measurements) {
-        if (measurements != null) {
-            if (measurements.size() > 0) {
+    public void showSensors(String devicesId, List<Sensor> sensors) {
+        if (sensors != null) {
+            if (sensors.size() > 0) {
                 if (tvNoMeasurement != null && tvNoMeasurement.getVisibility() == View.VISIBLE)
                     tvNoMeasurement.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(sensorId, measurements);
+                mAdapter.addItems(devicesId, sensors);
             } else {
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
                     mRecyclerView.setVisibility(View.GONE);
@@ -206,37 +195,37 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     }
 
     @Override
-    public void loadPage(Sensor sensor) {
-        if (mSensor != null) {
+    public void loadPage(Device device) {
+        if (mDevice != null) {
 
-            toolbarTitle.setText((TextUtils.isEmpty(mSensor.getId())) ? mSensor.getName() : mSensor.getId());
+            toolbarTitle.setText((TextUtils.isEmpty(mDevice.getId())) ? mDevice.getName() : mDevice.getId());
 
             showLoading();
-            // todo tvNoMeasurements for the measurements and the whole sensor is different should be implemented
+            // todo tvNoMeasurements for the sensors and the whole device is different should be implemented
             tvNoMeasurement.setVisibility(View.GONE);
-            showMeasurements(mSensor.getId(), mSensor.getMeasurements());
+            showSensors(mDevice.getId(), mDevice.getSensors());
 
-            if (mSensor.getLocation() != null) {
+            if (mDevice.getLocation() != null) {
                 btnSensorLocation.setVisibility(View.VISIBLE);
             }
 
-            if (!TextUtils.isEmpty(mSensor.getDateCreated()))
-                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mSensor.getDateCreated(),
+            if (!TextUtils.isEmpty(mDevice.getDateCreated()))
+                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mDevice.getDateCreated(),
                         DateTimeStyle.MEDIUM)));
 
-            if (!TextUtils.isEmpty(mSensor.getOwner())) {
+            if (!TextUtils.isEmpty(mDevice.getOwner())) {
                 sensorOwnerTitle.setVisibility(View.VISIBLE);
                 sensorOwner.setVisibility(View.VISIBLE);
-                sensorOwner.setText(String.valueOf(mSensor.getOwner()));
+                sensorOwner.setText(String.valueOf(mDevice.getOwner()));
             } else {
                 sensorOwnerTitle.setVisibility(View.GONE);
                 sensorOwner.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(mSensor.getDomain())) {
+            if (!TextUtils.isEmpty(mDevice.getDomain())) {
                 sensorDomainTitle.setVisibility(View.VISIBLE);
                 sensorDomain.setVisibility(View.VISIBLE);
-                sensorDomain.setText(String.valueOf(mSensor.getDomain()));
+                sensorDomain.setText(String.valueOf(mDevice.getDomain()));
             } else {
                 sensorDomainTitle.setVisibility(View.GONE);
                 sensorDomain.setVisibility(View.GONE);
@@ -248,8 +237,8 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     }
 
     @Override
-    public void showCreateMeasurementsDialog() {
-//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Measurement(), mPresenter);
+    public void showCreateSensorsDialog() {
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Sensor(), mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
@@ -267,21 +256,21 @@ public class DetailDevicesFragment extends BaseFragment implements DetailSensorM
     }
 
     @Override
-    public void onItemClicked(Measurement measurement) {
-        // add some content to be displayed here when clicking on the measurement
+    public void onItemClicked(Sensor sensor) {
+        // add some content to be displayed here when clicking on the sensor
     }
 
     @Override
-    public void onItemEditClicked(Measurement measurement) {
-        EditSensorDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
+    public void onItemEditClicked(Sensor sensor) {
+        EditSensorDialog.newInstance(sensor).show(getBaseActivity().getSupportFragmentManager(), "");
     }
 
     @Override
-    public void onItemDeleteClicked(String sensorId, Measurement measurement) {
+    public void onItemDeleteClicked(String sensorId, Sensor sensor) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
-        builder.setMessage("Are you sure you want to delete measurement?")
+        builder.setMessage("Are you sure you want to delete sensor?")
                 .setPositiveButton("Delete", (dialog, id) -> {
-                    mPresenter.onDeleteMeasurementClicked(sensorId, measurement.getId());
+                    mPresenter.onDeleteSensorClicked(sensorId, sensor.getId());
                     dialog.dismiss();
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {

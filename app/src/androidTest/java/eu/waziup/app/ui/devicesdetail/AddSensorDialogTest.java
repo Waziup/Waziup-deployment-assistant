@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.main.MainActivity;
 
@@ -24,7 +24,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class AddMeasurementDialogTest {
+public class AddSensorDialogTest {
 
     DetailDevicesFragment mDetailDevicesFragment;
 
@@ -37,7 +37,7 @@ public class AddMeasurementDialogTest {
         rule.launchActivity(new Intent());
 
         // for inflating the fragment - with mock data
-        mDetailDevicesFragment = DetailDevicesFragment.newInstance(new Sensor("IST-AFRICA-2018_Sensor6", "",
+        mDetailDevicesFragment = DetailDevicesFragment.newInstance(new Device("IST-AFRICA-2018_Sensor6", "",
                 "waziup", "public"), DevicesFragment.TAG);
 
         rule.getActivity()
@@ -50,7 +50,7 @@ public class AddMeasurementDialogTest {
     @Test
     public void onButtonsAndTextViewsDisplayed() throws Exception {
 
-        // add measurement button
+        // add sensor button
         onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
         // unDeploy button
 //        onView(withId(R.id.btn_undeploy)).check(matches(isDisplayed()));
@@ -73,7 +73,7 @@ public class AddMeasurementDialogTest {
 //
 //        // tells the ide to wait for the button being clicked before checking
 //        getInstrumentation().waitForIdleSync();
-//        // check for the title being displayed - Edit Measurement
+//        // check for the title being displayed - Edit Sensor
 //        onView(withId(R.id.dialog_measurement_title)).check(matches(isDisplayed()));
 //        // check for the id field being displayed
 //        onView(withId(R.id.dialog_measurement_id)).check(matches(isDisplayed()));

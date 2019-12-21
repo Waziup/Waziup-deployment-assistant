@@ -4,13 +4,11 @@ package eu.waziup.app.data.network;
 import java.util.List;
 
 import eu.waziup.app.data.network.model.LoginRequest;
-import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
-import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.user.User;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.ResponseBody;
 
@@ -26,15 +24,15 @@ public interface ApiHelper {
 
     Single<String> serverLogin(LoginRequest.ServerLoginRequest loginRequest);
 
-    Single<List<Device>> fetchSensors(String username);
+    Single<List<eu.waziup.app.data.network.model.devices.Device>> fetchSensors(String username);
 
-    Single<List<Device>> fetchSensors(int limit, int offset);
+    Single<List<eu.waziup.app.data.network.model.devices.Device>> fetchSensors(int limit, int offset);
 
     Single<ResponseBody> deleteMeasurement(String sensor_id, String measurement_id);
 
-    Single<List<Measurement>> getMeasurements(String sensor_id);
+    Single<List<Sensor>> getMeasurements(String sensor_id);
 
-    Single<RegisterSensorResponse> registerSensor(Sensor sensor);
+    Single<RegisterSensorResponse> registerSensor(Device device);
 
     Single<List<User>> getUsers();
 

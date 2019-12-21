@@ -9,11 +9,10 @@ import javax.inject.Singleton;
 import eu.waziup.app.data.network.ApiHeader;
 import eu.waziup.app.data.network.ApiHelper;
 import eu.waziup.app.data.network.model.LoginRequest;
-import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
-import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.user.User;
 import eu.waziup.app.data.prefs.PreferencesHelper;
 import io.reactivex.Single;
@@ -49,12 +48,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<List<Device>> fetchSensors(String username) {
+    public Single<List<eu.waziup.app.data.network.model.devices.Device>> fetchSensors(String username) {
         return mApiHelper.fetchSensors(username);
     }
 
     @Override
-    public Single<List<Device>> fetchSensors(int limit, int offset) {
+    public Single<List<eu.waziup.app.data.network.model.devices.Device>> fetchSensors(int limit, int offset) {
         return mApiHelper.fetchSensors(limit, offset);
     }
 
@@ -64,13 +63,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Single<List<Measurement>> getMeasurements(String sensor_id) {
+    public Single<List<Sensor>> getMeasurements(String sensor_id) {
         return mApiHelper.getMeasurements(sensor_id);
     }
 
     @Override
-    public Single<RegisterSensorResponse> registerSensor(Sensor sensor) {
-        return mApiHelper.registerSensor(sensor);
+    public Single<RegisterSensorResponse> registerSensor(Device device) {
+        return mApiHelper.registerSensor(device);
     }
 
     @Override

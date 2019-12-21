@@ -34,12 +34,12 @@ public class EditSensorPresenter<V extends EditSensorMvpView> extends BasePresen
     }
 
 //    @Override
-//    public void onEditMeasurementClicked(Measurement measurement) {
+//    public void onEditSensorClicked(Sensor measurement) {
 //
 //    }
 
 //    @Override
-//    public void onDeleteMeasurementClicked(String sensorId, String measurementId) {
+//    public void onDeleteSensorClicked(String sensorId, String measurementId) {
 //        getMvpView().showLoading();
 //        getCompositeDisposable().add(getDataManager().deleteMeasurement(sensorId, measurementId)
 //                .subscribeOn(getSchedulerProvider().io())
@@ -47,7 +47,7 @@ public class EditSensorPresenter<V extends EditSensorMvpView> extends BasePresen
 //                            if (!isViewAttached())
 //                                return;
 //
-//                            loadMeasurements(sensorId);
+//                            loadSensors(sensorId);
 //                        }, throwable -> {
 //                            if (!isViewAttached())
 //                                return;

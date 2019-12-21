@@ -10,8 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Random;
 
 import eu.waziup.app.data.DataManager;
-import eu.waziup.app.data.network.model.sensor.Sensor;
-import eu.waziup.app.ui.device.DevicesFragment;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.utils.rx.TestSchedulerProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.TestScheduler;
@@ -63,12 +62,12 @@ public class MainPresenterTest {
     @Test
     public void onSensorItemClicked() throws Exception{
         // todo check if this is the right way of doing it.
-        Sensor sensor = new Sensor(
+        Device device = new Device(
                 new Random(4).toString(), "APTD-123-asd", "Hawassa", "VISIBLE");
-        //mMainPresenter.onSensorItemClicked(sensor, DevicesFragment.TAG);
+        //mMainPresenter.onSensorItemClicked(device, DevicesFragment.TAG);
 
-        // has to open selected Sensor detail fragment
-//        verify(mMockMainMvpView).openSensorDetailFragment(sensor, DevicesFragment.TAG);
+        // has to open selected Device detail fragment
+//        verify(mMockMainMvpView).openSensorDetailFragment(device, DevicesFragment.TAG);
     }
 
     @After

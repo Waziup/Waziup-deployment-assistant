@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseDialog;
 
@@ -42,9 +42,9 @@ public class EditSensorDialog extends BaseDialog implements EditSensorMvpView {
     @BindView(R.id.dialog_measurement_title)
     TextView title;
 
-    private Measurement measurement;
+    private Sensor sensor;
 
-    public static EditSensorDialog newInstance(Measurement msrmnt) {
+    public static EditSensorDialog newInstance(Sensor msrmnt) {
         EditSensorDialog fragment = new EditSensorDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(MEASUREMENT_SENSOR_KEY, msrmnt);
@@ -69,7 +69,7 @@ public class EditSensorDialog extends BaseDialog implements EditSensorMvpView {
         }
 
         if (getArguments() != null)
-            measurement = (Measurement) getArguments().getSerializable(MEASUREMENT_SENSOR_KEY);
+            sensor = (Sensor) getArguments().getSerializable(MEASUREMENT_SENSOR_KEY);
 
         setUp(view);
 
@@ -84,24 +84,24 @@ public class EditSensorDialog extends BaseDialog implements EditSensorMvpView {
 
     @Override
     protected void setUp(View view) {
-        if (measurement != null) {
-            if (!TextUtils.isEmpty(measurement.getId()))
-                mId.setText(measurement.getId());
+        if (sensor != null) {
+            if (!TextUtils.isEmpty(sensor.getId()))
+                mId.setText(sensor.getId());
 
-            if (!TextUtils.isEmpty(measurement.getName()))
-                mName.setText(measurement.getName());
+            if (!TextUtils.isEmpty(sensor.getName()))
+                mName.setText(sensor.getName());
 
-//            if (!TextUtils.isEmpty(measurement.getSensingDevice()))
-//                mSensor.setText(measurement.getSensingDevice());
+//            if (!TextUtils.isEmpty(sensor.getSensingDevice()))
+//                mSensor.setText(sensor.getSensingDevice());
 
-            if (!TextUtils.isEmpty(measurement.getQuantityKind()))
-                mQuantityKind.setText(measurement.getQuantityKind());
+            if (!TextUtils.isEmpty(sensor.getQuantityKind()))
+                mQuantityKind.setText(sensor.getQuantityKind());
 
-            if (!TextUtils.isEmpty(measurement.getUnit()))
-                mUnit.setText(measurement.getUnit());
+            if (!TextUtils.isEmpty(sensor.getUnit()))
+                mUnit.setText(sensor.getUnit());
 
         } else {
-            Log.e("--->measurement Dialog", "null");
+            Log.e("--->sensor Dialog", "null");
             title.setText(R.string.dialog_add_measurement);
         }
     }

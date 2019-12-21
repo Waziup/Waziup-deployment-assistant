@@ -9,11 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import eu.waziup.app.BuildConfig;
 import eu.waziup.app.data.network.model.LoginRequest;
-import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.notification.NotificationResponse;
-import eu.waziup.app.data.network.model.sensor.Measurement;
-import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
 import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.sensor.RegisterSensorResponse;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.user.User;
 import io.reactivex.Single;
 import okhttp3.OkHttpClient;
@@ -39,11 +38,11 @@ public interface ApiCall {
 
     @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
-    Single<List<Device>> getSensors(@Query("q") String username);
+    Single<List<eu.waziup.app.data.network.model.devices.Device>> getSensors(@Query("q") String username);
 
     @GET(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
-    Single<List<Device>> getSensors(@Query("limit") int limit, @Query("offset") int skip);
+    Single<List<eu.waziup.app.data.network.model.devices.Device>> getSensors(@Query("limit") int limit, @Query("offset") int skip);
 
     @GET(ApiEndPoint.NOTIFICATION)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
@@ -51,7 +50,7 @@ public interface ApiCall {
 
     @POST(ApiEndPoint.DEVICES)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Single<RegisterSensorResponse> createSensor(@Body Sensor sensor);
+    Single<RegisterSensorResponse> createSensor(@Body Device device);
 
     @POST(ApiEndPoint.LOGIN)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PUBLIC_API)
@@ -63,7 +62,7 @@ public interface ApiCall {
 
     @GET(ApiEndPoint.SENSOR_LIST)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)
-    Single<List<Measurement>> getMeasurement(@Path("device_id") String sensorId);
+    Single<List<Sensor>> getMeasurement(@Path("device_id") String sensorId);
 
     @GET(ApiEndPoint.USERS)
     @Headers(ApiHeader.API_AUTH_TYPE + HEADER_PARAM_SEPARATOR + ApiHeader.PROTECTED_API)

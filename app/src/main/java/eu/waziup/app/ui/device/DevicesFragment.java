@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +41,7 @@ import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
 import eu.waziup.app.data.network.model.logout.AuthorizationServiceDiscovery;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.neterror.ErrorNetworkFragment;
@@ -404,11 +403,11 @@ public class DevicesFragment extends BaseFragment implements DevicesMvpView, Dev
 
     /**
      * handles the item click listener for when the measurements on the horizontal view item
-     * @param measurement the selected measurement item object
+     * @param sensor the selected sensor item object
      */
     @Override
-    public void onItemClicked(Measurement measurement) {
-        SensorDetailDialog.newInstance(measurement).show(getBaseActivity().getSupportFragmentManager(), "");
+    public void onItemClicked(Sensor sensor) {
+        SensorDetailDialog.newInstance(sensor).show(getBaseActivity().getSupportFragmentManager(), "");
     }
 
     @Override

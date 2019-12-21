@@ -1,7 +1,6 @@
 package eu.waziup.app.ui.main;
 
 import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.MvpView;
 
 public interface MainMvpView extends MvpView {

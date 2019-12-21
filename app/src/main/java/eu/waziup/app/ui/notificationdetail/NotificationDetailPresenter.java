@@ -3,7 +3,7 @@ package eu.waziup.app.ui.notificationdetail;
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BasePresenter;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.rx.SchedulerProvider;
@@ -26,7 +26,7 @@ public class NotificationDetailPresenter<V extends NotificationDetailMvpView> ex
     }
 
     @Override
-    public void onEditMeasurementClicked(Measurement measurement) {
+    public void onEditMeasurementClicked(Sensor sensor) {
 
     }
 
@@ -51,12 +51,12 @@ public class NotificationDetailPresenter<V extends NotificationDetailMvpView> ex
     }
 
 //    @Override
-//    public void onDeploySensorClicked() {
+//    public void onDeployDevicesClicked() {
 //
 //    }
 
 //    @Override
-//    public void onUnDeploySensorClicked() {
+//    public void onUnDeployDevicesClicked() {
 //
 //    }
 

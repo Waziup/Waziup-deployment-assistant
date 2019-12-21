@@ -34,7 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Sensor;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.device.DevicesCommunicator;
@@ -198,7 +198,7 @@ public class RegisterSensorFragment extends BaseFragment implements RegisterSens
         }
 
         mPresenter.onSubmitRegisterClicked(
-                new Sensor(sensorId.getText().toString().trim(),
+                new Device(sensorId.getText().toString().trim(),
                         sensorName.getText().toString().trim(),
                         sensorDomain.getText().toString().trim(),
                         TextUtils.isEmpty(mSensorVisibility) ? sensorVisibility.getSelectedItem().toString().trim() : mSensorVisibility,

@@ -14,10 +14,9 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import eu.waziup.app.R;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.LastValue;
-import eu.waziup.app.data.network.model.sensor.Measurement;
 import eu.waziup.app.data.network.model.sensor.Sensor;
-import eu.waziup.app.ui.device.DevicesFragment;
 import eu.waziup.app.ui.main.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -31,7 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class EditSensorDialogTest {
+public class EditDeviceDialogTest {
 
     DetailDevicesFragment mDetailDevicesFragment;
 
@@ -43,25 +42,25 @@ public class EditSensorDialogTest {
         // launching the activity
         rule.launchActivity(new Intent());
 
-        Sensor mSensor = new Sensor("IST-AFRICA-2018_Sensor6", "","waziup", "public");
+        Device mDevice = new Device("IST-AFRICA-2018_Sensor6", "","waziup", "public");
 
-        Measurement mMeasurement = new Measurement();
-        mMeasurement.setId("TC");
+        Sensor mSensor = new Sensor();
+        mSensor.setId("TC");
         // lastValue
         LastValue mLastValue = new LastValue();
         mLastValue.setValue("24.26");
         mLastValue.setDateReceived("2018-05-10T10:30:25.00Z");
         mLastValue.setTimestamp("2018-05-10T12:30:23+02:00");
 
-        mMeasurement.setLastValue(mLastValue);
-        mMeasurement.setId("TC");
-        ArrayList<Measurement> measurements = new ArrayList<>();
-        measurements.add(mMeasurement);
+        mSensor.setLastValue(mLastValue);
+        mSensor.setId("TC");
+        ArrayList<Sensor> sensors = new ArrayList<>();
+        sensors.add(mSensor);
 
-        //passing mock measurement data to mock sensor data
-        mSensor.setMeasurements(measurements);
+        //passing mock sensor data to mock sensor data
+        mDevice.setSensors(sensors);
         // for inflating the fragment - with mock data
-//        mDetailDevicesFragment = DetailDevicesFragment.newInstance(mSensor, DevicesFragment.TAG);
+//        mDetailDevicesFragment = DetailDevicesFragment.newInstance(mDevice, DevicesFragment.TAG);
 
         // inflating NotificationDetailFragment
         rule.getActivity()
@@ -73,7 +72,7 @@ public class EditSensorDialogTest {
 
     @Test
     public void onButtonsAndTextViewsDisplayed() throws Exception {
-        // add measurement button
+        // add sensor button
         onView(withId(R.id.detail_sensor_add_measurement)).check(matches(isDisplayed()));
 
         // -- below are views displayed on NotificationDetailFragment fragment
@@ -104,7 +103,7 @@ public class EditSensorDialogTest {
         // tells the ide to wait for the button being clicked before checking
         getInstrumentation().waitForIdleSync();
 
-        // check for the title being displayed - Edit Measurement
+        // check for the title being displayed - Edit Sensor
         onView(withId(R.id.dialog_measurement_title)).check(matches(isDisplayed()));
         // check for the id field being displayed
         onView(withId(R.id.dialog_measurement_id)).check(matches(isDisplayed()));

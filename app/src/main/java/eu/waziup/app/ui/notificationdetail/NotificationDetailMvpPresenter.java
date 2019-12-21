@@ -1,6 +1,6 @@
 package eu.waziup.app.ui.notificationdetail;
 
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.PerActivity;
 import eu.waziup.app.ui.base.MvpPresenter;
 
@@ -11,13 +11,13 @@ import eu.waziup.app.ui.base.MvpPresenter;
 @PerActivity
 public interface NotificationDetailMvpPresenter<V extends NotificationDetailMvpView> extends MvpPresenter<V> {
 
-    void onEditMeasurementClicked(Measurement measurement);
+    void onEditMeasurementClicked(Sensor sensor);
 
     void onDeleteMeasurementClicked(String sensorId, String measurementId);
 
-//    void onDeploySensorClicked();
+//    void onDeployDevicesClicked();
 //
-//    void onUnDeploySensorClicked();
+//    void onUnDeployDevicesClicked();
 
     void onAddMeasurementClicked();
 

@@ -32,7 +32,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
 import eu.waziup.app.ui.device.DevicesCommunicator;

@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseDialog;
 
@@ -27,7 +27,7 @@ public class SensorDetailDialog extends BaseDialog implements SensorDetailMvpVie
     @Inject
     SensorDetailMvpPresenter<SensorDetailMvpView> mPresenter;
 
-    private Measurement measurement;
+    private Sensor sensor;
 
     @BindView(R.id.card_measurement_value)
     TextView mMeasurementValue;
@@ -41,7 +41,7 @@ public class SensorDetailDialog extends BaseDialog implements SensorDetailMvpVie
     @BindView(R.id.card_measurement_kind)
     TextView mMeasurementKind;
 
-    public static SensorDetailDialog newInstance(Measurement msrmnt) {
+    public static SensorDetailDialog newInstance(Sensor msrmnt) {
         SensorDetailDialog fragment = new SensorDetailDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(MEASUREMENT_DETAIL_KEY, msrmnt);
@@ -65,7 +65,7 @@ public class SensorDetailDialog extends BaseDialog implements SensorDetailMvpVie
         }
 
         if (getArguments() != null)
-            measurement = (Measurement) getArguments().getSerializable(MEASUREMENT_DETAIL_KEY);
+            sensor = (Sensor) getArguments().getSerializable(MEASUREMENT_DETAIL_KEY);
 
         setUp(view);
 
@@ -79,33 +79,33 @@ public class SensorDetailDialog extends BaseDialog implements SensorDetailMvpVie
 
     @Override
     protected void setUp(View view) {
-        if (measurement != null) {
+        if (sensor != null) {
             // for setting the image
-            if (measurement.getSensingDevice() != null)
-                if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
+            if (sensor.getSensingDevice() != null)
+                if (sensor.getSensingDevice().toLowerCase().equals("thermometer"))
                     mIcon.setImageDrawable(getBaseActivity().getResources().getDrawable(R.drawable.ic_mesurement_temp));
 
-            if (!TextUtils.isEmpty(measurement.getId())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
+            if (!TextUtils.isEmpty(sensor.getId())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
                 mMeasurementName.setVisibility(View.VISIBLE);
-                mMeasurementName.setText(measurement.getId());
-            } else if (!TextUtils.isEmpty(measurement.getName())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
+                mMeasurementName.setText(sensor.getId());
+            } else if (!TextUtils.isEmpty(sensor.getName())) {// && mMeasurementName.getVisibility() != View.VISIBLE) {
                 mMeasurementName.setVisibility(View.VISIBLE);
-                mMeasurementName.setText(measurement.getName());
+                mMeasurementName.setText(sensor.getName());
             } else {
                 mMeasurementName.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(measurement.getQuantityKind())) {//mMeasurementKind.getVisibility() != View.VISIBLE
+            if (!TextUtils.isEmpty(sensor.getQuantityKind())) {//mMeasurementKind.getVisibility() != View.VISIBLE
                 mMeasurementKind.setVisibility(View.VISIBLE);
-                mMeasurementKind.setText(measurement.getQuantityKind());
+                mMeasurementKind.setText(sensor.getQuantityKind());
             } else {
                 mMeasurementKind.setVisibility(View.GONE);
             }
 
             // for the value
-            if (measurement.getLastValue() != null && !TextUtils.isEmpty(measurement.getLastValue().getValue())) {
+            if (sensor.getLastValue() != null && !TextUtils.isEmpty(sensor.getLastValue().getValue())) {
                 mMeasurementValue.setVisibility(View.VISIBLE);
-                mMeasurementValue.setText(measurement.getLastValue().getValue());
+                mMeasurementValue.setText(sensor.getLastValue().getValue());
             } else {
                 mMeasurementValue.setText(R.string.dialog_no_record);
             }

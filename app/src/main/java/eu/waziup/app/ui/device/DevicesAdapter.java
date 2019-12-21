@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
 import eu.waziup.app.data.network.model.devices.Device;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseViewHolder;
 
 public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
@@ -72,7 +72,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     // callback method interface for capturing the item click on the measurement list
     public interface MeasurementCallback {
-        void onItemClicked(Measurement measurement);
+        void onItemClicked(Sensor sensor);
     }
 
     public class SensorViewHolder extends BaseViewHolder {
@@ -135,9 +135,9 @@ public class DevicesAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 measurementContainer.removeAllViews();
 
-//                if (device.getMeasurements() != null) {
+//                if (device.getSensors() != null) {
 //
-//                    for (Measurement measurement : device.getMeasurements()) {
+//                    for (Sensor measurement : device.getSensors()) {
 //                        TextView measurementValue = new TextView(itemView.getContext());
 //                        measurementValue.setTextColor(itemView.getResources().getColor(R.color.white));
 //                        measurementValue.setGravity(Gravity.CENTER);

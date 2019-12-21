@@ -3,7 +3,7 @@ package eu.waziup.app.ui.devicesdetail;
 import javax.inject.Inject;
 
 import eu.waziup.app.data.DataManager;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BasePresenter;
 import eu.waziup.app.utils.CommonUtils;
 import eu.waziup.app.utils.rx.SchedulerProvider;
@@ -25,21 +25,31 @@ public class DetailDevicesPresenter<V extends DetailSensorMvpView> extends BaseP
         super(dataManager, schedulerProvider, compositeDisposable);
     }
 
+    /**
+     * method for editing a specific sensor when the edit button is clicked on the list
+     * todo implementing the feature
+     * @param sensor the sensor object to be edited and send to API for update
+     */
     @Override
-    public void onEditMeasurementClicked(Measurement measurement) {
+    public void onEditSensorClicked(Sensor sensor) {
 
     }
 
+    /**
+     * method for deleting the sensor from remote with an API call
+     * @param deviceId with deviceId for identifying the sensor
+     * @param sensorId with sensorId for identifying th sensor
+     */
     @Override
-    public void onDeleteMeasurementClicked(String sensorId, String measurementId) {
+    public void onDeleteSensorClicked(String deviceId, String sensorId) {
         getMvpView().showLoading();
-        getCompositeDisposable().add(getDataManager().deleteMeasurement(sensorId, measurementId)
+        getCompositeDisposable().add(getDataManager().deleteMeasurement(deviceId, sensorId)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui()).subscribe(responseBody -> {
                             if (!isViewAttached())
                                 return;
 
-                            loadMeasurements(sensorId);
+                            loadSensors(deviceId);
                         }, throwable -> {
                             if (!isViewAttached())
                                 return;
@@ -50,32 +60,47 @@ public class DetailDevicesPresenter<V extends DetailSensorMvpView> extends BaseP
                 ));
     }
 
+    /**
+     * method for deploying the device with the button click on the screen
+     * todo implement the feature
+     */
     @Override
-    public void onDeploySensorClicked() {
+    public void onDeployDevicesClicked() {
 
     }
 
+    /**
+     * method for unDeploying the device with a button click
+     * todo implement the feature
+     */
     @Override
-    public void onUnDeploySensorClicked() {
+    public void onUnDeployDevicesClicked() {
 
     }
 
+    /**
+     * method handling the add sensor click for opening a dialog where a sensor can be added
+     */
     @Override
-    public void onAddMeasurementClicked() {
-        getMvpView().showCreateMeasurementsDialog();
+    public void onAddSensorsClicked() {
+        getMvpView().showCreateSensorsDialog();
     }
 
+    /**
+     * method for fetching the sensors from the API to be displayed
+     * @param deviceId for filtering sensors with the deviceID
+     */
     @Override
-    public void loadMeasurements(String sensorId) {
+    public void loadSensors(String deviceId) {
         getMvpView().showLoading();
-        getCompositeDisposable().add(getDataManager().getMeasurements(sensorId)
+        getCompositeDisposable().add(getDataManager().getMeasurements(deviceId)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(measurements -> {
                     if (!isViewAttached())
                         return;
 
-                    getMvpView().showMeasurements(sensorId, measurements);
+                    getMvpView().showSensors(deviceId, measurements);
                 }, throwable -> {
                     if (!isViewAttached())
                         return;

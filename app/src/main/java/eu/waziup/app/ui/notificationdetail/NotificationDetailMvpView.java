@@ -4,7 +4,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.MvpView;
 
@@ -14,9 +14,9 @@ import eu.waziup.app.ui.base.MvpView;
 
 public interface NotificationDetailMvpView extends MvpView {
 
-    void showMeasurements(String sensorId, List<Measurement> measurements);
+    void showMeasurements(String sensorId, List<Sensor> sensors);
 
-    void loadPage(Sensor sensor);
+    void loadPage(Device device);
 
     void showCreateMeasurementsDialog();
 

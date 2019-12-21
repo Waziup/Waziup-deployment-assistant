@@ -39,7 +39,7 @@
     <string name="open_drawer">Drawer Open</string>
     <string name="close_drawer">Drawer Close</string>
     <string name="sensor_registration">Sensor Registration</string>
-    <string name="no_measurements_list_found">No measurements list found.</string>
+    <string name="no_measurements_list_found">No sensors list found.</string>
     <string name="cancel">CANCEL</string>
     <string name="exit">EXIT</string>
     <string name="dialog_retry">RETRY</string>
@@ -91,7 +91,7 @@
     <string name="no_internet_turn_on_title">No Internet Connection</string>
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_exit">Are you sure you want to exit?</string>
-    <string name="scan_sensor">Scan sensor</string>
+    <string name="scan_sensor">Scan device</string>
     <string name="login">login</string>
     <string name="dialog_no_record">no record</string>
     <string name="retry">Retry</string>

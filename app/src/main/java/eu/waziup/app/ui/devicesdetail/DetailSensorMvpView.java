@@ -4,7 +4,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.MvpView;
 
@@ -14,11 +14,13 @@ import eu.waziup.app.ui.base.MvpView;
 
 public interface DetailSensorMvpView extends MvpView {
 
-    void showMeasurements(String sensorId, List<Measurement> measurements);
+    // method for showing the sensors with deviceId filter and list of sensor
+    void showSensors(String devicesId, List<Sensor> sensors);
 
-    void loadPage(Sensor sensor);
+    // method for loading the page - refreshing the screen
+    void loadPage(Device device);
 
-    void showCreateMeasurementsDialog();
+    void showCreateSensorsDialog();
 
     void openMapFragment(LatLng latLng);
 }

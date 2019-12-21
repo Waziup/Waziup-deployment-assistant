@@ -12,7 +12,7 @@ import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.Mockito.verify;
 
-public class SensorPresenterTest {
+public class DevicePresenterTest {
 
     @Mock
     DevicesMvpView mMockDevicesMvpView;

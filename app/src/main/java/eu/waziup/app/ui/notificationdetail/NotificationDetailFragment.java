@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Device;
 import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.di.component.ActivityComponent;
 import eu.waziup.app.ui.base.BaseFragment;
@@ -72,14 +72,14 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     public static final String TAG = "NotificationDetailFragment";
 
-    Sensor mSensor;
+    Device mDevice;
 
     public static String parentFragment;
 
     //    https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    public static NotificationDetailFragment newInstance(Sensor sensor, String fragmentPassed) {
+    public static NotificationDetailFragment newInstance(Device device, String fragmentPassed) {
         Bundle args = new Bundle();
-        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
+        args.putSerializable(DETAIL_SENSOR_KEY, device);
         NotificationDetailFragment fragment = new NotificationDetailFragment();
         fragment.setArguments(args);
         parentFragment = fragmentPassed;
@@ -87,7 +87,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
 //    NOT BEING USED
-//    public static NotificationDetailFragment newInstance(Sensor sensor) {
+//    public static NotificationDetailFragment newInstance(Device sensor) {
 //        Bundle args = new Bundle();
 //        args.putSerializable(DETAIL_SENSOR_KEY, sensor);
 //        NotificationDetailFragment fragment = new NotificationDetailFragment();
@@ -112,7 +112,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
         }
 
         if (getArguments() != null)
-            mSensor = (Sensor) getArguments().getSerializable(DETAIL_SENSOR_KEY);
+            mDevice = (Device) getArguments().getSerializable(DETAIL_SENSOR_KEY);
 
         setUp(view);
 
@@ -121,7 +121,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     protected void setUp(View view) {
-        loadPage(mSensor);
+        loadPage(mDevice);
         setUpRecyclerView();
     }
 
@@ -133,12 +133,12 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     // todo held this feature for v.2.0 of the application
 //    @OnClick(R.id.btn_deploy)
 //    void onDeployClicked() {
-//        mPresenter.onDeploySensorClicked();
+//        mPresenter.onDeployDevicesClicked();
 //    }
 //
 //    @OnClick(R.id.btn_undeploy)
 //    void onUndeployClicked() {
-//        mPresenter.onUnDeploySensorClicked();
+//        mPresenter.onUnDeployDevicesClicked();
 //    }
 
 
@@ -160,14 +160,14 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
     @Override
-    public void showMeasurements(String sensorId, List<Measurement> measurements) {
-        if (measurements != null) {
-            if (measurements.size() > 0) {
+    public void showMeasurements(String sensorId, List<Sensor> sensors) {
+        if (sensors != null) {
+            if (sensors.size() > 0) {
                 if (tvNoMeasurement != null && tvNoMeasurement.getVisibility() == View.VISIBLE)
                     tvNoMeasurement.setVisibility(View.GONE);
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.GONE)
                     mRecyclerView.setVisibility(View.VISIBLE);
-                mAdapter.addItems(sensorId, measurements);
+                mAdapter.addItems(sensorId, sensors);
             } else {
                 if (mRecyclerView != null && mRecyclerView.getVisibility() == View.VISIBLE)
                     mRecyclerView.setVisibility(View.GONE);
@@ -181,33 +181,33 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
     @Override
-    public void loadPage(Sensor sensor) {
-        if (mSensor != null) {
+    public void loadPage(Device device) {
+        if (mDevice != null) {
 
-            toolbarTitle.setText((TextUtils.isEmpty(mSensor.getId())) ? mSensor.getName() : mSensor.getId());
+            toolbarTitle.setText((TextUtils.isEmpty(mDevice.getId())) ? mDevice.getName() : mDevice.getId());
 
             showLoading();
-            // todo tvNoMeasurements for the measurements and the whole sensor is different should be implemented
+            // todo tvNoMeasurements for the measurements and the whole device is different should be implemented
             tvNoMeasurement.setVisibility(View.GONE);
-            showMeasurements(mSensor.getId(), mSensor.getMeasurements());
+            showMeasurements(mDevice.getId(), mDevice.getSensors());
 
-            if (!TextUtils.isEmpty(mSensor.getDateCreated()))
-                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mSensor.getDateCreated(),
+            if (!TextUtils.isEmpty(mDevice.getDateCreated()))
+                sensorDate.setText(String.valueOf(DateTimeUtils.formatWithStyle(mDevice.getDateCreated(),
                         DateTimeStyle.MEDIUM)));
 
-            if (!TextUtils.isEmpty(mSensor.getOwner())) {
+            if (!TextUtils.isEmpty(mDevice.getOwner())) {
                 sensorOwnerTitle.setVisibility(View.VISIBLE);
                 sensorOwner.setVisibility(View.VISIBLE);
-                sensorOwner.setText(String.valueOf(mSensor.getOwner()));
+                sensorOwner.setText(String.valueOf(mDevice.getOwner()));
             } else {
                 sensorOwnerTitle.setVisibility(View.GONE);
                 sensorOwner.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(mSensor.getDomain())) {
+            if (!TextUtils.isEmpty(mDevice.getDomain())) {
                 sensorDomainTitle.setVisibility(View.VISIBLE);
                 sensorDomain.setVisibility(View.VISIBLE);
-                sensorDomain.setText(String.valueOf(mSensor.getDomain()));
+                sensorDomain.setText(String.valueOf(mDevice.getDomain()));
             } else {
                 sensorDomainTitle.setVisibility(View.GONE);
                 sensorDomain.setVisibility(View.GONE);
@@ -220,7 +220,7 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
 
     @Override
     public void showCreateMeasurementsDialog() {
-//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Measurement(), mPresenter);
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), new Sensor(), mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
@@ -243,13 +243,13 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
     @Override
-    public void onItemClicked(Measurement measurement) {
+    public void onItemClicked(Sensor sensor) {
 //        CommonUtils.toast("onItemDeleteClicked");
     }
 
     @Override
-    public void onItemEditClicked(Measurement measurement) {
-//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), measurement, mPresenter);
+    public void onItemEditClicked(Sensor sensor) {
+//        EditSensorDialog dialog = new EditSensorDialog(getBaseActivity(), sensor, mPresenter);
 //        if (dialog.getWindow() != null) {
 //            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
@@ -257,11 +257,11 @@ public class NotificationDetailFragment extends BaseFragment implements Notifica
     }
 
     @Override
-    public void onItemDeleteClicked(String sensorId, Measurement measurement) {
+    public void onItemDeleteClicked(String sensorId, Sensor sensor) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getBaseActivity());
-        builder.setMessage("Are you sure you want to delete measurement?")
+        builder.setMessage("Are you sure you want to delete sensor?")
                 .setPositiveButton("Delete", (dialog, id) -> {
-                    mPresenter.onDeleteMeasurementClicked(sensorId, measurement.getId());
+                    mPresenter.onDeleteMeasurementClicked(sensorId, sensor.getId());
                     dialog.dismiss();
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {

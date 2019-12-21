@@ -14,20 +14,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import eu.waziup.app.R;
-import eu.waziup.app.data.network.model.sensor.Measurement;
+import eu.waziup.app.data.network.model.sensor.Sensor;
 import eu.waziup.app.ui.base.BaseViewHolder;
 
 public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    List<Measurement> measurements;
+    List<Sensor> sensors;
 
     Callback mCallback;
     EditCallback mEditCallback;
     DeleteCallback mDeleteCallback;
     String sensorId = "";
 
-    public MeasurementAdapter(List<Measurement> measurements) {
-        this.measurements = measurements;
+    public MeasurementAdapter(List<Sensor> sensors) {
+        this.sensors = sensors;
     }
 
 
@@ -44,16 +44,16 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         baseViewHolder.onBind(i);
     }
 
-    public void addItems(String sensorId, List<Measurement> measurements) {
+    public void addItems(String sensorId, List<Sensor> sensors) {
         this.sensorId = sensorId;
-        this.measurements.clear();
-        this.measurements.addAll(measurements);
+        this.sensors.clear();
+        this.sensors.addAll(sensors);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return measurements.size();
+        return sensors.size();
     }
 
     public void setCallback(Callback callback) {
@@ -69,15 +69,21 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface Callback {
-        void onItemClicked(Measurement measurement);
+        void onItemClicked(Sensor sensor);
     }
 
+    /**
+     * callback interface for editing sensor item from the list
+     */
     public interface EditCallback {
-        void onItemEditClicked(Measurement measurement);
+        void onItemEditClicked(Sensor sensor);
     }
 
+    /**
+     * callback interface for deleting item from the sensor list
+     */
     public interface DeleteCallback {
-        void onItemDeleteClicked(String sensorId, Measurement measurement);
+        void onItemDeleteClicked(String sensorId, Sensor sensor);
     }
 
     public class MeasurementViewHolder extends BaseViewHolder {
@@ -100,56 +106,55 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.card_measurement_delete)
         ImageView mDelete;
 
-        Measurement measurement;
+        Sensor sensor;
 
         public MeasurementViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            mEdit.setOnClickListener(view -> mEditCallback.onItemEditClicked(measurements.get(getAdapterPosition())));
-            mDelete.setOnClickListener(view -> mDeleteCallback.onItemDeleteClicked(sensorId, measurements.get(getAdapterPosition())));
+            mEdit.setOnClickListener(view -> mEditCallback.onItemEditClicked(sensors.get(getAdapterPosition())));
+            mDelete.setOnClickListener(view -> mDeleteCallback.onItemDeleteClicked(sensorId, sensors.get(getAdapterPosition())));
             // todo find out how is it possible to separate the whole view onClickListener with just only some part of the view clickListener
-            itemView.setOnClickListener(view -> mCallback.onItemClicked(measurements.get(getAdapterPosition())));
+            itemView.setOnClickListener(view -> mCallback.onItemClicked(sensors.get(getAdapterPosition())));
 
         }
 
         @Override
         public void onBind(int position) {
             super.onBind(position);
-            if (measurements != null) {
-                measurement = measurements.get(position);
+            if (sensors != null) {
+                sensor = sensors.get(position);
 
                 // for setting the image
-                if (measurement.getSensingDevice() != null)
-                    if (measurement.getSensingDevice().toLowerCase().equals("thermometer"))
+                if (sensor.getSensingDevice() != null)
+                    if (sensor.getSensingDevice().toLowerCase().equals("thermometer"))
                         mIcon.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_mesurement_temp));
 
-                if (!TextUtils.isEmpty(measurement.getId())) {
+                if (!TextUtils.isEmpty(sensor.getId())) {
                     mMeasurementName.setVisibility(View.VISIBLE);
-                    mMeasurementName.setText(measurement.getId());
-                } else if (!TextUtils.isEmpty(measurement.getName())) {
+                    mMeasurementName.setText(sensor.getId());
+                } else if (!TextUtils.isEmpty(sensor.getName())) {
                     mMeasurementName.setVisibility(View.VISIBLE);
-                    mMeasurementName.setText(measurement.getName());
+                    mMeasurementName.setText(sensor.getName());
                 } else {
                     mMeasurementName.setVisibility(View.GONE);
                 }
 
-                mMeasurementName.setText((TextUtils.isEmpty(measurement.getId())) ? measurement.getName() : measurement.getId());
+                mMeasurementName.setText((TextUtils.isEmpty(sensor.getId())) ? sensor.getName() : sensor.getId());
 
-
-                if (!TextUtils.isEmpty(measurement.getQuantityKind())) {
+                if (!TextUtils.isEmpty(sensor.getQuantityKind())) {
                     mMeasurementKind.setVisibility(View.VISIBLE);
-                    mMeasurementKind.setText(measurement.getQuantityKind());
+                    mMeasurementKind.setText(sensor.getQuantityKind());
                 } else {
                     mMeasurementKind.setVisibility(View.GONE);
                 }
 
 
                 // for the value
-                if (measurement.getLastValue() != null)
-                    if (!TextUtils.isEmpty(measurement.getLastValue().getValue())) {
+                if (sensor.getLastValue() != null)
+                    if (!TextUtils.isEmpty(sensor.getLastValue().getValue())) {
                         mMeasurementValue.setVisibility(View.VISIBLE);
-                        mMeasurementValue.setText(measurement.getLastValue().getValue());
+                        mMeasurementValue.setText(sensor.getLastValue().getValue());
                     } else {
                         mMeasurementValue.setVisibility(View.GONE);
                     }
@@ -158,6 +163,9 @@ public class MeasurementAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         }
 
+        /**
+         * method for clearing the views when clearing is required
+         */
         @Override
         protected void clear() {
             mMeasurementValue.setText("");

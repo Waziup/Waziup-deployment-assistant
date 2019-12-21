@@ -66,7 +66,7 @@ public class Device implements Serializable {
         this.gatewayId = gatewayId;
     }
 
-    public Location getLocation() {
+    public eu.waziup.app.data.network.model.sensor.Location getLocation() {
         return location;
     }
 
